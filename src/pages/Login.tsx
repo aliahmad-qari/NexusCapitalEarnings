@@ -27,7 +27,7 @@ export const Login = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Login failed');
       login(data.token, data.user);
-      navigate('/');
+      navigate('/dashboard');
     } catch (err: any) {
       setError(err.message);
     } finally {

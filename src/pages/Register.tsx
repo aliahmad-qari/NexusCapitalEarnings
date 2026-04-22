@@ -44,7 +44,7 @@ export const Register = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Registration failed');
       login(data.token, data.user);
-      navigate('/');
+      navigate('/dashboard');
     } catch (err: any) {
       setError(err.message);
     } finally {

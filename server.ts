@@ -106,9 +106,14 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
+  const HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost';
+  app.listen(PORT, HOST, () => {
     logger.info(`Server environment: ${process.env.NODE_ENV || 'development'}`);
-    logger.info(`Server running on http://0.0.0.0:${PORT}`);
+    logger.info(`Server running on http://${HOST}:${PORT}`);
+    if (process.env.NODE_ENV !== 'production') {
+      logger.info(`Local access: http://localhost:${PORT}`);
+      logger.info(`Network access: http://127.0.0.1:${PORT}`);
+    }
   });
 }
 

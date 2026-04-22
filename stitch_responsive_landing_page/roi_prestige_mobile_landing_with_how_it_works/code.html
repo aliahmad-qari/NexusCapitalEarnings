@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary": "#003543",
+                    "surface-tint": "#00e293",
+                    "outline-variant": "#3b4a40",
+                    "on-surface": "#e1e2eb",
+                    "primary-fixed": "#50ffaf",
+                    "tertiary-container": "#d8d2ff",
+                    "on-tertiary-fixed": "#160066",
+                    "on-surface-variant": "#b9cbbd",
+                    "tertiary-fixed-dim": "#c6bfff",
+                    "secondary-container": "#00d2ff",
+                    "on-error-container": "#ffdad6",
+                    "surface": "#10131a",
+                    "secondary-fixed": "#b6ebff",
+                    "on-secondary-container": "#00566a",
+                    "surface-bright": "#363940",
+                    "on-primary-container": "#006b43",
+                    "primary-fixed-dim": "#00e293",
+                    "surface-container-high": "#272a31",
+                    "secondary-fixed-dim": "#47d6ff",
+                    "on-primary-fixed-variant": "#005232",
+                    "surface-variant": "#32353c",
+                    "inverse-surface": "#e1e2eb",
+                    "on-tertiary-container": "#5745d1",
+                    "primary": "#cdffde",
+                    "on-error": "#690005",
+                    "on-secondary-fixed-variant": "#004e60",
+                    "on-background": "#e1e2eb",
+                    "surface-container-highest": "#32353c",
+                    "on-tertiary": "#2900a0",
+                    "on-tertiary-fixed-variant": "#4029ba",
+                    "inverse-on-surface": "#2e3037",
+                    "tertiary": "#f6f1ff",
+                    "surface-dim": "#10131a",
+                    "secondary": "#a5e7ff",
+                    "primary-container": "#00f5a0",
+                    "outline": "#849588",
+                    "error": "#ffb4ab",
+                    "tertiary-fixed": "#e4dfff",
+                    "background": "#10131a",
+                    "on-primary-fixed": "#002111",
+                    "on-secondary-fixed": "#001f28",
+                    "surface-container-lowest": "#0b0e14",
+                    "on-primary": "#003921",
+                    "error-container": "#93000a",
+                    "surface-container": "#1d2026",
+                    "inverse-primary": "#006c44",
+                    "surface-container-low": "#191c22"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "xs": "4px",
+                    "md": "24px",
+                    "sm": "12px",
+                    "xl": "64px",
+                    "margin-desktop": "48px",
+                    "margin-mobile": "20px",
+                    "lg": "40px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "1", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(16, 20, 28, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .neon-border-top {
+            box-shadow: inset 0 1px 0 0 rgba(0, 226, 147, 0.3);
+        }
+        .emerald-glow {
+            box-shadow: 0px 20px 40px rgba(0, 245, 160, 0.15);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden">
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-50 bg-slate-950/60 backdrop-blur-xl border-b border-white/10 shadow-2xl shadow-emerald-500/5">
+<div class="flex justify-between items-center max-w-7xl mx-auto px-6 py-4">
+<div class="text-2xl font-black tracking-tighter text-white">ROI</div>
+<!-- Mobile Menu Toggle (Simplified for Mobile) -->
+<div class="flex items-center gap-4">
+<button class="text-emerald-400 font-inter tracking-tight text-sm uppercase font-bold hover:text-white transition-all duration-300">
+                    Invest Now
+                </button>
+<span class="material-symbols-outlined text-white">menu</span>
+</div>
+</div>
+</nav>
+<main class="pt-24 pb-16 px-6 space-y-xl">
+<!-- Hero Section -->
+<section class="flex flex-col items-center text-center space-y-md">
+<div class="relative w-full max-w-[320px] aspect-square mb-4">
+<div class="absolute inset-0 bg-primary-container/20 rounded-full blur-3xl"></div>
+<img alt="Investment Graphic" class="relative z-10 w-full h-full object-contain" data-alt="A high-fidelity 3D metallic emerald cube floating amidst glass shards and digital data streams, dark professional background, luxury aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJ4s3CbuCsF-03FKhe7xKjyx63po8k-9uH3NV0bMJLvwLsux3iltxemYNL3PzM5uP1EpPXc2vPVwTFuHocF1v8efCzlsB0zSslrNuaBit6i5IypUlJaAjiDlN5-JgZPkSd3wNDLWM4iDxqKLbFtrM_bE6QQg2eI-hpdwIq1V6Oicl8M3DkN5ENCW5jvfIjV0iTD0rR59i1SG3f7cXa4io1PPs2yLOZBSRQ9tApaG_AsoJUR5uOi2zklUp2kR9zBewlm0P9nG-8ySxS"/>
+</div>
+<h1 class="font-display-lg text-[38px] leading-[1.1] text-white tracking-tighter">
+                Smart Investments: Grow Your Wealth With <span class="text-surface-tint">Daily Profits</span>
+</h1>
+<p class="font-body-lg text-on-surface-variant max-w-sm">
+                Experience institutional-grade wealth management tailored for your future.
+            </p>
+<button class="w-full py-4 px-8 bg-gradient-to-r from-primary-container to-secondary-container rounded-lg font-label-md text-on-primary font-bold uppercase tracking-widest shadow-lg emerald-glow active:scale-95 transition-transform">
+                Invest Now
+            </button>
+</section>
+<!-- Live Stats -->
+<section class="overflow-x-auto no-scrollbar -mx-6 px-6">
+<div class="flex space-x-sm pb-4">
+<div class="flex-shrink-0 min-w-[140px] glass-card p-4 rounded-xl">
+<p class="font-label-sm text-on-surface-variant mb-1">Total Investors</p>
+<p class="font-headline-md text-surface-tint">48.2K</p>
+</div>
+<div class="flex-shrink-0 min-w-[140px] glass-card p-4 rounded-xl">
+<p class="font-label-sm text-on-surface-variant mb-1">Total Invested</p>
+<p class="font-headline-md text-surface-tint">$1.2B</p>
+</div>
+<div class="flex-shrink-0 min-w-[140px] glass-card p-4 rounded-xl">
+<p class="font-label-sm text-on-surface-variant mb-1">Active Payouts</p>
+<p class="font-headline-md text-surface-tint">$420M</p>
+</div>
+<div class="flex-shrink-0 min-w-[140px] glass-card p-4 rounded-xl">
+<p class="font-label-sm text-on-surface-variant mb-1">Daily ROI</p>
+<div class="flex items-center gap-1">
+<p class="font-headline-md text-surface-tint">2.4%</p>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Bento Grid -->
+<section class="space-y-sm">
+<h2 class="font-headline-lg text-white mb-6">Premium Services</h2>
+<div class="grid grid-cols-2 gap-sm">
+<div class="glass-card p-6 rounded-xl flex flex-col space-y-3 neon-border-top">
+<span class="material-symbols-outlined text-surface-tint text-3xl" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<h3 class="font-label-md text-white">Secure Custody</h3>
+<p class="text-label-sm text-on-surface-variant leading-relaxed">Multi-sig institutional vaults.</p>
+</div>
+<div class="glass-card p-6 rounded-xl flex flex-col space-y-3">
+<span class="material-symbols-outlined text-secondary-container text-3xl" style="font-variation-settings: 'FILL' 1;">monitoring</span>
+<h3 class="font-label-md text-white">Live Analytics</h3>
+<p class="text-label-sm text-on-surface-variant leading-relaxed">Real-time performance tracking.</p>
+</div>
+<div class="glass-card p-6 rounded-xl flex flex-col space-y-3">
+<span class="material-symbols-outlined text-tertiary-container text-3xl" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<h3 class="font-label-md text-white">Full Security</h3>
+<p class="text-label-sm text-on-surface-variant leading-relaxed">ISO 27001 certified protocols.</p>
+</div>
+<div class="glass-card p-6 rounded-xl flex flex-col space-y-3 neon-border-top">
+<span class="material-symbols-outlined text-primary-fixed text-3xl" style="font-variation-settings: 'FILL' 1;">support_agent</span>
+<h3 class="font-label-md text-white">24/7 Support</h3>
+<p class="text-label-sm text-on-surface-variant leading-relaxed">Dedicated wealth managers.</p>
+</div>
+</div>
+</section>
+<!-- Investment Plans Vertical List -->
+<section class="space-y-md">
+<div class="text-center">
+<h2 class="font-headline-lg text-white">How it Works</h2>
+<p class="font-label-md text-on-surface-variant mt-2">Three simple steps to start your wealth journey</p>
+</div>
+<div class="space-y-gutter">
+<!-- Step 1 -->
+<div class="flex gap-6 items-start">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-surface-tint/10 border border-surface-tint/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-surface-tint" style="font-variation-settings: 'FILL' 1;">person_add</span>
+</div>
+<div class="flex-1 border-b border-white/5 pb-6">
+<h3 class="font-label-md text-white text-lg mb-1">1. Create Account</h3>
+<p class="text-label-sm text-on-surface-variant">Register in minutes with our secure onboarding process. No complex paperwork required.</p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="flex gap-6 items-start">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-secondary-container/10 border border-secondary-container/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary-container" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+</div>
+<div class="flex-1 border-b border-white/5 pb-6">
+<h3 class="font-label-md text-white text-lg mb-1">2. Choose Plan</h3>
+<p class="text-label-sm text-on-surface-variant">Select a portfolio that matches your financial goals, from Starter to VIP Prestige levels.</p>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="flex gap-6 items-start">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary-fixed/10 border border-primary-fixed/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-fixed" style="font-variation-settings: 'FILL' 1;">payments</span>
+</div>
+<div class="flex-1">
+<h3 class="font-label-md text-white text-lg mb-1">3. Earn Daily</h3>
+<p class="text-label-sm text-on-surface-variant">Watch your wealth grow with automated daily payouts directly to your secure digital vault.</p>
+</div>
+</div>
+</div>
+</section><section class="space-y-md">
+<div class="text-center">
+<h2 class="font-headline-lg text-white">Investment Plans</h2>
+<p class="font-label-md text-on-surface-variant mt-2">Choose the path to your financial freedom</p>
+</div>
+<div class="space-y-sm">
+<!-- Starter Plan -->
+<div class="glass-card rounded-xl overflow-hidden">
+<div class="p-6 flex justify-between items-center">
+<div>
+<p class="font-label-sm text-surface-tint uppercase tracking-widest">Starter</p>
+<h3 class="font-headline-md text-white mt-1">1.2% Daily</h3>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-on-surface-variant">Min Deposit</p>
+<p class="font-label-md text-white">$100</p>
+</div>
+</div>
+<div class="px-6 pb-6 pt-2 border-t border-white/5 bg-white/5">
+<button class="w-full py-3 bg-white/10 text-white rounded-lg font-label-md hover:bg-white/20 transition-colors">Select Plan</button>
+</div>
+</div>
+<!-- Silver Plan (Highlighted) -->
+<div class="glass-card rounded-xl overflow-hidden border-surface-tint/30 relative">
+<div class="absolute top-0 right-0 bg-surface-tint text-on-primary px-3 py-1 rounded-bl-lg font-label-sm">POPULAR</div>
+<div class="p-6 flex justify-between items-center">
+<div>
+<p class="font-label-sm text-surface-tint uppercase tracking-widest">Silver</p>
+<h3 class="font-headline-md text-white mt-1">2.5% Daily</h3>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-on-surface-variant">Min Deposit</p>
+<p class="font-label-md text-white">$5,000</p>
+</div>
+</div>
+<div class="px-6 pb-6 pt-2 border-t border-white/5 bg-surface-tint/10">
+<button class="w-full py-3 bg-surface-tint text-on-primary rounded-lg font-label-md font-bold">Select Plan</button>
+</div>
+</div>
+<!-- Gold Plan -->
+<div class="glass-card rounded-xl overflow-hidden">
+<div class="p-6 flex justify-between items-center">
+<div>
+<p class="font-label-sm text-secondary-container uppercase tracking-widest">Gold</p>
+<h3 class="font-headline-md text-white mt-1">4.0% Daily</h3>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-on-surface-variant">Min Deposit</p>
+<p class="font-label-md text-white">$25,000</p>
+</div>
+</div>
+<div class="px-6 pb-6 pt-2 border-t border-white/5 bg-white/5">
+<button class="w-full py-3 bg-white/10 text-white rounded-lg font-label-md hover:bg-white/20 transition-colors">Select Plan</button>
+</div>
+</div>
+<!-- VIP Plan -->
+<div class="glass-card rounded-xl overflow-hidden">
+<div class="p-6 flex justify-between items-center">
+<div>
+<p class="font-label-sm text-tertiary-container uppercase tracking-widest">VIP Prestige</p>
+<h3 class="font-headline-md text-white mt-1">6.5% Daily</h3>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-on-surface-variant">Min Deposit</p>
+<p class="font-label-md text-white">$100,000</p>
+</div>
+</div>
+<div class="px-6 pb-6 pt-2 border-t border-white/5 bg-white/5">
+<button class="w-full py-3 bg-white/10 text-white rounded-lg font-label-md hover:bg-white/20 transition-colors">Enquire Now</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-slate-950 border-t border-white/5">
+<div class="flex flex-col items-center px-12 py-16 max-w-7xl mx-auto space-y-8">
+<div class="text-xl font-bold text-white tracking-tight">ROI PRESTIGE</div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="text-xs font-inter tracking-widest text-slate-500 hover:text-emerald-400 transition-colors" href="#">Terms</a>
+<a class="text-xs font-inter tracking-widest text-slate-500 hover:text-emerald-400 transition-colors" href="#">Privacy</a>
+<a class="text-xs font-inter tracking-widest text-slate-500 hover:text-emerald-400 transition-colors" href="#">Institutional</a>
+<a class="text-xs font-inter tracking-widest text-slate-500 hover:text-emerald-400 transition-colors" href="#">Support</a>
+</div>
+<p class="text-xs font-inter tracking-widest text-slate-500 text-center uppercase">
+                © 2024 ROI PRESTIGE. SECURE WEALTH MANAGEMENT.
+            </p>
+</div>
+</footer>
+<!-- Floating Contact (Mobile Exclusive FAB) -->
+<div class="fixed bottom-6 right-6 z-40">
+<button class="w-14 h-14 bg-surface-tint text-on-primary rounded-full flex items-center justify-center shadow-2xl emerald-glow active:scale-90 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">chat</span>
+</button>
+</div>
+</body></html>

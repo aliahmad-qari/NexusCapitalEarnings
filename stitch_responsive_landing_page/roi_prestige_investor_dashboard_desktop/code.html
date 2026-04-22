@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ROI Prestige | Investor Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#00e293",
+                    "on-tertiary-container": "#5745d1",
+                    "on-primary-container": "#006b43",
+                    "on-error-container": "#ffdad6",
+                    "secondary-fixed": "#b6ebff",
+                    "primary-container": "#00f5a0",
+                    "outline-variant": "#3b4a40",
+                    "primary-fixed": "#50ffaf",
+                    "on-secondary-fixed": "#001f28",
+                    "surface-container-low": "#191c22",
+                    "on-error": "#690005",
+                    "background": "#10131a",
+                    "on-secondary": "#003543",
+                    "surface-bright": "#363940",
+                    "surface": "#10131a",
+                    "tertiary-container": "#d8d2ff",
+                    "on-primary-fixed-variant": "#005232",
+                    "on-background": "#e1e2eb",
+                    "on-tertiary-fixed-variant": "#4029ba",
+                    "on-secondary-container": "#00566a",
+                    "secondary": "#a5e7ff",
+                    "primary-fixed-dim": "#00e293",
+                    "surface-container-highest": "#32353c",
+                    "secondary-fixed-dim": "#47d6ff",
+                    "on-tertiary-fixed": "#160066",
+                    "on-surface-variant": "#b9cbbd",
+                    "surface-container": "#1d2026",
+                    "tertiary-fixed-dim": "#c6bfff",
+                    "on-primary-fixed": "#002111",
+                    "tertiary": "#f6f1ff",
+                    "error-container": "#93000a",
+                    "secondary-container": "#00d2ff",
+                    "inverse-primary": "#006c44",
+                    "inverse-surface": "#e1e2eb",
+                    "surface-dim": "#10131a",
+                    "on-primary": "#003921",
+                    "error": "#ffb4ab",
+                    "outline": "#849588",
+                    "on-secondary-fixed-variant": "#004e60",
+                    "tertiary-fixed": "#e4dfff",
+                    "on-surface": "#e1e2eb",
+                    "inverse-on-surface": "#2e3037",
+                    "surface-container-high": "#272a31",
+                    "on-tertiary": "#2900a0",
+                    "primary": "#cdffde",
+                    "surface-container-lowest": "#0b0e14",
+                    "surface-variant": "#32353c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "24px",
+                    "base": "8px",
+                    "margin-desktop": "48px",
+                    "xl": "64px",
+                    "xs": "4px",
+                    "lg": "40px",
+                    "gutter": "16px",
+                    "sm": "12px",
+                    "margin-mobile": "20px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "1", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(16, 20, 28, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .neon-glow-primary {
+            box-shadow: 0px 20px 40px rgba(0, 245, 160, 0.15);
+        }
+        .neon-line {
+            filter: drop-shadow(0 0 4px rgba(0, 242, 147, 0.8));
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="bg-slate-950/60 backdrop-blur-xl border-b border-white/10 fixed top-0 w-full z-50 shadow-2xl shadow-emerald-500/5">
+<div class="flex justify-between items-center max-w-7xl mx-auto px-8 py-4">
+<div class="text-2xl font-black tracking-tighter text-white">ROI</div>
+<nav class="hidden md:flex items-center space-x-8 font-inter tracking-tight text-sm uppercase font-bold">
+<a class="text-emerald-400 border-b-2 border-emerald-400 pb-1 hover:text-white transition-all duration-300" href="#">Solutions</a>
+<a class="text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-300" href="#">Portfolio</a>
+<a class="text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-300" href="#">Security</a>
+<a class="text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-300" href="#">Insights</a>
+</nav>
+<div class="flex items-center space-x-4">
+<button class="px-6 py-2 rounded-full border border-white/10 text-slate-400 text-sm uppercase font-bold hover:bg-white/5 transition-all duration-300">Explore</button>
+<button class="px-6 py-2 rounded-full bg-primary-container text-on-primary-container text-sm uppercase font-bold hover:opacity-80 scale-95 transition-all duration-300">Invest Now</button>
+</div>
+</div>
+</header>
+<div class="flex pt-20">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 h-full w-64 glass-panel border-r border-white/5 hidden md:block">
+<div class="p-8 space-y-6">
+<div class="space-y-2">
+<p class="text-label-sm text-slate-500 uppercase tracking-widest px-4">Menu</p>
+<nav class="space-y-1">
+<a class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-primary-container/10 text-surface-tint border-r-4 border-surface-tint" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard" data-weight="fill">dashboard</span>
+<span class="font-label-md">Dashboard</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-md">Portfolio</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-md">Transactions</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+<span class="font-label-md">Security</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="support_agent">support_agent</span>
+<span class="font-label-md">Support</span>
+</a>
+</nav>
+</div>
+<div class="pt-8">
+<div class="glass-panel rounded-2xl p-4 bg-primary-container/5 border-primary-container/20">
+<div class="flex items-center justify-between mb-2">
+<span class="text-label-sm text-surface-tint uppercase">Tier: Platinum</span>
+<span class="material-symbols-outlined text-surface-tint" data-icon="star" data-weight="fill">star</span>
+</div>
+<p class="text-xs text-slate-400">Next tier unlock at $100k</p>
+<div class="w-full bg-white/10 h-1.5 rounded-full mt-3 overflow-hidden">
+<div class="bg-surface-tint h-full w-[65%] shadow-[0_0_10px_#00e293]"></div>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 px-8 py-10 space-y-md">
+<!-- Hero Section: Portfolio Value & Chart -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-md">
+<div class="lg:col-span-2 glass-panel rounded-3xl p-8 neon-glow-primary overflow-hidden relative">
+<div class="absolute top-0 right-0 p-8 opacity-10">
+<span class="material-symbols-outlined text-9xl" data-icon="monitoring">monitoring</span>
+</div>
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-8">
+<div>
+<h1 class="text-label-sm text-slate-500 uppercase tracking-[0.2em] mb-1">Current Portfolio Value</h1>
+<div class="flex items-end space-x-4">
+<span class="text-display-lg font-display-lg text-white">$482,905.12</span>
+<span class="flex items-center text-surface-tint bg-surface-tint/10 px-3 py-1 rounded-full text-label-sm mb-2">
+<span class="material-symbols-outlined text-sm mr-1" data-icon="trending_up">trending_up</span>
+                                        +12.4%
+                                    </span>
+</div>
+</div>
+<div class="flex space-x-2">
+<button class="px-4 py-1.5 rounded-lg bg-white/5 text-slate-400 text-label-sm hover:text-white transition-colors">1D</button>
+<button class="px-4 py-1.5 rounded-lg bg-white/5 text-slate-400 text-label-sm hover:text-white transition-colors">1W</button>
+<button class="px-4 py-1.5 rounded-lg bg-primary-container text-on-primary-container text-label-sm">1M</button>
+<button class="px-4 py-1.5 rounded-lg bg-white/5 text-slate-400 text-label-sm hover:text-white transition-colors">ALL</button>
+</div>
+</div>
+<!-- Growth Chart Mockup -->
+<div class="h-64 flex items-end justify-between space-x-2 relative group">
+<div class="absolute inset-x-0 bottom-0 h-[1px] bg-white/10"></div>
+<div class="w-full h-48 relative">
+<svg class="w-full h-full" viewbox="0 0 800 200">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#00e293" stop-opacity="0.4"></stop>
+<stop offset="100%" stop-color="#00e293" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path class="neon-line" d="M0,150 Q100,120 200,160 T400,80 T600,100 T800,20" fill="transparent" stroke="#00e293" stroke-width="3"></path>
+<path d="M0,150 Q100,120 200,160 T400,80 T600,100 T800,20 V200 H0 Z" fill="url(#chartGradient)"></path>
+</svg>
+</div>
+</div>
+<div class="flex justify-between text-label-sm text-slate-500 mt-4">
+<span>01 OCT</span>
+<span>08 OCT</span>
+<span>15 OCT</span>
+<span>22 OCT</span>
+<span>29 OCT</span>
+</div>
+</div>
+</div>
+<!-- Market Watch Section -->
+<div class="glass-panel rounded-3xl p-8 flex flex-col">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-headline-md font-headline-md text-white">Market Watch</h2>
+<span class="material-symbols-outlined text-surface-tint" data-icon="sensors">sensors</span>
+</div>
+<div class="space-y-4 flex-1">
+<div class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center">
+<img alt="US Flag" class="w-5 h-5 rounded-sm" data-alt="close up of small clean american flag graphic icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGBcHwmU6D7s1oSBlPfL0jeH5urBdkasETq5LH2D9sAVkwEBtmOpjFEqWGFNk6YT-gzkmMUknl0MuAzYuILcrBtttPMmym--J4UT1CljhicYFnfN8oENQe2Jj6iSWPTuVXvkIWgE6B5ZHuPsxxCrTCP92WpunITtCe_Q2X-uahqPh8SO0mLrSK5TOZYv6b6r7invyJsd46LzC907E1s8AepuCBAEEaevxfi3v750Du9Wj7Bl9fFrOCnpIxxc71MRctp-c7aSJTS5k4"/>
+</div>
+<div>
+<p class="text-label-md text-white">S&amp;P 500 Index</p>
+<p class="text-xs text-slate-500">Institutional Feed</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-label-md text-white">5,782.10</p>
+<p class="text-xs text-surface-tint">+0.82%</p>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-sm" data-icon="currency_bitcoin" data-weight="fill">currency_bitcoin</span>
+</div>
+<div>
+<p class="text-label-md text-white">BTC / USD</p>
+<p class="text-xs text-slate-500">Live Asset Tracking</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-label-md text-white">64,290.44</p>
+<p class="text-xs text-surface-tint">+2.15%</p>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-yellow-500">
+<span class="material-symbols-outlined text-sm" data-icon="monetization_on" data-weight="fill">monetization_on</span>
+</div>
+<div>
+<p class="text-label-md text-white">Gold Spot</p>
+<p class="text-xs text-slate-500">Commodity Market</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-label-md text-white">2,654.12</p>
+<p class="text-xs text-error">-0.12%</p>
+</div>
+</div>
+</div>
+<button class="w-full py-4 mt-6 rounded-2xl border border-white/10 text-label-sm uppercase tracking-widest text-slate-400 hover:bg-white/5 transition-all">
+                        Full Market Terminal
+                    </button>
+</div>
+</section>
+<!-- Statistics Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-md">
+<div class="glass-panel rounded-3xl p-6 relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-24 h-24 bg-surface-tint/5 rounded-bl-full transform translate-x-12 -translate-y-12 transition-transform group-hover:translate-x-10 group-hover:-translate-y-10"></div>
+<p class="text-label-sm text-slate-500 uppercase tracking-widest mb-2">Total Invested</p>
+<h3 class="text-headline-lg font-headline-lg text-white">$312,000</h3>
+<div class="mt-4 flex items-center text-xs text-slate-500">
+<span class="material-symbols-outlined text-sm mr-1" data-icon="account_balance">account_balance</span>
+                        Across 4 Active Plans
+                    </div>
+</div>
+<div class="glass-panel rounded-3xl p-6 relative overflow-hidden group">
+<p class="text-label-sm text-slate-500 uppercase tracking-widest mb-2">Total Profit</p>
+<h3 class="text-headline-lg font-headline-lg text-surface-tint">+$170,905</h3>
+<div class="mt-4 flex items-center text-xs text-slate-500">
+<span class="material-symbols-outlined text-sm mr-1" data-icon="show_chart">show_chart</span>
+                        All-time performance
+                    </div>
+</div>
+<div class="glass-panel rounded-3xl p-6 relative overflow-hidden group">
+<p class="text-label-sm text-slate-500 uppercase tracking-widest mb-2">Pending Payouts</p>
+<h3 class="text-headline-lg font-headline-lg text-secondary-container">$12,450</h3>
+<div class="mt-4 flex items-center text-xs text-slate-500">
+<span class="material-symbols-outlined text-sm mr-1" data-icon="schedule">schedule</span>
+                        Available in 48 hours
+                    </div>
+</div>
+<div class="glass-panel rounded-3xl p-6 relative overflow-hidden group">
+<p class="text-label-sm text-slate-500 uppercase tracking-widest mb-2">Referral Earnings</p>
+<h3 class="text-headline-lg font-headline-lg text-white">$8,540</h3>
+<div class="mt-4 flex items-center text-xs text-slate-500">
+<span class="material-symbols-outlined text-sm mr-1" data-icon="group">group</span>
+                        12 Active Referrals
+                    </div>
+</div>
+</section>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-md">
+<!-- Active Plans -->
+<div class="xl:col-span-2 glass-panel rounded-3xl p-8">
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-headline-md font-headline-md text-white">Active Investment Plans</h2>
+<button class="text-surface-tint text-label-md flex items-center hover:opacity-80">
+                            View All <span class="material-symbols-outlined ml-1" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="text-label-sm text-slate-500 border-b border-white/5">
+<th class="pb-4 font-semibold uppercase">Plan Tier</th>
+<th class="pb-4 font-semibold uppercase">Start Date</th>
+<th class="pb-4 font-semibold uppercase">Daily Rate</th>
+<th class="pb-4 font-semibold uppercase text-right">Cumulative</th>
+<th class="pb-4 font-semibold uppercase text-center">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="py-6">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-xl bg-primary-container/10 flex items-center justify-center text-surface-tint">
+<span class="material-symbols-outlined" data-icon="diamond" data-weight="fill">diamond</span>
+</div>
+<div>
+<p class="text-label-md text-white">Prestige Diamond</p>
+<p class="text-xs text-slate-500">$100,000 Principle</p>
+</div>
+</div>
+</td>
+<td class="py-6 text-label-md text-slate-300">Sep 12, 2024</td>
+<td class="py-6 text-label-md text-surface-tint">2.4% / Day</td>
+<td class="py-6 text-right text-label-md text-white">$44,200.00</td>
+<td class="py-6 text-center">
+<span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-bold uppercase">Active</span>
+</td>
+</tr>
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="py-6">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-xl bg-secondary-container/10 flex items-center justify-center text-secondary-container">
+<span class="material-symbols-outlined" data-icon="token" data-weight="fill">token</span>
+</div>
+<div>
+<p class="text-label-md text-white">Elite Growth</p>
+<p class="text-xs text-slate-500">$50,000 Principle</p>
+</div>
+</div>
+</td>
+<td class="py-6 text-label-md text-slate-300">Oct 05, 2024</td>
+<td class="py-6 text-label-md text-surface-tint">1.8% / Day</td>
+<td class="py-6 text-right text-label-md text-white">$12,600.00</td>
+<td class="py-6 text-center">
+<span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-bold uppercase">Active</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Financial Controls -->
+<div class="space-y-md">
+<div class="glass-panel rounded-3xl p-8">
+<h2 class="text-headline-md font-headline-md text-white mb-6">Quick Actions</h2>
+<div class="grid grid-cols-2 gap-4">
+<button class="flex flex-col items-center justify-center p-6 rounded-2xl bg-primary-container text-on-primary-container hover:opacity-90 transition-all">
+<span class="material-symbols-outlined text-3xl mb-2" data-icon="add_circle">add_circle</span>
+<span class="text-label-sm font-bold uppercase">Deposit</span>
+</button>
+<button class="flex flex-col items-center justify-center p-6 rounded-2xl border border-white/10 text-white hover:bg-white/5 transition-all">
+<span class="material-symbols-outlined text-3xl mb-2" data-icon="payments">payments</span>
+<span class="text-label-sm font-bold uppercase">Withdraw</span>
+</button>
+</div>
+</div>
+<div class="glass-panel rounded-3xl p-8">
+<h2 class="text-headline-md font-headline-md text-white mb-6">Recent History</h2>
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+<span class="material-symbols-outlined text-sm" data-icon="south_west">south_west</span>
+</div>
+<div>
+<p class="text-label-md text-white">Daily Profit</p>
+<p class="text-xs text-slate-500">Oct 24, 14:20</p>
+</div>
+</div>
+<span class="text-label-md text-surface-tint">+$2,400.00</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-slate-500/10 flex items-center justify-center text-slate-400">
+<span class="material-symbols-outlined text-sm" data-icon="north_east">north_east</span>
+</div>
+<div>
+<p class="text-label-md text-white">Withdrawal</p>
+<p class="text-xs text-slate-500">Oct 22, 09:15</p>
+</div>
+</div>
+<span class="text-label-md text-white">-$5,000.00</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+<span class="material-symbols-outlined text-sm" data-icon="south_west">south_west</span>
+</div>
+<div>
+<p class="text-label-md text-white">Referral Bonus</p>
+<p class="text-xs text-slate-500">Oct 21, 11:45</p>
+</div>
+</div>
+<span class="text-label-md text-surface-tint">+$450.00</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-slate-950 border-t border-white/5 w-full bottom-0">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 py-16 max-w-7xl mx-auto space-y-8 md:space-y-0">
+<div class="text-xl font-bold text-white tracking-tight">ROI PRESTIGE</div>
+<div class="flex flex-wrap justify-center gap-8 text-xs font-inter tracking-widest text-slate-500 uppercase">
+<a class="hover:text-emerald-400 transition-colors" href="#">Terms</a>
+<a class="hover:text-emerald-400 transition-colors" href="#">Privacy</a>
+<a class="hover:text-emerald-400 transition-colors" href="#">Institutional</a>
+<a class="hover:text-emerald-400 transition-colors" href="#">Support</a>
+</div>
+<div class="text-xs font-inter tracking-widest text-slate-500 uppercase">
+                © 2024 ROI PRESTIGE. SECURE WEALTH MANAGEMENT.
+            </div>
+</div>
+</footer>
+</body></html>

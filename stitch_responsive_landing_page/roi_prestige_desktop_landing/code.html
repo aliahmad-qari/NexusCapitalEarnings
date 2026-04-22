@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary": "#003543",
+                    "surface-tint": "#00e293",
+                    "outline-variant": "#3b4a40",
+                    "on-surface": "#e1e2eb",
+                    "primary-fixed": "#50ffaf",
+                    "tertiary-container": "#d8d2ff",
+                    "on-tertiary-fixed": "#160066",
+                    "on-surface-variant": "#b9cbbd",
+                    "tertiary-fixed-dim": "#c6bfff",
+                    "secondary-container": "#00d2ff",
+                    "on-error-container": "#ffdad6",
+                    "surface": "#10131a",
+                    "secondary-fixed": "#b6ebff",
+                    "on-secondary-container": "#00566a",
+                    "surface-bright": "#363940",
+                    "on-primary-container": "#006b43",
+                    "primary-fixed-dim": "#00e293",
+                    "surface-container-high": "#272a31",
+                    "secondary-fixed-dim": "#47d6ff",
+                    "on-primary-fixed-variant": "#005232",
+                    "surface-variant": "#32353c",
+                    "inverse-surface": "#e1e2eb",
+                    "on-tertiary-container": "#5745d1",
+                    "primary": "#cdffde",
+                    "on-error": "#690005",
+                    "on-secondary-fixed-variant": "#004e60",
+                    "on-background": "#e1e2eb",
+                    "surface-container-highest": "#32353c",
+                    "on-tertiary": "#2900a0",
+                    "on-tertiary-fixed-variant": "#4029ba",
+                    "inverse-on-surface": "#2e3037",
+                    "tertiary": "#f6f1ff",
+                    "surface-dim": "#10131a",
+                    "secondary": "#a5e7ff",
+                    "primary-container": "#00f5a0",
+                    "outline": "#849588",
+                    "error": "#ffb4ab",
+                    "tertiary-fixed": "#e4dfff",
+                    "background": "#10131a",
+                    "on-primary-fixed": "#002111",
+                    "on-secondary-fixed": "#001f28",
+                    "surface-container-lowest": "#0b0e14",
+                    "on-primary": "#003921",
+                    "error-container": "#93000a",
+                    "surface-container": "#1d2026",
+                    "inverse-primary": "#006c44",
+                    "surface-container-low": "#191c22"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "xs": "4px",
+                    "md": "24px",
+                    "sm": "12px",
+                    "xl": "64px",
+                    "margin-desktop": "48px",
+                    "margin-mobile": "20px",
+                    "lg": "40px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "1", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #05070A;
+            color: #e1e2eb;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-card {
+            background: rgba(16, 20, 28, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .inner-glow-top {
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+        }
+        .primary-gradient {
+            background: linear-gradient(135deg, #00f5a0 0%, #00d2ff 100%);
+        }
+        .neon-tube {
+            box-shadow: 0 0 15px rgba(0, 245, 160, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="bg-slate-950/60 backdrop-blur-xl border-b border-white/10 fixed top-0 w-full z-50 shadow-2xl shadow-emerald-500/5">
+<div class="flex justify-between items-center max-w-7xl mx-auto px-8 py-4">
+<div class="text-2xl font-black tracking-tighter text-white">ROI</div>
+<nav class="hidden md:flex items-center space-x-8">
+<a class="text-emerald-400 border-b-2 border-emerald-400 pb-1 font-inter tracking-tight text-sm uppercase font-bold hover:text-white hover:bg-white/5 transition-all duration-300" href="#">Solutions</a>
+<a class="text-slate-400 font-inter tracking-tight text-sm uppercase font-bold hover:text-white hover:bg-white/5 transition-all duration-300" href="#">Portfolio</a>
+<a class="text-slate-400 font-inter tracking-tight text-sm uppercase font-bold hover:text-white hover:bg-white/5 transition-all duration-300" href="#">Security</a>
+<a class="text-slate-400 font-inter tracking-tight text-sm uppercase font-bold hover:text-white hover:bg-white/5 transition-all duration-300" href="#">Insights</a>
+</nav>
+<div class="flex items-center space-x-4">
+<button class="text-slate-400 font-inter tracking-tight text-sm uppercase font-bold px-4 py-2 hover:text-white transition-all">Explore</button>
+<button class="bg-primary-container text-on-primary-container font-inter tracking-tight text-sm uppercase font-bold px-6 py-2 rounded-lg hover:opacity-90 active:scale-95 transition-all">Invest Now</button>
+</div>
+</div>
+</header>
+<main class="pt-24">
+<!-- Hero Section -->
+<section class="relative min-h-[870px] flex items-center overflow-hidden px-8">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
+<div class="z-10">
+<div class="inline-flex items-center space-x-2 bg-white/5 border border-white/10 rounded-full px-4 py-1 mb-6">
+<span class="flex h-2 w-2 rounded-full bg-surface-tint"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-widest uppercase">Institutional Grade Platform</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-white mb-6 leading-tight">
+                        Smart Investments: <br/>
+<span class="text-transparent bg-clip-text primary-gradient">Grow Your Wealth</span> <br/>
+                        With Daily Profits
+                    </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg mb-10">
+                        Join the elite circle of prestige investors. Secure your future with our algorithmically driven wealth management ecosystem designed for institutional performance.
+                    </p>
+<div class="flex flex-wrap gap-4">
+<button class="primary-gradient text-on-primary font-label-md text-label-md px-8 py-4 rounded-xl shadow-lg shadow-emerald-500/20 hover:scale-[1.02] transition-transform active:scale-95">Invest Now</button>
+<button class="glass-card text-white font-label-md text-label-md px-8 py-4 rounded-xl hover:bg-white/10 transition-colors">Explore Plans</button>
+</div>
+</div>
+<div class="relative hidden lg:block">
+<div class="absolute -top-24 -right-24 w-96 h-96 bg-primary-container/20 blur-[120px] rounded-full"></div>
+<div class="relative glass-card rounded-3xl p-4 overflow-hidden border-white/20 aspect-square flex items-center justify-center">
+<img alt="3D Digital Asset" class="w-full h-full object-cover rounded-2xl opacity-80 mix-blend-screen" data-alt="Futuristic 3D glowing digital asset floating on a dark glass podium with emerald green neon light accents and reflections" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCu7yJT0H4vPg_r8ZR73aqoFbgaoDouI05W-J4iwebEc3gJ--2na2qNTT79IdxIWNgaNXdB0ITR5lWdVaaIezsLYjXLsr275XWaBRiSpNiNRLin6Fyc304vl9IKAe8tz1PCNFReKn4PtZV2Gtg5Lp-u1tD4YzolAZZcqaErIa8fPbYp126hTOhyux0ShdXUHtdfFt1OFNZAn8nzRSmvfxkBeHsv6hWMSzF6Gwvixgp2NqR_nNBGN_w0FpzSvI9tfxheUtUoOlrDnpJ5"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Live Stats Section -->
+<section class="py-12 border-y border-white/5 bg-surface-container-lowest/50 backdrop-blur-md">
+<div class="max-w-7xl mx-auto px-8">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="flex flex-col space-y-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Total Investors</span>
+<div class="flex items-end space-x-3">
+<span class="font-display-lg text-4xl text-white">12,842</span>
+<span class="flex items-center text-primary-container font-label-sm text-label-sm mb-2">
+<span class="material-symbols-outlined text-sm mr-1">trending_up</span> +8.4%
+                            </span>
+</div>
+</div>
+<div class="flex flex-col space-y-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Total Invested</span>
+<div class="flex items-end space-x-3">
+<span class="font-display-lg text-4xl text-white">$2.4B</span>
+<span class="flex items-center text-primary-container font-label-sm text-label-sm mb-2">
+<span class="material-symbols-outlined text-sm mr-1">trending_up</span> +12.5%
+                            </span>
+</div>
+</div>
+<div class="flex flex-col space-y-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Total Payouts</span>
+<div class="flex items-end space-x-3">
+<span class="font-display-lg text-4xl text-white">$482M</span>
+<span class="flex items-center text-primary-container font-label-sm text-label-sm mb-2">
+<span class="material-symbols-outlined text-sm mr-1">trending_up</span> +5.2%
+                            </span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Section -->
+<section class="py-24 px-8">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-16">
+<h2 class="font-headline-lg text-headline-lg text-white mb-4">Why ROI Prestige?</h2>
+<p class="text-on-surface-variant font-body-md text-body-md max-w-2xl mx-auto">The industry standard for security, speed, and reliability in wealth management.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Feature 1 -->
+<div class="glass-card inner-glow-top p-8 rounded-2xl hover:border-surface-tint/50 transition-colors group">
+<div class="w-12 h-12 bg-primary-container/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-surface-tint" style="font-variation-settings: 'FILL' 1;">shield</span>
+</div>
+<h3 class="font-headline-md text-label-md text-white mb-3">Bank Grade Security</h3>
+<p class="font-body-md text-sm text-on-surface-variant leading-relaxed">Multi-layer encryption and cold storage solutions for ultimate protection.</p>
+</div>
+<!-- Feature 2 -->
+<div class="glass-card inner-glow-top p-8 rounded-2xl hover:border-surface-tint/50 transition-colors group">
+<div class="w-12 h-12 bg-secondary-container/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-secondary-container" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</div>
+<h3 class="font-headline-md text-label-md text-white mb-3">Instant Withdrawals</h3>
+<p class="font-body-md text-sm text-on-surface-variant leading-relaxed">Access your profits instantly through our proprietary high-speed rail.</p>
+</div>
+<!-- Feature 3 -->
+<div class="glass-card inner-glow-top p-8 rounded-2xl hover:border-surface-tint/50 transition-colors group">
+<div class="w-12 h-12 bg-tertiary-container/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-on-tertiary-container" style="font-variation-settings: 'FILL' 1;">headset_mic</span>
+</div>
+<h3 class="font-headline-md text-label-md text-white mb-3">24/7 Support</h3>
+<p class="font-body-md text-sm text-on-surface-variant leading-relaxed">Dedicated wealth managers available round the clock for your peace of mind.</p>
+</div>
+<!-- Feature 4 -->
+<div class="glass-card inner-glow-top p-8 rounded-2xl hover:border-surface-tint/50 transition-colors group">
+<div class="w-12 h-12 bg-primary-container/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-surface-tint" style="font-variation-settings: 'FILL' 1;">groups</span>
+</div>
+<h3 class="font-headline-md text-label-md text-white mb-3">Trusted by 10k+ Users</h3>
+<p class="font-body-md text-sm text-on-surface-variant leading-relaxed">Join a global community of elite investors who trust ROI Prestige.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Investment Plans Section -->
+<section class="py-24 px-8 bg-surface-container-low/30">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-white mb-4">Investment Tiers</h2>
+<p class="text-on-surface-variant font-body-md text-body-md max-w-xl">Choose a strategy that aligns with your capital goals. High performance, guaranteed precision.</p>
+</div>
+<div class="flex bg-surface-container-highest p-1 rounded-lg">
+<button class="bg-surface-variant text-white px-4 py-2 rounded-md font-label-sm text-label-sm">Daily</button>
+<button class="text-on-surface-variant px-4 py-2 rounded-md font-label-sm text-label-sm hover:text-white transition-colors">Compound</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Starter -->
+<div class="glass-card flex flex-col p-8 rounded-3xl inner-glow-top border-white/5 relative group">
+<div class="mb-8">
+<span class="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-widest block mb-2">Starter</span>
+<div class="text-white font-display-lg text-4xl mb-4">1.5% <span class="text-surface-tint text-lg uppercase font-label-md">Daily</span></div>
+<div class="h-1 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary-container neon-tube w-1/4"></div>
+</div>
+</div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center text-on-surface-variant font-body-md text-sm">
+<span class="material-symbols-outlined text-surface-tint text-base mr-3">check_circle</span> Min: $500
+                            </li>
+<li class="flex items-center text-on-surface-variant font-body-md text-sm">
+<span class="material-symbols-outlined text-surface-tint text-base mr-3">check_circle</span> Max: $5,000
+                            </li>
+<li class="flex items-center text-on-surface-variant font-body-md text-sm">
+<span class="material-symbols-outlined text-surface-tint text-base mr-3">check_circle</span> 30 Day Duration
+                            </li>
+</ul>
+<button class="w-full py-4 rounded-xl border border-white/10 text-white font-label-md hover:bg-white/5 transition-all group-hover:border-primary-container/50">Select Starter</button>
+</div>
+<!-- Silver -->
+<div class="glass-card flex flex-col p-8 rounded-3xl inner-glow-top border-white/5 relative overflow-hidden group">
+<div class="mb-8">
+<span class="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-widest block mb-2">Silver</span>
+<div class="text-white font-display-lg text-4xl mb-4">2.8% <span class="text-surface-tint text-lg uppercase font-label-md">Daily</span></div>
+<div class="h-1 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary-container neon-tube w-1/2"></div>
+</div>
+</div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center text-on-surface-variant font-body-md text-sm">
+<span class="material-symbols-outlined text-surface-tint text-base mr-3">check_circle</span> Min: $5,001
+                            </li>
+<li class="flex items-center text-on-surface-variant font-body-md text-sm">
+<span class="material-symbols-outlined text-surface-tint text-base mr-3">check_circle</span> Max: $25,000
+                            </li>
+<li class="flex items-center text-on-surface-variant font-body-md text-sm">
+<span class="material-symbols-outlined text-surface-tint text-base mr-3">check_circle</span> 60 Day Duration
+                            </li>
+</ul>
+<button class="w-full py-4 rounded-xl border border-white/10 text-white font-label-md hover:bg-white/5 transition-all group-hover:border-primary-container/50">Select Silver</button>
+</div>
+<!-- Gold (Highlighted) -->
+<div class="glass-card flex flex-col p-8 rounded-3xl border-primary-container/30 relative overflow-hidden ring-1 ring-primary-container/20 group">
+<div class="absolute top-0 right-0 bg-primary-container text-on-primary-container font-label-sm text-[10px] px-3 py-1 rounded-bl-xl uppercase tracking-tighter font-black">Most Popular</div>
+<div class="mb-8">
+<span class="text-primary-container font-label-sm text-label-sm uppercase tracking-widest block mb-2">Gold</span>
+<div class="text-white font-display-lg text-4xl mb-4">4.2% <span class="text-surface-tint text-lg uppercase font-label-md">Daily</span></div>
+<div class="h-1 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary-container neon-tube w-3/4 shadow-[0_0_20px_#00f5a0]"></div>
+</div>
+</div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center text-on-surface font-body-md text-sm">
+<span class="material-symbols-outlined text-primary-container text-base mr-3" style="font-variation-settings: 'FILL' 1;">check_circle</span> Min: $25,001
+                            </li>
+<li class="flex items-center text-on-surface font-body-md text-sm">
+<span class="material-symbols-outlined text-primary-container text-base mr-3" style="font-variation-settings: 'FILL' 1;">check_circle</span> Max: $100,000
+                            </li>
+<li class="flex items-center text-on-surface font-body-md text-sm">
+<span class="material-symbols-outlined text-primary-container text-base mr-3" style="font-variation-settings: 'FILL' 1;">check_circle</span> 90 Day Duration
+                            </li>
+<li class="flex items-center text-on-surface font-body-md text-sm">
+<span class="material-symbols-outlined text-primary-container text-base mr-3" style="font-variation-settings: 'FILL' 1;">check_circle</span> Priority Manager
+                            </li>
+</ul>
+<button class="w-full py-4 rounded-xl primary-gradient text-on-primary font-label-md hover:opacity-90 transition-all shadow-lg shadow-emerald-500/10">Select Gold</button>
+</div>
+<!-- VIP -->
+<div class="glass-card flex flex-col p-8 rounded-3xl inner-glow-top border-white/5 relative group">
+<div class="mb-8">
+<span class="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-widest block mb-2">VIP</span>
+<div class="text-white font-display-lg text-4xl mb-4">6.5% <span class="text-surface-tint text-lg uppercase font-label-md">Daily</span></div>
+<div class="h-1 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary-container neon-tube w-full"></div>
+</div>
+</div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center text-on-surface-variant font-body-md text-sm">
+<span class="material-symbols-outlined text-surface-tint text-base mr-3">check_circle</span> Min: $100,001+
+                            </li>
+<li class="flex items-center text-on-surface-variant font-body-md text-sm">
+<span class="material-symbols-outlined text-surface-tint text-base mr-3">check_circle</span> Unlimited Ceiling
+                            </li>
+<li class="flex items-center text-on-surface-variant font-body-md text-sm">
+<span class="material-symbols-outlined text-surface-tint text-base mr-3">check_circle</span> 180 Day Duration
+                            </li>
+<li class="flex items-center text-on-surface-variant font-body-md text-sm">
+<span class="material-symbols-outlined text-surface-tint text-base mr-3">check_circle</span> Insider Events
+                            </li>
+</ul>
+<button class="w-full py-4 rounded-xl border border-white/10 text-white font-label-md hover:bg-white/5 transition-all group-hover:border-primary-container/50">Contact Advisor</button>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-32 px-8 text-center relative overflow-hidden">
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary-container/5 via-transparent to-transparent"></div>
+<div class="max-w-4xl mx-auto relative z-10">
+<h2 class="font-display-lg text-display-lg text-white mb-6">Ready to Compound Your Future?</h2>
+<p class="text-on-surface-variant font-body-lg text-body-lg mb-10">Don't wait for opportunity. Create it with ROI Prestige's intelligent asset growth systems.</p>
+<div class="flex justify-center gap-6">
+<button class="primary-gradient text-on-primary font-headline-md px-12 py-5 rounded-2xl hover:scale-105 transition-transform shadow-2xl shadow-emerald-500/20">Open Account Now</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-950 border-t border-white/5 w-full bottom-0">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 py-16 max-w-7xl mx-auto space-y-8 md:space-y-0">
+<div class="flex flex-col items-center md:items-start space-y-4">
+<div class="text-xl font-bold text-white tracking-tight">ROI PRESTIGE</div>
+<p class="text-xs font-inter tracking-widest text-slate-500 uppercase">© 2024 ROI PRESTIGE. SECURE WEALTH MANAGEMENT.</p>
+</div>
+<div class="flex space-x-8">
+<a class="text-xs font-inter tracking-widest text-slate-500 hover:text-emerald-400 transition-colors uppercase" href="#">Terms</a>
+<a class="text-xs font-inter tracking-widest text-slate-500 hover:text-emerald-400 transition-colors uppercase" href="#">Privacy</a>
+<a class="text-xs font-inter tracking-widest text-slate-500 hover:text-emerald-400 transition-colors uppercase" href="#">Institutional</a>
+<a class="text-xs font-inter tracking-widest text-slate-500 hover:text-emerald-400 transition-colors uppercase" href="#">Support</a>
+</div>
+<div class="flex space-x-6">
+<a class="text-slate-500 hover:text-emerald-400 transition-colors" href="#">
+<span class="material-symbols-outlined">public</span>
+</a>
+<a class="text-slate-500 hover:text-emerald-400 transition-colors" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+</a>
+<a class="text-slate-500 hover:text-emerald-400 transition-colors" href="#">
+<span class="material-symbols-outlined">verified_user</span>
+</a>
+</div>
+</div>
+</footer>
+</body></html>

@@ -17,28 +17,28 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const { logout } = useAuth();
 
   const mainNavItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
-    { icon: Wallet, label: 'Capital Ledger', path: '/wallet' },
-    { icon: BarChart3, label: 'Investment Plans', path: '/plans' },
-    { icon: PieChart, label: 'My Investments', path: '/my-investments' },
-    { icon: Clock, label: 'Transaction History', path: '/history' },
-    { icon: Users, label: 'Referrals', path: '/referrals' },
-    { icon: Bell, label: 'Notifications', path: '/notifications' },
-    { icon: User, label: 'Profile', path: '/profile' },
+    { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
+    { icon: Wallet, label: 'Capital Ledger', path: '/dashboard/wallet' },
+    { icon: BarChart3, label: 'Investment Plans', path: '/dashboard/plans' },
+    { icon: PieChart, label: 'My Investments', path: '/dashboard/my-investments' },
+    { icon: Clock, label: 'Transaction History', path: '/dashboard/history' },
+    { icon: Users, label: 'Referrals', path: '/dashboard/referrals' },
+    { icon: Bell, label: 'Notifications', path: '/dashboard/notifications' },
+    { icon: User, label: 'Profile', path: '/dashboard/profile' },
   ];
 
   const supportNavItems = [
-    { icon: Lock, label: 'Security Settings', path: '/security' },
-    { icon: HelpCircle, label: 'Support', path: '/support' },
-    { icon: SettingsIcon, label: 'Settings', path: '/settings' },
+    { icon: Lock, label: 'Security Settings', path: '/dashboard/security' },
+    { icon: HelpCircle, label: 'Support', path: '/dashboard/support' },
+    { icon: SettingsIcon, label: 'Settings', path: '/dashboard/settings' },
   ];
 
   const adminNavItems = [
-    { icon: ShieldCheck, label: 'Admin Hub', path: '/admin' },
-    { icon: Users, label: 'User Nodes', path: '/admin/users' },
-    { icon: BarChart3, label: 'Investment Strategies', path: '/admin/plans' },
-    { icon: Clock, label: 'Registry Queue', path: '/admin/transactions' },
-    { icon: Lock, label: 'Audit Logs', path: '/admin/logs' },
+    { icon: ShieldCheck, label: 'Admin Hub', path: '/dashboard/admin' },
+    { icon: Users, label: 'User Nodes', path: '/dashboard/admin/users' },
+    { icon: BarChart3, label: 'Investment Strategies', path: '/dashboard/admin/plans' },
+    { icon: Clock, label: 'Registry Queue', path: '/dashboard/admin/transactions' },
+    { icon: Lock, label: 'Audit Logs', path: '/dashboard/admin/logs' },
   ];
 
   const SidebarContent = () => {

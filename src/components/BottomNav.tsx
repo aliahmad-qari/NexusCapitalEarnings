@@ -6,11 +6,11 @@ export const BottomNav = () => {
   const location = useLocation();
 
   const navItems = [
-    { icon: Home, label: 'Dashboard', path: '/' },
-    { icon: Wallet, label: 'Wallet', path: '/wallet' },
-    { icon: PieChart, label: 'Plans', path: '/plans' },
-    { icon: History, label: 'History', path: '/history' },
-    { icon: User, label: 'Profile', path: '/profile' },
+    { icon: Home, label: 'Dashboard', path: '/dashboard' },
+    { icon: Wallet, label: 'Wallet', path: '/dashboard/wallet' },
+    { icon: PieChart, label: 'Plans', path: '/dashboard/plans' },
+    { icon: History, label: 'History', path: '/dashboard/history' },
+    { icon: User, label: 'Profile', path: '/dashboard/profile' },
   ];
 
   return (

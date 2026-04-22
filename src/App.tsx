@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Layout } from './components/Layout.tsx';
+import { Landing } from './pages/Landing.tsx';
 import { Dashboard } from './pages/Dashboard.tsx';
 import { Wallet } from './pages/Wallet.tsx';
 import { Plans } from './pages/Plans.tsx';
@@ -27,7 +28,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
   
   if (loading) return <div className="flex items-center justify-center h-screen">Loading...</div>;
-  if (!user) return <Navigate to="/login" />;
+  if (!user) return <Navigate to="/" />;
   
   return <>{children}</>;
 };
@@ -46,8 +47,15 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Layout />}>
-            {/* User Routes */}
+          {/* Landing Page - Public Route */}
+          <Route path="/" element={<Landing />} />
+          
+          {/* Auth Routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          
+          {/* Dashboard Routes - Protected */}
+          <Route path="/dashboard" element={<Layout />}>
             <Route index element={
               <ProtectedRoute>
                 <Dashboard />
@@ -131,8 +139,6 @@ export default function App() {
               </AdminRoute>
             } />
           </Route>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

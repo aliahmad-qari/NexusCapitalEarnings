@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed": "#b6ebff",
+                    "on-secondary": "#003543",
+                    "on-tertiary-container": "#5745d1",
+                    "error-container": "#93000a",
+                    "on-tertiary-fixed": "#160066",
+                    "surface-tint": "#00e293",
+                    "surface-container-highest": "#32353c",
+                    "on-secondary-container": "#00566a",
+                    "outline-variant": "#3b4a40",
+                    "on-surface": "#e1e2eb",
+                    "on-error": "#690005",
+                    "inverse-surface": "#e1e2eb",
+                    "secondary-container": "#00d2ff",
+                    "inverse-on-surface": "#2e3037",
+                    "surface-container-lowest": "#0b0e14",
+                    "primary-fixed": "#50ffaf",
+                    "surface-container-high": "#272a31",
+                    "inverse-primary": "#006c44",
+                    "surface-variant": "#32353c",
+                    "on-primary": "#003921",
+                    "on-background": "#e1e2eb",
+                    "secondary-fixed-dim": "#47d6ff",
+                    "on-primary-fixed": "#002111",
+                    "tertiary-fixed": "#e4dfff",
+                    "on-primary-container": "#006b43",
+                    "primary-container": "#00f5a0",
+                    "surface-dim": "#10131a",
+                    "surface-container-low": "#191c22",
+                    "surface": "#10131a",
+                    "on-primary-fixed-variant": "#005232",
+                    "background": "#10131a",
+                    "secondary": "#a5e7ff",
+                    "primary": "#cdffde",
+                    "tertiary-fixed-dim": "#c6bfff",
+                    "tertiary": "#f6f1ff",
+                    "outline": "#849588",
+                    "on-secondary-fixed": "#001f28",
+                    "on-tertiary": "#2900a0",
+                    "error": "#ffb4ab",
+                    "on-error-container": "#ffdad6",
+                    "on-tertiary-fixed-variant": "#4029ba",
+                    "surface-bright": "#363940",
+                    "primary-fixed-dim": "#00e293",
+                    "on-surface-variant": "#b9cbbd",
+                    "tertiary-container": "#d8d2ff",
+                    "on-secondary-fixed-variant": "#004e60",
+                    "surface-container": "#1d2026"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "24px",
+                    "margin-mobile": "20px",
+                    "lg": "40px",
+                    "xs": "4px",
+                    "xl": "64px",
+                    "base": "8px",
+                    "sm": "12px",
+                    "gutter": "16px",
+                    "margin-desktop": "48px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "1", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #05070A; }
+        .glass-card {
+            background: rgba(16, 20, 28, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .emerald-glow {
+            box-shadow: 0px 0px 20px rgba(0, 245, 160, 0.15);
+            border: 1px solid rgba(0, 245, 160, 0.3);
+        }
+        .neon-border {
+            border-bottom: 2px solid;
+            border-image: linear-gradient(to right, transparent, #00f5a0, transparent) 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-on-surface antialiased">
+<!-- Top Navigation Bar (Mobile Focused) -->
+<header class="fixed top-0 w-full z-50 bg-slate-950/60 backdrop-blur-xl border-b border-white/10">
+<div class="flex justify-between items-center px-margin-mobile py-4 max-w-7xl mx-auto">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">shield</span>
+<span class="text-2xl font-black tracking-tighter text-white">ROI</span>
+</div>
+<button class="bg-white/5 p-2 rounded-lg">
+<span class="material-symbols-outlined text-white">menu</span>
+</button>
+</div>
+</header>
+<main class="pt-24 pb-32 px-margin-mobile max-w-md mx-auto">
+<!-- Badge Section -->
+<div class="flex justify-center mb-6">
+<span class="bg-primary-container/10 text-primary-container px-4 py-1.5 rounded-full border border-primary-container/30 font-label-sm text-label-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                Most Popular
+            </span>
+</div>
+<!-- Tier Hero -->
+<div class="text-center mb-lg">
+<h1 class="font-display-lg text-display-lg text-white mb-2">Gold</h1>
+<div class="inline-block relative">
+<span class="font-headline-lg text-headline-lg text-primary-container">4.2% Daily</span>
+<div class="absolute -bottom-2 left-0 w-full h-[1px] bg-gradient-to-right from-transparent via-primary-container to-transparent"></div>
+</div>
+</div>
+<!-- Tier Illustration -->
+<div class="mb-lg relative h-48 flex items-center justify-center">
+<div class="absolute inset-0 bg-primary-container/10 blur-[80px] rounded-full"></div>
+<img alt="Gold Tier Visual" class="relative z-10 w-32 h-32 object-contain" data-alt="3D rendered golden trophy with glowing metallic texture and diamond accents on a dark glass pedestal with emerald lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3Vz6EBbXzSktKaT0gy0kOEI9PuT-E1WzJujN9MrYHg-gaNkp6Q4eQPg4LAguOVHLQOf1-CgUeHyWIZ_wIDotaZFMspp_jEV5D0Te22iYrI-6qDW0V5pcpnN9_2Cfnj64L8ekG6U_Cp9a_zaY44ABJy5CE6KQXCg_Mpn9G4DyGYf71GDak92unTxWZg0zvdVBcDRuGP-F4-pd6Fqf8Wxcj9JZApA5bM_O7MArR7oGFniWuD37lOqum-PutUMHiFoUB_0UnijktYTY1"/>
+</div>
+<!-- Stats Grid (Bento Style) -->
+<div class="grid grid-cols-2 gap-md mb-lg">
+<div class="glass-card emerald-glow p-md rounded-xl col-span-2">
+<p class="text-label-sm font-label-sm text-slate-400 mb-xs">Status</p>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-container">verified_user</span>
+<p class="text-headline-md font-headline-md text-white">Priority Support</p>
+</div>
+</div>
+<div class="glass-card p-md rounded-xl">
+<p class="text-label-sm font-label-sm text-slate-400 mb-xs">Min Deposit</p>
+<p class="text-headline-md font-headline-md text-white">$25,000</p>
+</div>
+<div class="glass-card p-md rounded-xl">
+<p class="text-label-sm font-label-sm text-slate-400 mb-xs">Max Deposit</p>
+<p class="text-headline-md font-headline-md text-white">$100,000</p>
+</div>
+<div class="glass-card p-md rounded-xl col-span-2 flex justify-between items-center">
+<div>
+<p class="text-label-sm font-label-sm text-slate-400 mb-xs">Duration</p>
+<p class="text-headline-md font-headline-md text-white">90 Days</p>
+</div>
+<span class="material-symbols-outlined text-slate-600 text-4xl">schedule</span>
+</div>
+</div>
+<!-- Elite Benefits List -->
+<div class="glass-card p-md rounded-xl mb-lg border-l-4 border-l-primary-container">
+<h3 class="font-label-md text-label-md text-primary-container uppercase tracking-widest mb-md">Elite Benefits</h3>
+<ul class="space-y-4">
+<li class="flex items-center gap-4">
+<div class="bg-primary-container/10 p-2 rounded-full">
+<span class="material-symbols-outlined text-primary-container text-[20px]" style="font-variation-settings: 'FILL' 1;">person_pin</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface">Dedicated Wealth Manager</span>
+</li>
+<li class="flex items-center gap-4">
+<div class="bg-primary-container/10 p-2 rounded-full">
+<span class="material-symbols-outlined text-primary-container text-[20px]" style="font-variation-settings: 'FILL' 1;">confirmation_number</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface">Insider Events Access</span>
+</li>
+<li class="flex items-center gap-4">
+<div class="bg-primary-container/10 p-2 rounded-full">
+<span class="material-symbols-outlined text-primary-container text-[20px]" style="font-variation-settings: 'FILL' 1;">insights</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface">Advanced Analytics</span>
+</li>
+</ul>
+</div>
+<!-- Action Buttons -->
+<div class="space-y-4">
+<button class="w-full py-4 bg-gradient-to-r from-primary-container to-secondary-container rounded-xl text-on-primary font-headline-md shadow-lg shadow-primary-container/20 active:scale-95 transition-transform">
+                Invest in Gold
+            </button>
+<button class="w-full py-4 glass-card rounded-xl text-white font-label-md border border-white/10 active:opacity-80 transition-opacity">
+                Contact Advisor
+            </button>
+</div>
+</main>
+<!-- Footer Space for Mobile Clarity -->
+<footer class="bg-slate-950 border-t border-white/5">
+<div class="flex flex-col items-center px-margin-mobile py-12 space-y-4">
+<span class="text-xl font-bold text-white tracking-tight">ROI PRESTIGE</span>
+<p class="text-xs font-inter tracking-widest text-slate-500 uppercase text-center">
+                © 2024 ROI PRESTIGE. SECURE WEALTH MANAGEMENT.
+            </p>
+<div class="flex gap-6">
+<span class="text-xs font-inter text-slate-500 hover:text-white transition-colors">Terms</span>
+<span class="text-xs font-inter text-slate-500 hover:text-white transition-colors">Privacy</span>
+<span class="text-xs font-inter text-slate-500 hover:text-white transition-colors">Support</span>
+</div>
+</div>
+</footer>
+</body></html>

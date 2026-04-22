@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ROI | VIP Prestige Tier</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#b6ebff",
+                        "on-secondary": "#003543",
+                        "on-tertiary-container": "#5745d1",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#160066",
+                        "surface-tint": "#00e293",
+                        "surface-container-highest": "#32353c",
+                        "on-secondary-container": "#00566a",
+                        "outline-variant": "#3b4a40",
+                        "on-surface": "#e1e2eb",
+                        "on-error": "#690005",
+                        "inverse-surface": "#e1e2eb",
+                        "secondary-container": "#00d2ff",
+                        "inverse-on-surface": "#2e3037",
+                        "surface-container-lowest": "#0b0e14",
+                        "primary-fixed": "#50ffaf",
+                        "surface-container-high": "#272a31",
+                        "inverse-primary": "#006c44",
+                        "surface-container-low": "#191c22",
+                        "surface": "#10131a",
+                        "on-primary-fixed-variant": "#005232",
+                        "background": "#10131a",
+                        "secondary": "#a5e7ff",
+                        "primary": "#cdffde",
+                        "tertiary-fixed-dim": "#c6bfff",
+                        "tertiary": "#f6f1ff",
+                        "outline": "#849588",
+                        "on-secondary-fixed": "#001f28",
+                        "on-tertiary": "#2900a0",
+                        "error": "#ffb4ab",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#4029ba",
+                        "surface-bright": "#363940",
+                        "primary-fixed-dim": "#00e293",
+                        "on-surface-variant": "#b9cbbd",
+                        "tertiary-container": "#d8d2ff",
+                        "on-secondary-fixed-variant": "#004e60",
+                        "surface-container": "#1d2026"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "24px",
+                        "margin-mobile": "20px",
+                        "lg": "40px",
+                        "xs": "4px",
+                        "xl": "64px",
+                        "base": "8px",
+                        "sm": "12px",
+                        "gutter": "16px",
+                        "margin-desktop": "48px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "1", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-layer {
+            background: rgba(16, 20, 28, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .emerald-glow {
+            box-shadow: 0px 20px 40px rgba(0, 245, 160, 0.1);
+        }
+        .inner-glow-top {
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+        }
+        .neon-tube {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00f5a0, transparent);
+            box-shadow: 0 0 8px #00f5a0;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#05070A] text-on-surface font-body-md overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-slate-950/60 backdrop-blur-xl border-b border-white/10 shadow-2xl shadow-emerald-500/5">
+<div class="flex justify-between items-center max-w-7xl mx-auto px-8 py-4">
+<div class="text-2xl font-black tracking-tighter text-white">ROI</div>
+<nav class="hidden md:flex space-x-gutter">
+<a class="font-inter tracking-tight text-sm uppercase font-bold text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-300" href="#">Solutions</a>
+<a class="font-inter tracking-tight text-sm uppercase font-bold text-emerald-400 border-b-2 border-emerald-400 pb-1 hover:text-white hover:bg-white/5 transition-all duration-300" href="#">Portfolio</a>
+<a class="font-inter tracking-tight text-sm uppercase font-bold text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-300" href="#">Security</a>
+<a class="font-inter tracking-tight text-sm uppercase font-bold text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-300" href="#">Insights</a>
+</nav>
+<div class="flex items-center space-x-sm">
+<button class="hidden sm:block text-slate-400 font-inter tracking-tight text-sm uppercase font-bold px-4 py-2 hover:text-white transition-all">Explore</button>
+<button class="bg-primary-container text-on-primary-container px-6 py-2 rounded-lg font-inter tracking-tight text-sm uppercase font-bold active:opacity-80 active:scale-95 transition-all">Invest Now</button>
+</div>
+</div>
+</header>
+<main class="pt-32 pb-xl px-margin-mobile flex flex-col items-center max-w-screen-sm mx-auto">
+<!-- Hero Section -->
+<section class="w-full mb-xl text-center">
+<div class="inline-flex items-center px-4 py-1.5 rounded-full glass-layer border border-primary-container/20 mb-md">
+<span class="material-symbols-outlined text-primary-container text-sm mr-2" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+<span class="text-label-sm font-label-sm text-primary-container tracking-widest uppercase">Institutional Grade</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-white mb-xs">VIP Prestige</h1>
+<div class="flex items-center justify-center space-x-sm">
+<div class="neon-tube w-12"></div>
+<p class="font-headline-md text-headline-md text-primary-container">6.5% Daily</p>
+<div class="neon-tube w-12"></div>
+</div>
+</section>
+<!-- Stats Bento Grid -->
+<section class="w-full grid grid-cols-2 gap-gutter mb-xl">
+<div class="glass-layer inner-glow-top p-md rounded-xl flex flex-col col-span-2">
+<span class="text-label-sm font-label-sm text-outline mb-1 uppercase tracking-tighter">Minimum Entry</span>
+<span class="text-headline-lg font-headline-lg text-white">$100,000+</span>
+</div>
+<div class="glass-layer inner-glow-top p-md rounded-xl flex flex-col">
+<span class="text-label-sm font-label-sm text-outline mb-1 uppercase tracking-tighter">Ceiling</span>
+<span class="text-headline-md font-headline-md text-white">Unlimited</span>
+</div>
+<div class="glass-layer inner-glow-top p-md rounded-xl flex flex-col">
+<span class="text-label-sm font-label-sm text-outline mb-1 uppercase tracking-tighter">Duration</span>
+<span class="text-headline-md font-headline-md text-white">180 Days</span>
+</div>
+</section>
+<!-- VIP Concierge Highlight -->
+<section class="w-full mb-xl">
+<h3 class="text-label-sm font-label-sm text-outline uppercase tracking-[0.2em] mb-md text-center">Exclusive Privileges</h3>
+<div class="space-y-sm">
+<!-- Concierge Card 1 -->
+<div class="glass-layer emerald-glow p-md rounded-xl border-l-2 border-primary-container/40">
+<div class="flex items-start space-x-md">
+<div class="w-12 h-12 rounded-lg bg-primary-container/10 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary-container">account_balance_wallet</span>
+</div>
+<div>
+<h4 class="font-headline-md text-[18px] text-white mb-1">Personalized Portfolio Strategy</h4>
+<p class="text-on-surface-variant text-label-md">Direct access to institutional analysts for tailored asset allocation and risk modeling.</p>
+</div>
+</div>
+</div>
+<!-- Concierge Card 2 -->
+<div class="glass-layer p-md rounded-xl border-l-2 border-secondary-container/40">
+<div class="flex items-start space-x-md">
+<div class="w-12 h-12 rounded-lg bg-secondary-container/10 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-secondary-container">confirmation_number</span>
+</div>
+<div>
+<h4 class="font-headline-md text-[18px] text-white mb-1">Global Event Access</h4>
+<p class="text-on-surface-variant text-label-md">Complimentary invitations to exclusive economic forums and luxury networking galas.</p>
+</div>
+</div>
+</div>
+<!-- Concierge Card 3 -->
+<div class="glass-layer p-md rounded-xl border-l-2 border-primary-fixed/40">
+<div class="flex items-start space-x-md">
+<div class="w-12 h-12 rounded-lg bg-primary-fixed/10 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary-fixed">concierge</span>
+</div>
+<div>
+<h4 class="font-headline-md text-[18px] text-white mb-1">24/7 Priority Concierge</h4>
+<p class="text-on-surface-variant text-label-md">A dedicated relationship manager available around the clock for all financial inquiries.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="w-full flex flex-col items-center space-y-lg">
+<div class="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+<div class="text-center">
+<p class="text-on-surface-variant font-body-md mb-md px-lg">Entry into the VIP Prestige tier is subject to capital verification and invitation only.</p>
+<button class="w-full max-w-xs bg-gradient-to-br from-primary-container to-secondary-container text-on-primary-container font-inter text-sm uppercase font-black tracking-widest py-5 rounded-lg shadow-[0_0_50px_-10px_rgba(0,245,160,0.3)] active:scale-[0.98] transition-transform">
+                    Request Invitation
+                </button>
+</div>
+<!-- Asset Preview -->
+<div class="relative w-full aspect-video rounded-xl overflow-hidden glass-layer mt-xl border border-white/5">
+<img class="w-full h-full object-cover opacity-60" data-alt="Luxurious dark modern office interior with emerald accents, high-end materials, and panoramic city views at night" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmdT8qqJFxO2Qe5xPeyfUoVi6a310hL_dpC1LJH2dkF0YeOX3Mn_fmYZbUCh61QfikVDaWUn4Dhj0G_f2mMcqu4f31_kJ_nPHNeOXGW2oIJ9OgfPRks7fn1ezNdB1wHM-8txKtdEQR1MOFq5_JfLa3FHNiKX-BbdaMKh4bV_M-WSIKEfixL02PEGH6YqRq_TVt8XqURbp_83Av4rw6FkZyBQyUS1NItm-IpBsw52ryG2bMWNdvLLh1QgtSfyRcrSWyVF6pGsDrtGgf"/>
+<div class="absolute inset-0 bg-gradient-to-t from-[#05070A] via-transparent to-transparent"></div>
+<div class="absolute bottom-md left-md">
+<span class="text-label-sm font-label-sm text-primary-container uppercase tracking-widest">Global HQ Access</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-950 border-t border-white/5 w-full bottom-0">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 py-16 max-w-7xl mx-auto space-y-8 md:space-y-0">
+<div class="text-xl font-bold text-white tracking-tight">ROI PRESTIGE</div>
+<div class="flex space-x-md">
+<a class="text-xs font-inter tracking-widest text-slate-500 hover:text-emerald-400 transition-colors" href="#">Terms</a>
+<a class="text-xs font-inter tracking-widest text-slate-500 hover:text-emerald-400 transition-colors" href="#">Privacy</a>
+<a class="text-xs font-inter tracking-widest text-slate-500 hover:text-emerald-400 transition-colors" href="#">Institutional</a>
+<a class="text-xs font-inter tracking-widest text-slate-500 hover:text-emerald-400 transition-colors" href="#">Support</a>
+</div>
+<div class="text-xs font-inter tracking-widest text-slate-500 uppercase">
+                © 2024 ROI PRESTIGE. SECURE WEALTH MANAGEMENT.
+            </div>
+</div>
+</footer>
+<!-- FAB for direct support (Contextual) -->
+<div class="fixed bottom-gutter right-gutter md:hidden z-40">
+<button class="bg-primary-container text-on-primary-container p-4 rounded-full shadow-2xl shadow-emerald-500/20 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">support_agent</span>
+</button>
+</div>
+</body></html>
