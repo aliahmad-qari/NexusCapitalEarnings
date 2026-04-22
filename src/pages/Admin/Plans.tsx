@@ -26,7 +26,8 @@ export const AdminPlans = () => {
   const fetchPlans = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/investment/plans');
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/investment/plans`);
       const data = await res.json();
       if (Array.isArray(data)) {
         setPlans(data);
@@ -57,7 +58,8 @@ export const AdminPlans = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/admin/create-plan', {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/admin/create-plan`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

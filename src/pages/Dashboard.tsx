@@ -45,7 +45,8 @@ export const Dashboard = () => {
   const fetchStats = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/investment/my', {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/investment/my`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -67,7 +68,8 @@ export const Dashboard = () => {
   const fetchHistory = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/wallet/history', {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/wallet/history`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -81,7 +83,8 @@ export const Dashboard = () => {
   const fetchPerformance = async (range: string) => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`/api/analytics/performance?range=${range}`, {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/analytics/performance?range=${range}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -104,7 +107,8 @@ export const Dashboard = () => {
   const handleSaveGoal = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/auth/profile', {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/auth/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

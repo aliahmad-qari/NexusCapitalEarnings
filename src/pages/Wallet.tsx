@@ -35,7 +35,8 @@ export const Wallet = () => {
   const fetchHistory = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/wallet/history', {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/wallet/history`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -62,8 +63,9 @@ export const Wallet = () => {
 
     try {
       const token = localStorage.getItem('token');
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
       const endpoint = activeAction === 'deposit' ? '/api/wallet/deposit' : '/api/wallet/withdraw';
-      const res = await fetch(endpoint, {
+      const res = await fetch(`${apiBase}${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -57,25 +57,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const token = localStorage.getItem('token');
     if (!token) return;
     try {
-      const res = await fetch('/api/auth/profile', {
-        headers: { Authorization: `Bearer ${token}` }
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/auth/profile`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
         const data = await res.json();
         const userData = {
-           id: data._id,
-           name: data.name,
-           email: data.email,
-           referralCode: data.referralCode,
-           wallet: data.wallet,
-           isAdmin: data.isAdmin,
-           investmentGoal: data.investmentGoal
+          id: data._id,
+          name: data.name,
+          email: data.email,
+          referralCode: data.referralCode,
+          wallet: data.wallet,
+          isAdmin: data.isAdmin,
+          investmentGoal: data.investmentGoal,
         };
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData));
+      } else {
+        logout();
       }
     } catch (error) {
-      console.error('Refresh user error', error);
+      console.error('Failed to refresh user:', error);
+      logout();
     }
   };
 

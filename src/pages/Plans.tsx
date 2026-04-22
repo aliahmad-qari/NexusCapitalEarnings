@@ -51,7 +51,8 @@ export const Plans = () => {
   const fetchPlans = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/investment/plans');
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/investment/plans`);
       const data = await res.json();
       setPlans(data);
     } catch (err) {
@@ -137,7 +138,8 @@ export const Plans = () => {
     setInvesting(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/investment/create', {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/investment/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

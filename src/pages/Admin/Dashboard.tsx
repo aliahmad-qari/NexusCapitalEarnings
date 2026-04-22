@@ -30,7 +30,8 @@ export const AdminDashboard = () => {
   const fetchStats = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/admin/stats', {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/admin/stats`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -45,7 +46,8 @@ export const AdminDashboard = () => {
   const fetchLogs = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/admin/logs', {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/admin/logs`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();

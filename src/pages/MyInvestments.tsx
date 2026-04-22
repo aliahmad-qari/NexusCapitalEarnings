@@ -18,7 +18,8 @@ export const MyInvestments = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/investment/my', {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/investment/my`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();

@@ -25,10 +25,16 @@ export const Register = () => {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('/api/auth/register', {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          referredBy: formData.referredBy || undefined,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Registration failed');

@@ -23,7 +23,8 @@ export const Profile = () => {
   const fetchHistory = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/wallet/history', {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/wallet/history`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -48,7 +49,8 @@ export const Profile = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/auth/profile', {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/auth/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

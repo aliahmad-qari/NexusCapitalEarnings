@@ -24,7 +24,8 @@ export const UserManagement = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/admin/users', {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/admin/users`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -41,7 +42,8 @@ export const UserManagement = () => {
   const updateUserStatus = async (userId: string, newStatus: string) => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/admin/user-status', {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/admin/user-status`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -64,7 +66,8 @@ export const UserManagement = () => {
     if (!window.confirm('CRITICAL: Permanent deletion of user node. Proceed?')) return;
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`/api/admin/user/${userId}`, {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/admin/user/${userId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });

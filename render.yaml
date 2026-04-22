@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: nexuscapital-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: MONGODB_URI
+        scope: build
+        value: mongodb+srv://username:password@cluster.mongodb.net/nexuscapital
+      - key: JWT_SECRET
+        scope: build
+        value: your_super_secret_jwt_key_change_this_in_production
+      - key: NODE_ENV
+        scope: build
+        value: production
+      - key: FRONTEND_URL
+        scope: build
+        value: https://roiwealth.vercel.app
+      - key: PORT
+        scope: build
+        value: 3000

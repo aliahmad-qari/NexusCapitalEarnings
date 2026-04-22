@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "tsx server.ts",
     "build": "vite build",
+    "start": "node --experimental-loader ts-node/esm server.ts",
     "preview": "vite preview",
     "clean": "rm -rf dist",
-    "lint": "tsc --noEmit && eslint ."
+    "lint": "tsc --noEmit && eslint .",
+    "prod": "npm run build && npm start"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",
@@ -29,6 +31,7 @@
     "react-router-dom": "^7.14.1",
     "recharts": "^3.8.1",
     "tailwind-merge": "^3.5.0",
+    "ts-node": "^10.9.2",
     "vite": "^6.2.0",
     "winston": "^3.19.0"
   },
