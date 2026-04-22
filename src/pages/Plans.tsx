@@ -179,7 +179,7 @@ export const Plans = () => {
   );
 
   return (
-    <div className="p-4 md:p-8 lg:p-12 max-w-[1600px] mx-auto space-y-12 pb-32 lg:pb-12 text-slate-200">
+    <div className="p-4 md:p-8 lg:p-12 max-w-[1600px] mx-auto space-y-12 pb-8 lg:pb-0 text-slate-200">
       
       {/* Top Section */}
       <section className="space-y-8">

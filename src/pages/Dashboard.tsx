@@ -139,7 +139,7 @@ export const Dashboard = () => {
     : null;
 
   return (
-    <div className="p-4 md:p-8 lg:p-12 max-w-[1600px] mx-auto space-y-8 pb-32 lg:pb-12">
+    <div className="p-4 md:p-8 lg:p-12 max-w-[1600px] mx-auto space-y-8 pb-8 lg:pb-0">
       
       {/* 1. Top Bar */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">

@@ -102,7 +102,7 @@ export const Wallet = () => {
     .reduce((acc, curr: any) => acc + curr.amount, 0);
 
   return (
-    <div className="p-4 md:p-8 lg:p-12 max-w-[1600px] mx-auto space-y-12 pb-32 lg:pb-12 text-slate-200 uppercase tracking-tight">
+    <div className="p-4 md:p-8 lg:p-12 max-w-[1600px] mx-auto space-y-12 pb-8 lg:pb-0 text-slate-200 uppercase tracking-tight">
       
       {/* Header */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
