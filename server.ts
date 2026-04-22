@@ -66,34 +66,20 @@ async function startServer() {
     logger.error('MongoDB connection error:', err);
   });
 
-  // CORS Configuration - Allow specific origins
-  const allowedOrigins = [
-    'http://localhost:5173',
-    'http://localhost:3000',
-    'http://127.0.0.1:5173',
-    'https://nexus-capital-earnings.vercel.app',
-    'https://roiwealth.vercel.app',
-    process.env.FRONTEND_URL,
-  ].filter(Boolean);
-
-  app.use(cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        logger.warn(`CORS blocked request from origin: ${origin}`);
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+  // CORS Configuration - MUST be first middleware
+  const corsOptions = {
+    origin: ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173', 'https://nexus-capital-earnings.vercel.app', 'https://roiwealth.vercel.app', process.env.FRONTEND_URL].filter(Boolean),
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
     optionsSuccessStatus: 200,
-  }));
+  };
 
-  // Explicit OPTIONS handler for preflight requests
-  app.options('*', cors());
+  // Apply CORS to all routes
+  app.use(cors(corsOptions));
+
+  // Explicit preflight handler
+  app.options('*', cors(corsOptions));
 
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
@@ -101,7 +87,7 @@ async function startServer() {
   // API Routes
   app.use('/api', apiRoutes);
 
-  app.get('/api/health', (req, res) => {
+  app.get('/api/health', (_req, res) => {
     res.json({ status: 'ok', database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected' });
   });
 
