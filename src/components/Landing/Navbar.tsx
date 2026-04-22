@@ -1,74 +1,112 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Menu, X, TrendingUp } from 'lucide-react';
+
+const navLinks = [
+  { label: 'Solutions', href: '#solutions' },
+  { label: 'How It Works', href: '#how-it-works' },
+  { label: 'Plans', href: '#plans' },
+  { label: 'Calculator', href: '#calculator' },
+  { label: 'Security', href: '#security' },
+];
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <header className="bg-slate-950/60 backdrop-blur-xl border-b border-white/10 fixed top-0 w-full z-50 shadow-2xl shadow-emerald-500/5">
-      <div className="flex justify-between items-center max-w-7xl mx-auto px-4 sm:px-8 py-4">
-        <div className="text-2xl font-black tracking-tighter text-white">ROI</div>
-        
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
-          <a href="#solutions" className="text-emerald-400 border-b-2 border-emerald-400 pb-1 font-inter tracking-tight text-sm uppercase font-bold hover:text-white hover:bg-white/5 transition-all duration-300">Solutions</a>
-          <a href="#portfolio" className="text-slate-400 font-inter tracking-tight text-sm uppercase font-bold hover:text-white hover:bg-white/5 transition-all duration-300">Portfolio</a>
-          <a href="#security" className="text-slate-400 font-inter tracking-tight text-sm uppercase font-bold hover:text-white hover:bg-white/5 transition-all duration-300">Security</a>
-          <a href="#insights" className="text-slate-400 font-inter tracking-tight text-sm uppercase font-bold hover:text-white hover:bg-white/5 transition-all duration-300">Insights</a>
+    <header
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        scrolled
+          ? 'bg-nexus-bg/80 backdrop-blur-2xl border-b border-white/8 shadow-xl shadow-black/30'
+          : 'bg-transparent'
+      }`}
+    >
+      <div className="flex justify-between items-center max-w-7xl mx-auto px-5 sm:px-10 py-4">
+        {/* Logo */}
+        <button
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2.5 group"
+        >
+          <div className="w-8 h-8 primary-gradient rounded-lg flex items-center justify-center shadow-lg shadow-nexus-primary/20">
+            <TrendingUp size={16} className="text-nexus-bg" strokeWidth={2.5} />
+          </div>
+          <span className="text-lg font-black tracking-tight text-white">
+            Nexus<span className="text-gradient">Capital</span>
+          </span>
+        </button>
+
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex items-center gap-1">
+          {navLinks.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              className="text-slate-400 hover:text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-white/5 transition-all duration-200"
+            >
+              {link.label}
+            </a>
+          ))}
         </nav>
 
-        {/* Desktop Buttons */}
-        <div className="hidden md:flex items-center space-x-4">
-          <button 
+        {/* Desktop CTA */}
+        <div className="hidden md:flex items-center gap-3">
+          <button
             onClick={() => navigate('/login')}
-            className="text-slate-400 font-inter tracking-tight text-sm uppercase font-bold px-4 py-2 hover:text-white transition-all"
+            className="text-slate-400 hover:text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-white/5 transition-all"
           >
-            Login
+            Log In
           </button>
-          <button 
+          <button
             onClick={() => navigate('/register')}
-            className="bg-primary-container text-on-primary-container font-inter tracking-tight text-sm uppercase font-bold px-6 py-2 rounded-lg hover:opacity-90 active:scale-95 transition-all"
+            className="primary-gradient text-nexus-bg text-sm font-bold px-5 py-2.5 rounded-xl hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-nexus-primary/20"
           >
-            Register
+            Get Started
           </button>
         </div>
 
-        {/* Mobile Menu Button */}
-        <button 
+        {/* Mobile Toggle */}
+        <button
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-white"
+          className="md:hidden text-white w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/5 transition-colors"
+          aria-label="Toggle menu"
         >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
+          {isOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
-      {/* Mobile Navigation */}
+      {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-slate-950/95 backdrop-blur-xl border-t border-white/10 px-4 py-4 space-y-4">
-          <a href="#solutions" className="block text-emerald-400 font-inter tracking-tight text-sm uppercase font-bold py-2">Solutions</a>
-          <a href="#portfolio" className="block text-slate-400 font-inter tracking-tight text-sm uppercase font-bold py-2 hover:text-white">Portfolio</a>
-          <a href="#security" className="block text-slate-400 font-inter tracking-tight text-sm uppercase font-bold py-2 hover:text-white">Security</a>
-          <a href="#insights" className="block text-slate-400 font-inter tracking-tight text-sm uppercase font-bold py-2 hover:text-white">Insights</a>
-          <div className="flex flex-col gap-2 pt-4 border-t border-white/10">
-            <button 
-              onClick={() => {
-                navigate('/login');
-                setIsOpen(false);
-              }}
-              className="text-slate-400 font-inter tracking-tight text-sm uppercase font-bold px-4 py-2 hover:text-white transition-all w-full text-left"
+        <div className="md:hidden bg-nexus-bg/95 backdrop-blur-2xl border-t border-white/8 px-5 py-5 space-y-1">
+          {navLinks.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              onClick={() => setIsOpen(false)}
+              className="block text-slate-400 hover:text-white text-sm font-medium px-4 py-3 rounded-xl hover:bg-white/5 transition-all"
             >
-              Login
+              {link.label}
+            </a>
+          ))}
+          <div className="flex flex-col gap-2 pt-4 border-t border-white/8 mt-3">
+            <button
+              onClick={() => { navigate('/login'); setIsOpen(false); }}
+              className="text-slate-400 hover:text-white text-sm font-semibold px-4 py-3 rounded-xl hover:bg-white/5 transition-all text-left"
+            >
+              Log In
             </button>
-            <button 
-              onClick={() => {
-                navigate('/register');
-                setIsOpen(false);
-              }}
-              className="bg-primary-container text-on-primary-container font-inter tracking-tight text-sm uppercase font-bold px-6 py-2 rounded-lg hover:opacity-90 w-full"
+            <button
+              onClick={() => { navigate('/register'); setIsOpen(false); }}
+              className="primary-gradient text-nexus-bg text-sm font-bold px-4 py-3 rounded-xl hover:opacity-90 text-center"
             >
-              Register
+              Get Started — It's Free
             </button>
           </div>
         </div>
