@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 export const ComingSoon = ({ title }: { title: string }) => {
   return (
-    <div className="p-4 md:p-8 lg:p-12 max-w-[1600px] mx-auto min-h-[70vh] flex flex-col items-center justify-center space-y-8 text-slate-200">
+    <div className="px-4 md:px-8 lg:px-12 pt-4 md:pt-8 lg:pt-12 max-w-[1600px] mx-auto min-h-[70vh] flex flex-col items-center justify-center space-y-8 text-slate-200">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}

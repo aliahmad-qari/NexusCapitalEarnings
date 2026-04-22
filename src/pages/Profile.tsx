@@ -71,7 +71,7 @@ export const Profile = () => {
   };
 
   return (
-    <div className="p-4 md:p-8 lg:p-12 max-w-[1600px] mx-auto space-y-10 pb-8 lg:pb-0 text-slate-200">
+    <div className="px-4 md:px-8 lg:px-12 pt-4 md:pt-8 lg:pt-12 max-w-[1600px] mx-auto space-y-10 text-slate-200">
       
       {/* 1. User Info Section (Top) */}
       <section className="nexus-card p-8 md:p-12 relative overflow-hidden bg-gradient-to-br from-nexus-primary/5 to-transparent">

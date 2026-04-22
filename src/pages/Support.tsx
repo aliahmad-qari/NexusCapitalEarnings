@@ -24,7 +24,7 @@ export const Support = () => {
   };
 
   return (
-    <div className="p-4 md:p-8 lg:p-12 max-w-[1400px] mx-auto space-y-12 pb-8 lg:pb-0 text-slate-200">
+    <div className="px-4 md:px-8 lg:px-12 pt-4 md:pt-8 lg:pt-12 max-w-[1400px] mx-auto space-y-12 text-slate-200">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-nexus-primary">

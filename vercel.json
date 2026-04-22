@@ -5,6 +5,10 @@
     {
       "source": "/api/(.*)",
       "destination": "https://nexuscapitalearnings.onrender.com/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [

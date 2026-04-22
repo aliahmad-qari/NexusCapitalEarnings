@@ -14,7 +14,7 @@ export const BottomNav = () => {
   const location = useLocation();
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-nexus-bg/85 backdrop-blur-2xl border-t border-white/5 px-6 py-4 flex justify-between items-center z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-nexus-bg/85 backdrop-blur-2xl border-t border-white/5 px-6 py-3 flex justify-between items-center z-50 h-20">
       {navItems.map(({ icon: Icon, label, path }) => {
         const isActive = location.pathname === path;
         return (

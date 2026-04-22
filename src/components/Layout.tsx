@@ -16,7 +16,7 @@ export const Layout = () => {
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       )}
       
-      <main className={`flex-1 min-h-screen relative overflow-x-hidden ${shouldHideNav ? '' : 'pb-24 lg:pb-0'}`}>
+      <main className={`flex-1 min-h-screen relative overflow-x-hidden`}>
         {!shouldHideNav && (
           <header className="lg:hidden flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#05060b]/80 backdrop-blur-xl sticky top-0 z-30">
             <button onClick={() => setIsSidebarOpen(true)} className="p-2 -ml-2 text-white/60 hover:text-white transition-colors">
@@ -35,7 +35,7 @@ export const Layout = () => {
           </header>
         )}
         
-        <div className={`${shouldHideNav ? '' : 'w-full mx-auto'}`}>
+        <div className={`${shouldHideNav ? '' : 'w-full mx-auto pb-20'}`}>
           <Outlet />
         </div>
       </main>
