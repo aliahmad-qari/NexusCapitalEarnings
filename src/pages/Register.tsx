@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, User as UserIcon, UserPlus, ChevronRight } from 'lucide-react';
+import { Mail, Lock, User as UserIcon, UserPlus, ChevronRight, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.tsx';
 import { motion } from 'motion/react';
 
@@ -12,6 +12,8 @@ export const Register = () => {
     confirmPassword: '',
     referredBy: '',
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -21,6 +23,9 @@ export const Register = () => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       return setError('Passwords do not match');
+    }
+    if (formData.password.length < 6) {
+      return setError('Password must be at least 6 characters');
     }
     setLoading(true);
     setError('');
@@ -52,91 +57,175 @@ export const Register = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-nexus-bg p-8 pt-12 overflow-y-auto">
+    <div className="flex flex-col min-h-screen bg-nexus-bg p-4 sm:p-8 overflow-y-auto">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-sm mx-auto pb-10"
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md mx-auto my-auto py-8"
       >
-        <div className="flex items-center space-x-3 mb-12">
-          <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white text-xl">R</div>
-          <span className="text-2xl font-bold tracking-tight uppercase">ROI<span className="text-blue-500">WEALTH</span></span>
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center space-x-3 mb-8">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center font-bold text-white text-lg shadow-lg shadow-blue-500/30">
+              R
+            </div>
+            <div>
+              <span className="text-2xl font-bold tracking-tight">ROI<span className="text-blue-400">WEALTH</span></span>
+              <p className="text-white/40 text-xs mt-1">Investment Platform</p>
+            </div>
+          </div>
+
+          <h1 className="text-4xl font-bold mb-2 tracking-tight">Create Account</h1>
+          <p className="text-white/50 text-sm">Join our investment community today</p>
         </div>
 
-        <h2 className="text-3xl font-bold mb-2 tracking-tight">Create Identity</h2>
-        <p className="text-white/40 mb-10 text-sm">Join the network to deploy capital.</p>
+        {/* Error Message */}
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="glass border-l-4 border-red-500 bg-red-500/10 text-red-400 p-4 rounded-xl mb-6 text-sm font-medium"
+          >
+            {error}
+          </motion.div>
+        )}
 
-        {error && <div className="glass border-rose-500/20 text-rose-500 p-4 rounded-2xl mb-8 text-[11px] font-bold uppercase tracking-wider">{error}</div>}
-
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="relative">
-            <UserIcon className="absolute left-5 top-1/2 -translate-y-1/2 text-white/20" size={18} />
-            <input
-              type="text"
-              name="name"
-              placeholder="FULL IDENTITY NAME"
-              onChange={handleChange}
-              className="w-full glass rounded-2xl py-4 pr-5 pl-14 outline-none focus:border-blue-500 transition-all text-xs font-bold tracking-widest placeholder:text-white/10 uppercase"
-              required
-            />
-          </div>
-          <div className="relative">
-            <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-white/20" size={18} />
-            <input
-              type="email"
-              name="email"
-              placeholder="NETWORK ADDRESS"
-              onChange={handleChange}
-              className="w-full glass rounded-2xl py-4 pr-5 pl-14 outline-none focus:border-blue-500 transition-all text-xs font-bold tracking-widest placeholder:text-white/10 uppercase"
-              required
-            />
-          </div>
-          <div className="relative">
-            <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-white/20" size={18} />
-            <input
-              type="password"
-              name="password"
-              placeholder="NEW ACCESS KEY"
-              onChange={handleChange}
-              className="w-full glass rounded-2xl py-4 pr-5 pl-14 outline-none focus:border-blue-500 transition-all text-xs font-bold tracking-widest placeholder:text-white/10 uppercase"
-              required
-            />
-          </div>
-          <div className="relative">
-            <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-white/20" size={18} />
-            <input
-              type="password"
-              name="confirmPassword"
-              placeholder="VERIFY ACCESS KEY"
-              onChange={handleChange}
-              className="w-full glass rounded-2xl py-4 pr-5 pl-14 outline-none focus:border-blue-500 transition-all text-xs font-bold tracking-widest placeholder:text-white/10 uppercase"
-              required
-            />
-          </div>
-          <div className="relative">
-            <UserPlus className="absolute left-5 top-1/2 -translate-y-1/2 text-white/20" size={18} />
-            <input
-              type="text"
-              name="referredBy"
-              placeholder="AFFILIATE CODE (OPTIONAL)"
-              onChange={handleChange}
-              className="w-full glass rounded-2xl py-4 pr-5 pl-14 outline-none focus:border-blue-500 transition-all text-xs font-bold tracking-widest placeholder:text-white/10 uppercase"
-            />
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Full Name */}
+          <div>
+            <label className="block text-xs font-semibold text-white/70 mb-2 uppercase tracking-wider">Full Name</label>
+            <div className="relative group">
+              <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-blue-400 transition-colors" size={18} />
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="John Doe"
+                className="w-full glass rounded-xl py-3.5 pl-12 pr-4 outline-none border border-white/10 focus:border-blue-500/50 focus:bg-white/[0.05] transition-all text-sm placeholder:text-white/30"
+                required
+              />
+            </div>
           </div>
 
+          {/* Email */}
+          <div>
+            <label className="block text-xs font-semibold text-white/70 mb-2 uppercase tracking-wider">Email Address</label>
+            <div className="relative group">
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-blue-400 transition-colors" size={18} />
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="you@example.com"
+                className="w-full glass rounded-xl py-3.5 pl-12 pr-4 outline-none border border-white/10 focus:border-blue-500/50 focus:bg-white/[0.05] transition-all text-sm placeholder:text-white/30"
+                required
+              />
+            </div>
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="block text-xs font-semibold text-white/70 mb-2 uppercase tracking-wider">Password</label>
+            <div className="relative group">
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-blue-400 transition-colors" size={18} />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                className="w-full glass rounded-xl py-3.5 pl-12 pr-12 outline-none border border-white/10 focus:border-blue-500/50 focus:bg-white/[0.05] transition-all text-sm placeholder:text-white/30"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+            <p className="text-xs text-white/40 mt-1">At least 6 characters</p>
+          </div>
+
+          {/* Confirm Password */}
+          <div>
+            <label className="block text-xs font-semibold text-white/70 mb-2 uppercase tracking-wider">Confirm Password</label>
+            <div className="relative group">
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-blue-400 transition-colors" size={18} />
+              <input
+                type={showConfirmPassword ? 'text' : 'password'}
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="••••••••"
+                className="w-full glass rounded-xl py-3.5 pl-12 pr-12 outline-none border border-white/10 focus:border-blue-500/50 focus:bg-white/[0.05] transition-all text-sm placeholder:text-white/30"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
+              >
+                {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Referral Code */}
+          <div>
+            <label className="block text-xs font-semibold text-white/70 mb-2 uppercase tracking-wider">Referral Code (Optional)</label>
+            <div className="relative group">
+              <UserPlus className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-blue-400 transition-colors" size={18} />
+              <input
+                type="text"
+                name="referredBy"
+                value={formData.referredBy}
+                onChange={handleChange}
+                placeholder="Enter referral code"
+                className="w-full glass rounded-xl py-3.5 pl-12 pr-4 outline-none border border-white/10 focus:border-blue-500/50 focus:bg-white/[0.05] transition-all text-sm placeholder:text-white/30"
+              />
+            </div>
+          </div>
+
+          {/* Terms */}
+          <label className="flex items-start gap-3 cursor-pointer group mt-6">
+            <input type="checkbox" className="w-4 h-4 rounded border border-white/20 bg-white/5 cursor-pointer mt-1" required />
+            <span className="text-xs text-white/50 group-hover:text-white/70 transition-colors">
+              I agree to the <span className="text-blue-400 hover:text-blue-300">Terms of Service</span> and <span className="text-blue-400 hover:text-blue-300">Privacy Policy</span>
+            </span>
+          </label>
+
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-white/5 text-white font-bold py-5 rounded-2xl mt-4 flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-500/20 uppercase text-xs tracking-[0.2em]"
+            className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-white/5 disabled:to-white/5 text-white font-semibold py-3.5 rounded-xl mt-6 flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-500/25 disabled:shadow-none"
           >
-            {loading ? 'Encrypting...' : 'Deploy Identity'}
-            <ChevronRight size={16} />
+            {loading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Creating account...
+              </>
+            ) : (
+              <>
+                Create Account
+                <ChevronRight size={18} />
+              </>
+            )}
           </button>
         </form>
 
-        <p className="text-center text-white/30 mt-10 text-[10px] font-bold uppercase tracking-widest">
-          Already verified?{' '}
-          <Link to="/login" className="text-blue-400">Initialize session</Link>
+        {/* Footer */}
+        <p className="text-center text-white/50 mt-8 text-sm">
+          Already have an account?{' '}
+          <Link to="/login" className="text-blue-400 hover:text-blue-300 font-semibold transition-colors">
+            Sign in
+          </Link>
         </p>
       </motion.div>
     </div>
