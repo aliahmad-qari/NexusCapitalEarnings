@@ -66,27 +66,34 @@ async function startServer() {
     logger.error('MongoDB connection error:', err);
   });
 
-  // CORS Configuration - Allow multiple origins
+  // CORS Configuration - Allow specific origins
   const allowedOrigins = [
     'http://localhost:5173',
     'http://localhost:3000',
     'http://127.0.0.1:5173',
+    'https://nexus-capital-earnings.vercel.app',
+    'https://roiwealth.vercel.app',
     process.env.FRONTEND_URL,
-    'https://roiwealth.vercel.app', // Update with your Vercel domain
   ].filter(Boolean);
 
   app.use(cors({
     origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        logger.warn(`CORS blocked request from origin: ${origin}`);
         callback(new Error('Not allowed by CORS'));
       }
     },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    optionsSuccessStatus: 200,
   }));
+
+  // Explicit OPTIONS handler for preflight requests
+  app.options('*', cors());
 
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
