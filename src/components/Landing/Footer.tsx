@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp, Twitter, Linkedin, Github, Globe } from 'lucide-react';
+import { Twitter, Linkedin, Github, Globe } from 'lucide-react';
 
 const links = {
   Company: ['About Us', 'Blog', 'Careers', 'Press Kit'],
@@ -22,11 +22,11 @@ export const Footer = () => {
           {/* Brand column */}
           <div className="lg:col-span-2 space-y-5">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 primary-gradient rounded-lg flex items-center justify-center">
-                <TrendingUp size={16} className="text-nexus-bg" strokeWidth={2.5} />
+              <div className="w-8 h-8 rounded-full border border-nexus-primary/30 flex items-center justify-center bg-nexus-primary/10 shadow-lg shadow-nexus-primary/10">
+                <span className="text-nexus-primary font-black text-sm">$</span>
               </div>
-              <span className="text-lg font-black tracking-tight text-white">
-                Nexus<span className="text-gradient">Capital</span>
+              <span className="text-xl font-black tracking-tight text-white uppercase">
+                ROI
               </span>
             </div>
             <p className="text-slate-500 text-sm leading-relaxed max-w-xs">
@@ -70,7 +70,7 @@ export const Footer = () => {
         {/* Bottom bar */}
         <div className="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <p className="text-slate-600 text-xs">
-            © 2025 NexusCapital. All rights reserved.
+            © 2026 ROI. All rights reserved.
           </p>
           <p className="text-slate-700 text-xs max-w-lg text-right">
             Investment involves risk. Past performance is not indicative of future results.

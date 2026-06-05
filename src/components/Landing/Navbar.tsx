@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Menu, X, TrendingUp } from 'lucide-react';
+import { Menu, X, Globe } from 'lucide-react';
 
 const navLinks = [
   { label: 'Solutions', href: '#solutions' },
@@ -35,11 +35,11 @@ export const Navbar = () => {
           onClick={() => navigate('/')}
           className="flex items-center gap-2.5 group"
         >
-          <div className="w-8 h-8 primary-gradient rounded-lg flex items-center justify-center shadow-lg shadow-nexus-primary/20">
-            <TrendingUp size={16} className="text-nexus-bg" strokeWidth={2.5} />
+          <div className="w-8 h-8 rounded-full border border-nexus-primary/30 flex items-center justify-center bg-nexus-primary/10 shadow-lg shadow-nexus-primary/10">
+            <span className="text-nexus-primary font-black text-sm">$</span>
           </div>
-          <span className="text-lg font-black tracking-tight text-white">
-            Nexus<span className="text-gradient">Capital</span>
+          <span className="text-xl font-black tracking-tight text-white uppercase">
+            ROI
           </span>
         </button>
 
@@ -54,6 +54,10 @@ export const Navbar = () => {
               {link.label}
             </a>
           ))}
+          <div className="flex items-center gap-1.5 px-3 py-2 text-slate-400 hover:text-white text-sm font-medium cursor-pointer rounded-lg hover:bg-white/5 transition-all duration-200">
+            <Globe size={16} />
+            <span>EN</span>
+          </div>
         </nav>
 
         {/* Desktop CTA */}
@@ -95,6 +99,10 @@ export const Navbar = () => {
               {link.label}
             </a>
           ))}
+          <div className="flex items-center gap-1.5 px-4 py-3 text-slate-400 hover:text-white text-sm font-medium cursor-pointer rounded-xl hover:bg-white/5 transition-all">
+            <Globe size={16} />
+            <span>EN</span>
+          </div>
           <div className="flex flex-col gap-2 pt-4 border-t border-white/8 mt-3">
             <button
               onClick={() => { navigate('/login'); setIsOpen(false); }}

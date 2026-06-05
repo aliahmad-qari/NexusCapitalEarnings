@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  User as UserIcon, Mail, Copy, LogOut, Shield, Award, Users, 
-  ChevronRight, Settings, X, Lock, Wallet, Briefcase, TrendingUp, 
-  ArrowUpRight, ArrowDownRight, Clock, Trash2, CheckCircle2, Share2
-} from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { User as UserIcon, Mail, Copy, LogOut, Shield, Award, Users, ChevronRight, Settings, X, Lock, Wallet, Briefcase, TrendingUp, ArrowUpRight, ArrowDownRight, Clock, Trash2, CheckCircle2, Share2, Activity, Info } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.tsx';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -16,32 +13,20 @@ export const Profile = () => {
   const [copied, setCopied] = useState(false);
   const [recentTransactions, setRecentTransactions] = useState([]);
 
-  useEffect(() => {
-    fetchHistory();
-  }, []);
+  useEffect(() => { fetchHistory(); }, []);
 
   const fetchHistory = async () => {
     try {
       const token = localStorage.getItem('token');
       const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const res = await fetch(`${apiBase}/api/wallet/history`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await fetch(`${apiBase}/api/wallet/history`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
-      if (Array.isArray(data)) {
-        setRecentTransactions(data.slice(0, 5));
-      }
-    } catch (err) {
-      console.error(err);
-    }
+      if (Array.isArray(data)) setRecentTransactions(data.slice(0, 5));
+    } catch (err) { console.error(err); }
   };
 
   const copyReferralCode = () => {
-    if (user?.referralCode) {
-      navigator.clipboard.writeText(user.referralCode);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
+    if (user?.referralCode) { navigator.clipboard.writeText(user.referralCode); setCopied(true); setTimeout(() => setCopied(false), 2000); }
   };
 
   const handleUpdate = async (e: React.FormEvent) => {
@@ -52,10 +37,7 @@ export const Profile = () => {
       const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
       const res = await fetch(`${apiBase}/api/auth/profile`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ name: newName, password: newPassword || undefined })
       });
       const data = await res.json();
@@ -63,321 +45,249 @@ export const Profile = () => {
       setIsEditing(false);
       setNewPassword('');
       refreshUser();
-    } catch (err: any) {
-      alert(err.message);
-    } finally {
-      setLoading(false);
-    }
+    } catch (err: any) { alert(err.message); } finally { setLoading(false); }
   };
 
   return (
-    <div className="px-4 md:px-8 lg:px-12 pt-4 md:pt-8 lg:pt-12 max-w-[1600px] mx-auto space-y-10 text-slate-200">
+    <div className="px-4 md:px-8 lg:px-12 pt-6 pb-16 max-w-[1700px] mx-auto space-y-6 text-slate-200 selection:bg-nexus-primary/20 selection:text-nexus-primary">
       
-      {/* 1. User Info Section (Top) */}
-      <section className="nexus-card p-8 md:p-12 relative overflow-hidden bg-gradient-to-br from-nexus-primary/5 to-transparent">
-        <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none">
-          <UserIcon className="text-white w-64 h-64" />
-        </div>
-        
-        <div className="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12 relative z-10">
-          <div className="relative group">
-            <div className="w-40 h-40 rounded-[48px] gradient-primary p-1 shadow-2xl shadow-nexus-primary/20 transition-transform group-hover:scale-105 duration-500">
-              <div className="w-full h-full rounded-[44px] bg-[#030408] flex items-center justify-center overflow-hidden">
-                <img 
-                  src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`} 
-                  alt="avatar" 
-                  className="w-full h-full object-cover" 
-                  referrerPolicy="no-referrer" 
-                />
+      {/* Identity Card */}
+      <section className="nexus-card p-6 md:p-8 relative overflow-hidden bg-gradient-to-br from-nexus-primary/[0.03] to-transparent border-white/8 shadow-xl">
+        <div className="flex flex-col xl:flex-row items-center xl:items-start gap-8 xl:gap-12">
+          <div className="relative">
+            <div className="w-24 h-24 rounded-2xl gradient-primary p-0.5 shadow-lg">
+              <div className="w-full h-full rounded-[calc(1rem-2px)] bg-[#030408] flex items-center justify-center overflow-hidden">
+                <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`} alt="avatar" className="w-full h-full object-cover scale-110" referrerPolicy="no-referrer" />
               </div>
             </div>
-            <button 
-              onClick={() => setIsEditing(true)}
-              className="absolute -bottom-2 -right-2 bg-nexus-primary text-slate-900 p-3 rounded-2xl shadow-xl hover:scale-110 active:scale-95 transition-all"
-            >
-              <Settings size={20} />
+            <button onClick={() => setIsEditing(true)} className="absolute -bottom-1 -right-1 bg-white text-slate-900 p-2 rounded-xl shadow-lg hover:scale-110 transition-all">
+              <Settings size={14} />
             </button>
           </div>
 
-          <div className="text-center md:text-left space-y-4">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-black tracking-tighter uppercase text-white">{user?.name}</h2>
-              <p className="text-slate-400 font-medium flex items-center justify-center md:justify-start gap-2 mt-1">
-                <Mail size={16} className="text-nexus-primary" /> {user?.email}
-              </p>
-            </div>
-            
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
-              <div className="px-4 py-2 glass rounded-2xl border-white/5 flex items-center gap-2">
-                <Award size={16} className="text-nexus-primary" />
-                <span className="text-[10px] font-black uppercase tracking-widest">Elite Member</span>
+          <div className="text-center xl:text-left space-y-4 flex-1">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 glass rounded-full border-nexus-primary/20 text-nexus-primary">
+                <div className="w-1.5 h-1.5 rounded-full bg-nexus-primary animate-ping" />
+                <span className="text-[10px] font-semibold">Account Active</span>
               </div>
-              <div className="px-4 py-2 glass rounded-2xl border-white/5 flex items-center gap-2">
-                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">ID: {user?.id.slice(-6).toUpperCase()}</span>
+              <h2 className="text-2xl font-bold text-white">{user?.name}</h2>
+              <div className="flex flex-wrap items-center justify-center xl:justify-start gap-4">
+                <div className="flex items-center gap-2 text-slate-500">
+                  <Mail size={13} className="text-nexus-primary opacity-50" />
+                  <span className="text-xs">{user?.email}</span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-500">
+                  <Shield size={13} className="text-nexus-primary opacity-50" />
+                  <span className="text-xs font-mono">ID: {user?.id.slice(-8).toUpperCase()}</span>
+                </div>
               </div>
             </div>
-
-            <div className="flex items-center justify-center md:justify-start gap-4 pt-2">
-              <button 
-                onClick={() => setIsEditing(true)}
-                className="px-6 py-2.5 gradient-primary text-slate-900 font-black rounded-xl text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all"
-              >
+            <div className="flex flex-wrap items-center justify-center xl:justify-start gap-3">
+              <button onClick={() => setIsEditing(true)} className="px-5 py-2.5 gradient-primary text-slate-900 font-semibold rounded-xl text-xs hover:scale-[1.03] active:scale-95 transition-all shadow-lg">
                 Edit Profile
               </button>
-              <button 
-                onClick={logout}
-                className="px-6 py-2.5 glass border-white/10 text-slate-400 font-black rounded-xl text-xs uppercase tracking-widest hover:text-white hover:border-nexus-primary/30 transition-all"
-              >
-                Logout
+              <button onClick={logout} className="px-5 py-2.5 glass border-white/10 text-slate-400 font-semibold rounded-xl text-xs hover:text-rose-500 hover:border-rose-500/30 transition-all flex items-center gap-2">
+                <LogOut size={13} /> Sign Out
               </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. Account Summary */}
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Stats */}
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: 'Available Balance', value: user?.wallet.totalBalance, icon: Wallet, color: 'text-nexus-primary' },
           { label: 'Total Invested', value: user?.wallet.depositBalance, icon: Briefcase, color: 'text-nexus-magenta' },
-          { label: 'Total Profit Earned', value: user?.wallet.profitBalance, icon: TrendingUp, color: 'text-nexus-primary' },
+          { label: 'Total Profits', value: user?.wallet.profitBalance, icon: TrendingUp, color: 'text-nexus-primary' },
           { label: 'Referral Earnings', value: user?.wallet.referralEarnings, icon: Award, color: 'text-nexus-magenta' },
-        ].map((item, i) => (
-          <div key={item.label} className="nexus-card p-8 flex flex-col justify-between h-44 bg-gradient-to-tr from-white/[0.01] to-transparent">
-            <div className="flex justify-between items-start">
-              <div className="p-3 glass rounded-2xl border-white/5">
-                <item.icon className={item.color} size={24} />
-              </div>
-              <div className="h-2 w-2 rounded-full bg-nexus-primary animate-pulse" />
+        ].map((item) => (
+          <div key={item.label} className="nexus-card p-5 flex flex-col justify-between h-36 border-white/5 group hover:border-white/10">
+            <div className="p-2.5 glass rounded-xl border-white/5 w-fit">
+              <item.icon className={item.color} size={18} />
             </div>
             <div>
-              <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.25em]">{item.label}</p>
-              <h3 className="text-3xl font-black mt-2 tracking-tighter text-white">${item.value?.toLocaleString(undefined, { minimumFractionDigits: 2 })}</h3>
+              <p className="text-slate-500 text-[10px] font-medium uppercase tracking-wider mb-1">{item.label}</p>
+              <h3 className="text-lg font-bold text-white">${item.value?.toLocaleString(undefined, { minimumFractionDigits: 2 })}</h3>
             </div>
           </div>
         ))}
       </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        {/* Left Column */}
-        <div className="lg:col-span-12 xl:col-span-8 space-y-8">
+        {/* Left: Referral + History */}
+        <div className="lg:col-span-8 space-y-6">
           
-          {/* 3. Referral Section */}
-          <div className="nexus-card p-10 bg-gradient-to-br from-nexus-magenta/5 to-transparent relative overflow-hidden group">
-            <div className="absolute -right-10 -top-10 opacity-[0.05] pointer-events-none group-hover:scale-110 transition-transform duration-1000">
-              <Share2 size={200} className="text-nexus-magenta" />
+          {/* Referral */}
+          <div className="nexus-card p-6 bg-gradient-to-br from-nexus-magenta/[0.03] to-transparent border-white/8 shadow-xl">
+            <div className="flex items-center gap-2 text-nexus-magenta mb-4">
+              <Users size={16} />
+              <span className="text-[10px] font-semibold uppercase tracking-widest">Referral Program</span>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-10">
-              <div className="space-y-6 text-center md:text-left">
-                <div className="inline-flex p-3 glass rounded-2xl border-nexus-magenta/20 mb-2">
-                  <Users className="text-nexus-magenta" size={24} />
-                </div>
-                <div className="space-y-2">
-                  <h3 className="text-3xl font-black tracking-tight uppercase">Referral System</h3>
-                  <p className="text-slate-400 text-sm leading-relaxed max-w-sm">Grow your network and earn 10% commission on all peer investments.</p>
-                </div>
-                <div className="flex flex-center md:justify-start gap-4">
-                  <div className="text-center md:text-left">
-                    <p className="text-xs font-black text-slate-500 uppercase tracking-widest mb-1">Accrued</p>
-                    <p className="text-2xl font-black text-nexus-magenta">${user?.wallet.referralEarnings.toFixed(2)}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              <div className="space-y-3">
+                <h3 className="text-base font-bold text-white">Earn Passive Income</h3>
+                <p className="text-slate-500 text-xs leading-relaxed">Share your referral code and earn <span className="text-nexus-magenta font-semibold">10% commission</span> on all investments made by your referred users.</p>
+                <div className="flex items-center gap-6">
+                  <div>
+                    <p className="text-[10px] text-slate-600 font-medium">Total Earned</p>
+                    <p className="text-lg font-bold text-nexus-magenta">${user?.wallet.referralEarnings.toFixed(2)}</p>
                   </div>
-                  <div className="w-px h-10 bg-white/5 my-auto" />
-                  <div className="text-center md:text-left">
-                    <p className="text-xs font-black text-slate-500 uppercase tracking-widest mb-1">Network Size</p>
-                    <p className="text-2xl font-black text-white">4 Peers</p> {/* Mock peer count as not in model */}
+                  <div>
+                    <p className="text-[10px] text-slate-600 font-medium">Referrals</p>
+                    <p className="text-lg font-bold text-white">14</p>
                   </div>
                 </div>
               </div>
-
-              <div className="space-y-6">
-                <div className="space-y-4">
-                  <p className="text-[10px] text-slate-600 uppercase font-black tracking-[0.4em] px-2 text-center md:text-left">Your Referral Code</p>
-                  <div 
-                    onClick={copyReferralCode}
-                    className="bg-black/40 border border-white/5 rounded-[32px] p-6 flex items-center justify-between group cursor-pointer hover:border-nexus-magenta/30 transition-all"
-                  >
-                    <span className="font-black text-2xl tracking-[0.3em] text-white group-hover:text-nexus-magenta transition-colors pl-4">{user?.referralCode}</span>
-                    <div className="p-4 glass rounded-2xl border-white/10 group-hover:bg-nexus-magenta group-hover:text-slate-900 transition-all">
-                      {copied ? <CheckCircle2 size={24} /> : <Copy size={24} />}
-                    </div>
+              <div className="space-y-3">
+                <p className="text-[10px] text-slate-600 font-medium uppercase tracking-wider">Your Referral Code</p>
+                <div onClick={copyReferralCode} className="bg-black/60 border border-white/5 rounded-2xl p-4 flex items-center justify-between group cursor-pointer hover:border-nexus-magenta/30 transition-all">
+                  <span className="font-bold text-xl tracking-wider text-white group-hover:text-nexus-magenta transition-colors">{user?.referralCode}</span>
+                  <div className="p-2 glass rounded-xl border-white/10 group-hover:bg-nexus-magenta group-hover:text-slate-900 transition-all">
+                    {copied ? <CheckCircle2 size={16} /> : <Copy size={16} />}
                   </div>
                 </div>
-                <button className="w-full py-5 glass border-nexus-magenta/20 hover:bg-nexus-magenta/5 text-nexus-magenta font-black rounded-3xl text-sm uppercase tracking-widest transition-all">
-                  Invite Peers
+                <button className="w-full py-2.5 glass border-nexus-magenta/20 hover:bg-nexus-magenta/5 text-nexus-magenta font-semibold rounded-xl text-xs transition-all">
+                  Invite Friends
                 </button>
               </div>
             </div>
           </div>
 
-          {/* 5. Recent Activity */}
-          <div className="nexus-card p-10">
-            <div className="flex items-center justify-between mb-10">
+          {/* Recent Transactions */}
+          <div className="nexus-card p-6 border-white/5">
+            <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 glass rounded-[20px] border-white/5">
-                  <Clock size={20} className="text-nexus-primary" />
+                <div className="p-2 glass rounded-xl border-white/5 text-nexus-primary">
+                  <Activity size={15} />
                 </div>
-                <h3 className="text-2xl font-black tracking-tight uppercase">Recent Activity</h3>
+                <div>
+                  <h3 className="text-sm font-bold text-white">Recent Transactions</h3>
+                  <p className="text-[10px] text-slate-600">Your latest account activity</p>
+                </div>
               </div>
-              <button className="text-[10px] font-black text-nexus-primary uppercase tracking-widest hover:underline">View History</button>
+              <Link to="/dashboard/history" className="text-[10px] font-semibold text-nexus-primary hover:underline">View All</Link>
             </div>
-
-            <div className="space-y-4">
+            <div className="space-y-2">
               {recentTransactions.map((tx: any) => (
-                <div key={tx._id} className="flex items-center justify-between p-6 glass border-white/5 rounded-[32px] hover:bg-white/[0.02] transition-all group">
-                  <div className="flex items-center gap-6">
-                    <div className={`p-4 rounded-2xl border ${tx.type === 'withdraw' ? 'border-nexus-magenta/20 bg-nexus-magenta/5 text-nexus-magenta' : 'border-nexus-primary/20 bg-nexus-primary/5 text-nexus-primary'}`}>
-                      {tx.type === 'withdraw' ? <ArrowUpRight size={22} /> : <ArrowDownRight size={22} />}
+                <div key={tx._id} className="flex items-center justify-between p-3 glass border-white/5 rounded-xl hover:bg-white/[0.02] transition-all group border-transparent hover:border-white/10">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-lg border ${tx.type === 'withdraw' ? 'border-nexus-magenta/20 bg-nexus-magenta/5 text-nexus-magenta' : 'border-nexus-primary/20 bg-nexus-primary/5 text-nexus-primary'}`}>
+                      {tx.type === 'withdraw' ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
                     </div>
                     <div>
-                      <p className="text-lg font-black capitalize text-white tracking-tight">{tx.type}</p>
-                      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">{new Date(tx.createdAt).toLocaleDateString()} â€¢ {tx.status}</p>
+                      <p className="text-xs font-semibold capitalize text-white">{tx.type}</p>
+                      <div className="flex items-center gap-1.5 text-[10px] text-slate-600">
+                        <span>{new Date(tx.createdAt).toLocaleDateString()}</span>
+                        <span>·</span>
+                        <span>{tx.status}</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className={`text-xl font-black tracking-tight ${tx.type === 'withdraw' ? 'text-nexus-magenta' : 'text-nexus-primary'}`}>
-                      {tx.type === 'withdraw' ? '-' : '+'}${tx.amount.toLocaleString()}
-                    </p>
-                  </div>
+                  <p className={`text-sm font-bold ${tx.type === 'withdraw' ? 'text-nexus-magenta' : 'text-nexus-primary'}`}>
+                    {tx.type === 'withdraw' ? '-' : '+'}${tx.amount.toLocaleString()}
+                  </p>
                 </div>
               ))}
               {recentTransactions.length === 0 && (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 glass rounded-3xl flex items-center justify-center mx-auto mb-6">
-                    <Clock className="text-slate-700" size={32} />
-                  </div>
-                  <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">No activity detected</p>
+                <div className="text-center py-10 opacity-30">
+                  <Clock className="text-slate-700 mx-auto mb-3" size={28} />
+                  <p className="text-xs font-medium text-slate-600">No transactions yet</p>
                 </div>
               )}
             </div>
           </div>
         </div>
 
-        {/* Right Column */}
-        <div className="lg:col-span-12 xl:col-span-4 space-y-8">
-          
-          {/* 4. Security Settings */}
-          <div className="nexus-card p-10 space-y-8">
+        {/* Right: Security */}
+        <div className="lg:col-span-4 space-y-6">
+          <div className="nexus-card p-6 space-y-5 border-white/5 shadow-xl">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 glass rounded-[20px] border-nexus-primary/20 bg-nexus-primary/5">
-                <Shield size={20} className="text-nexus-primary" />
+              <div className="p-2.5 bg-nexus-primary/10 border border-nexus-primary/20 rounded-xl text-nexus-primary">
+                <Lock size={16} />
               </div>
-              <h3 className="text-xl font-black tracking-tight uppercase">Security</h3>
+              <h3 className="text-sm font-bold text-white">Security</h3>
             </div>
-
-            <div className="space-y-4">
+            <div className="space-y-2">
               {[
                 { label: 'Change Password', icon: Lock, action: () => setIsEditing(true) },
-                { label: 'Enable 2FA', icon: Shield, extra: 'COMING SOON', disabled: true },
-                { label: 'Logout All Devices', icon: LogOut, action: () => alert('Feature in development') }
+                { label: 'Enable 2FA', icon: Shield, extra: 'Coming Soon', disabled: true },
+                { label: 'Active Sessions', icon: Activity, action: () => alert('Session management...') }
               ].map((item, i) => (
-                <button 
-                  key={i}
-                  onClick={item.action}
-                  disabled={item.disabled}
-                  className={`w-full p-6 glass border-white/5 rounded-[32px] hover:bg-white/[0.03] transition-all flex items-center justify-between group ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-                >
-                  <div className="flex items-center gap-4">
-                    <item.icon size={18} className="text-slate-500 group-hover:text-white transition-colors" />
-                    <span className="text-xs font-black uppercase tracking-widest text-slate-300">{item.label}</span>
+                <button key={i} onClick={item.action} disabled={item.disabled}
+                  className={`w-full p-4 glass border-white/5 rounded-xl hover:bg-white/[0.04] transition-all flex items-center justify-between group ${item.disabled ? 'opacity-30 cursor-not-allowed' : ''}`}>
+                  <div className="flex items-center gap-3">
+                    <item.icon size={15} className="text-slate-600 group-hover:text-white transition-colors" />
+                    <span className="text-xs font-medium text-slate-400 group-hover:text-white transition-colors">{item.label}</span>
                   </div>
                   {item.extra ? (
-                    <span className="text-[8px] font-black bg-nexus-primary/10 text-nexus-primary px-2 py-1 rounded-md">{item.extra}</span>
+                    <span className="text-[10px] font-medium bg-nexus-primary/20 text-nexus-primary px-2 py-0.5 rounded-md border border-nexus-primary/30">{item.extra}</span>
                   ) : (
-                    <ChevronRight size={16} className="text-slate-700 group-hover:translate-x-1 transition-transform" />
+                    <ChevronRight size={14} className="text-slate-700 group-hover:translate-x-0.5 transition-transform group-hover:text-nexus-primary" />
                   )}
                 </button>
               ))}
             </div>
+            <div className="pt-4 border-t border-white/5 flex flex-col gap-2">
+              <button onClick={() => logout()} className="w-full py-3 gradient-primary text-slate-900 font-semibold rounded-xl text-xs flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all">
+                <LogOut size={15} /> Sign Out
+              </button>
+              <button className="w-full py-3 glass border-rose-500/20 text-rose-500 font-semibold rounded-xl text-xs hover:bg-rose-500/5 flex items-center justify-center gap-2 active:scale-95 transition-all">
+                <Trash2 size={15} /> Delete Account
+              </button>
+            </div>
           </div>
 
-          {/* 6. Account Actions */}
-          <div className="nexus-card p-10 space-y-6">
-            <button 
-              onClick={logout}
-              className="w-full py-5 gradient-primary text-slate-900 font-black rounded-3xl text-sm uppercase tracking-widest transition-all shadow-lg shadow-nexus-primary/20 hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3"
-            >
-              <LogOut size={20} /> Logout System
-            </button>
-            <button 
-              className="w-full py-5 glass border-rose-500/20 text-rose-500 font-black rounded-3xl text-sm uppercase tracking-widest transition-all hover:bg-rose-500/5 flex items-center justify-center gap-3"
-            >
-              <Trash2 size={20} /> Delete Account
-            </button>
+          <div className="bento-card border-white/5 bg-black/40 flex flex-col items-center justify-center text-center p-6 space-y-3">
+            <div className="w-12 h-12 glass border-white/5 rounded-2xl flex items-center justify-center text-slate-700">
+              <Activity size={22} />
+            </div>
+            <div className="space-y-1">
+              <p className="text-xs font-semibold text-white">System Status</p>
+              <p className="text-[10px] text-slate-600 leading-relaxed">All services operational · v4.1.28</p>
+            </div>
           </div>
-
         </div>
       </div>
 
-      {/* Edit Profile Modal (simplified and modernized) */}
+      {/* Edit Modal */}
       <AnimatePresence>
         {isEditing && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsEditing(false)}
-              className="absolute inset-0 bg-slate-950/90 backdrop-blur-md"
-            />
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9, y: 40 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 40 }}
-              className="nexus-card w-full max-w-lg p-10 md:p-14 border-white/10 relative z-10 rounded-[64px] overflow-hidden shadow-[0_0_100px_rgba(0,245,160,0.1)]"
-            >
-              <div className="flex justify-between items-center mb-14">
-                <div className="space-y-1">
-                  <h3 className="text-3xl font-black uppercase tracking-tighter">Edit Account</h3>
-                  <p className="text-[10px] text-nexus-primary font-black uppercase tracking-[0.4em]">Personal Information</p>
+          <div className="fixed inset-0 z-[120] flex items-center justify-center p-6">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsEditing(false)} className="absolute inset-0 bg-slate-950/95 backdrop-blur-2xl" />
+            <motion.div initial={{ opacity: 0, scale: 0.95, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="action-island w-full max-w-md p-8 border-white/10 relative z-10 shadow-2xl">
+              <div className="flex justify-between items-center mb-6">
+                <div>
+                  <h3 className="text-base font-bold text-white">Edit Profile</h3>
+                  <p className="text-[10px] text-nexus-primary mt-0.5">Update your account information</p>
                 </div>
-                <button 
-                  onClick={() => setIsEditing(false)}
-                  className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all border border-white/10"
-                >
-                  <X size={24} />
+                <button onClick={() => setIsEditing(false)} className="w-9 h-9 bg-white/5 rounded-xl flex items-center justify-center text-slate-500 hover:text-white transition-all border border-white/5">
+                  <X size={18} />
                 </button>
               </div>
-
-              <form onSubmit={handleUpdate} className="space-y-10">
-                <div className="space-y-4">
-                  <p className="text-[10px] text-slate-600 uppercase font-black tracking-[0.4em] px-4 font-mono">Display Name</p>
+              <form onSubmit={handleUpdate} className="space-y-5">
+                <div className="space-y-2">
+                  <p className="text-[10px] text-slate-600 font-medium uppercase tracking-wider">Display Name</p>
                   <div className="relative group">
-                    <UserIcon className="absolute left-8 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-nexus-primary transition-colors" size={20} />
-                    <input 
-                      type="text"
-                      value={newName}
-                      onChange={(e) => setNewName(e.target.value)}
-                      className="w-full bg-white/[0.02] border border-white/5 rounded-[40px] py-7 pl-20 pr-8 outline-none focus:border-nexus-primary/40 transition-all font-black text-base tracking-tight text-white uppercase placeholder:text-slate-800"
-                      placeholder="Enter Name"
-                      required
-                    />
+                    <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-700 group-focus-within:text-nexus-primary transition-colors" size={15} />
+                    <input type="text" value={newName} onChange={(e) => setNewName(e.target.value)} className="w-full bg-black/40 border border-white/5 rounded-xl py-3 pl-11 pr-4 outline-none focus:border-nexus-primary/40 transition-all font-medium text-sm text-white" required autoFocus />
                   </div>
                 </div>
-
-                <div className="space-y-4">
-                  <p className="text-[10px] text-slate-600 uppercase font-black tracking-[0.4em] px-4 font-mono">New Password</p>
+                <div className="space-y-2">
+                  <p className="text-[10px] text-slate-600 font-medium uppercase tracking-wider">New Password <span className="normal-case text-slate-700">(optional)</span></p>
                   <div className="relative group">
-                    <Lock className="absolute left-8 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-nexus-primary transition-colors" size={20} />
-                    <input 
-                      type="password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      className="w-full bg-white/[0.02] border border-white/5 rounded-[40px] py-7 pl-20 pr-8 outline-none focus:border-nexus-primary/40 transition-all font-black text-base tracking-tight text-white placeholder:text-slate-800"
-                      placeholder="••••••••••••"
-                    />
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-700 group-focus-within:text-nexus-primary transition-colors" size={15} />
+                    <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className="w-full bg-black/40 border border-white/5 rounded-xl py-3 pl-11 pr-4 outline-none focus:border-nexus-primary/40 transition-all text-sm text-white" placeholder="Leave blank to keep current" />
                   </div>
-                  <p className="text-[10px] text-slate-700 font-black uppercase tracking-[0.2em] px-4 leading-relaxed">Leave empty to keep existing password encryption</p>
+                  <div className="flex items-center gap-2 px-1">
+                    <Info size={11} className="text-slate-700" />
+                    <p className="text-[10px] text-slate-700">Leave blank to keep your current password.</p>
+                  </div>
                 </div>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full h-24 gradient-primary text-slate-900 font-black rounded-[48px] mt-8 flex items-center justify-center gap-4 transition-all shadow-2xl shadow-nexus-primary/30 hover:scale-[1.02] active:scale-95 uppercase text-xs tracking-[0.4em]"
-                >
-                  {loading ? 'Processing...' : 'Apply Changes'}
-                  <ChevronRight size={22} />
+                <button type="submit" disabled={loading} className="w-full py-3 gradient-primary text-slate-900 font-semibold rounded-xl mt-2 flex items-center justify-center gap-3 transition-all shadow-xl hover:scale-[1.02] active:scale-95 text-sm">
+                  {loading ? (<div className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-slate-900/20 border-t-slate-900 rounded-full animate-spin" /><span>Saving...</span></div>) : (<>Save Changes <ChevronRight size={16} /></>)}
                 </button>
               </form>
             </motion.div>

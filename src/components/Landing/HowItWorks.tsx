@@ -47,7 +47,7 @@ export const HowItWorks = () => {
             How It Works
           </h2>
           <p className="text-slate-400 text-body-md max-w-xl mx-auto">
-            Three simple steps to start growing your wealth with NexusCapital.
+            Three simple steps to start growing your wealth with ROI.
           </p>
         </div>
 

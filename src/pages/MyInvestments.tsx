@@ -1,157 +1,150 @@
 import { useEffect, useState } from 'react';
-import { 
-  BarChart2, Clock, TrendingUp, Calendar, 
-  ArrowUpRight, AlertCircle, PieChart, Activity
-} from 'lucide-react';
-import { motion } from 'motion/react';
+import { TrendingUp, Calendar, Clock, Activity, PieChart, Zap, ChevronRight, AlertCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 
 export const MyInvestments = () => {
   const [investments, setInvestments] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchMyInvestments();
-  }, []);
+  useEffect(() => { fetchMyInvestments(); }, []);
 
   const fetchMyInvestments = async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
       const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const res = await fetch(`${apiBase}/api/investment/my`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await fetch(`${apiBase}/api/investment/my`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
-      if (Array.isArray(data)) {
-        setInvestments(data);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+      if (Array.isArray(data)) setInvestments(data);
+    } catch (err) { console.error(err); } finally { setLoading(false); }
   };
 
   const calculateProgress = (start: string, duration: number) => {
     const startDate = new Date(start).getTime();
     const durationMs = duration * 24 * 60 * 60 * 1000;
-    const now = new Date().getTime();
-    const elapsed = now - startDate;
-    const progress = Math.min(Math.max((elapsed / durationMs) * 100, 0), 100);
-    return progress;
+    const elapsed = new Date().getTime() - startDate;
+    return Math.min(Math.max((elapsed / durationMs) * 100, 0), 100);
   };
 
   return (
-    <div className="px-4 md:px-8 lg:px-12 pt-4 md:pt-8 lg:pt-12 max-w-[1600px] mx-auto space-y-12 text-slate-200">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-4">
-        <div className="space-y-2">
+    <div className="px-4 md:px-8 lg:px-12 pt-6 pb-16 max-w-[1700px] mx-auto space-y-6 text-slate-200 selection:bg-nexus-primary/20 selection:text-nexus-primary">
+      
+      {/* Header */}
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-5">
+        <div className="space-y-1">
           <div className="flex items-center gap-2 text-nexus-primary">
-            <PieChart size={18} />
-            <span className="text-[10px] font-black uppercase tracking-[0.4em]">Node Registry</span>
+            <PieChart size={14} className="animate-pulse" />
+            <span className="text-[10px] font-semibold uppercase tracking-widest">My Portfolio</span>
           </div>
-          <h2 className="text-3xl md:text-5xl font-black tracking-tighter uppercase">My <span className="text-gradient">Deployments</span></h2>
-          <p className="text-slate-500 text-sm max-w-md normal-case font-medium">Monitoring active capital nodes and yield harvesting cycles across the nexus.</p>
+          <h2 className="text-xl font-bold text-white">My Investments</h2>
+          <p className="text-slate-500 text-xs max-w-xl">Track your active investment plans and yield harvesting cycles.</p>
         </div>
-        <Link 
-          to="/plans" 
-          className="gradient-primary px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-900 shadow-xl shadow-nexus-primary/20 hover:scale-105 active:scale-95 transition-all"
-        >
-          Deploy New Node
+        <Link to="/dashboard/plans" className="gradient-primary px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-900 shadow-lg hover:scale-[1.03] active:scale-95 transition-all flex items-center gap-2">
+          <Zap size={14} /> New Investment
         </Link>
       </header>
 
-      {loading ? (
-        <div className="p-20 flex flex-col items-center justify-center gap-6">
-           <div className="w-12 h-12 border-4 border-nexus-primary/20 border-t-nexus-primary rounded-full animate-spin"></div>
-           <p className="text-nexus-primary/40 font-black uppercase tracking-[0.4em] text-[10px]">Scanning Strategy Nodes...</p>
-        </div>
-      ) : investments.length === 0 ? (
-        <div className="nexus-card rounded-[48px] p-24 flex flex-col items-center border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent">
-           <div className="w-20 h-20 bg-white/5 border border-white/5 rounded-[32px] flex items-center justify-center mb-8">
-              <PieChart className="text-slate-800" size={32} />
-           </div>
-           <h3 className="text-xl font-black mb-3 tracking-tighter uppercase">No Active Nodes</h3>
-           <p className="text-slate-600 text-center max-w-xs text-xs leading-relaxed font-bold uppercase tracking-widest mb-10">You have no active strategy deployments in the registry.</p>
-           <Link to="/plans" className="gradient-primary px-10 py-5 rounded-2xl text-slate-900 font-black text-[11px] uppercase tracking-widest">Deploy First Node</Link>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-          {investments.map((inv: any) => {
-            const progress = calculateProgress(inv.createdAt, inv.planId.durationDays);
-            const totalProfit = inv.amount * (inv.planId.dailyProfitPercent / 100) * inv.planId.durationDays;
-            const currentEarnings = (inv.amount * (inv.planId.dailyProfitPercent / 100)) * (progress / 100 * inv.planId.durationDays);
+      {/* Content */}
+      <section>
+        {loading ? (
+          <div className="p-20 flex flex-col items-center justify-center gap-4">
+            <div className="w-10 h-10 border-4 border-nexus-primary/10 border-t-nexus-primary rounded-full animate-spin"></div>
+            <p className="text-nexus-primary/50 text-xs font-medium">Loading your investments...</p>
+          </div>
+        ) : investments.length === 0 ? (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="nexus-card rounded-2xl p-14 flex flex-col items-center border-white/5 text-center">
+            <PieChart className="text-slate-800 mb-4" size={40} />
+            <h3 className="text-base font-bold mb-2 text-white">No Investments Yet</h3>
+            <p className="text-slate-600 text-xs max-w-sm mb-6">You don't have any active investment plans. Browse our plans to get started.</p>
+            <Link to="/dashboard/plans" className="gradient-primary px-8 py-3 rounded-xl text-slate-900 font-semibold text-xs shadow-lg">Browse Plans</Link>
+          </motion.div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            {investments.map((inv: any, idx) => {
+              const progress = calculateProgress(inv.createdAt, inv.planId.durationDays);
+              const totalProfit = inv.amount * (inv.planId.dailyProfitPercent / 100) * inv.planId.durationDays;
+              const currentEarnings = (inv.amount * (inv.planId.dailyProfitPercent / 100)) * (progress / 100 * inv.planId.durationDays);
 
-            return (
-              <motion.div 
-                layout
-                key={inv._id}
-                className="nexus-card p-8 space-y-8 border-white/5 bg-gradient-to-br from-white/[0.01] to-transparent group hover:border-nexus-primary/20 transition-all"
-              >
-                <div className="flex justify-between items-start">
-                  <div className="space-y-1">
-                    <h3 className="text-xl font-black tracking-tighter uppercase text-white">{inv.planId.name}</h3>
-                    <div className="flex items-center gap-2 text-nexus-primary">
-                      <Activity size={12} />
-                      <span className="text-[9px] font-black uppercase tracking-widest">Active Node</span>
+              return (
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.07 }} key={inv._id}
+                  className="nexus-card p-6 space-y-5 border-white/8 group hover:border-nexus-primary/30 transition-all shadow-xl">
+
+                  <div className="flex justify-between items-start">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-1.5 text-nexus-primary">
+                        <Activity size={11} className="animate-pulse" />
+                        <span className="text-[10px] font-semibold uppercase tracking-wider">Active</span>
+                      </div>
+                      <h3 className="text-base font-bold text-white">{inv.planId.name}</h3>
+                    </div>
+                    <div className="p-2 glass rounded-xl border-white/5 text-nexus-primary group-hover:border-nexus-primary/20 transition-all">
+                      <TrendingUp size={16} />
                     </div>
                   </div>
-                  <div className="p-3 glass rounded-xl border-white/5 text-nexus-primary">
-                    <TrendingUp size={20} />
-                  </div>
-                </div>
 
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <p className="text-[9px] text-slate-600 font-black uppercase tracking-widest mb-1">Capital Stake</p>
-                    <p className="text-2xl font-black text-slate-200">${inv.amount.toLocaleString()}</p>
+                  <div className="grid grid-cols-2 gap-4 border-y border-white/5 py-4">
+                    <div className="space-y-0.5">
+                      <p className="text-[10px] text-slate-600 font-medium uppercase tracking-wider">Invested</p>
+                      <p className="text-lg font-bold text-white">${inv.amount.toLocaleString()}</p>
+                    </div>
+                    <div className="text-right space-y-0.5">
+                      <p className="text-[10px] text-slate-600 font-medium uppercase tracking-wider">Daily Return</p>
+                      <p className="text-lg font-bold text-nexus-primary">+{inv.planId.dailyProfitPercent}%</p>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-[9px] text-slate-600 font-black uppercase tracking-widest mb-1">Daily Yield</p>
-                    <p className="text-2xl font-black text-nexus-primary">+{inv.planId.dailyProfitPercent}%</p>
-                  </div>
-                </div>
 
-                <div className="space-y-3">
-                  <div className="flex justify-between items-end">
-                    <p className="text-[9px] text-slate-600 font-black uppercase tracking-widest">Harvesting Progress</p>
-                    <p className="text-[10px] font-black text-slate-400">{progress.toFixed(1)}%</p>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <p className="text-[10px] font-medium text-slate-600">Progress</p>
+                      <p className="text-xs font-bold text-white">{progress.toFixed(1)}%</p>
+                    </div>
+                    <div className="w-full h-1.5 bg-white/[0.03] border border-white/5 rounded-full overflow-hidden">
+                      <motion.div initial={{ width: 0 }} animate={{ width: `${progress}%` }} transition={{ duration: 1.5, ease: 'easeOut' }} className="h-full gradient-primary rounded-full" />
+                    </div>
                   </div>
-                  <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      animate={{ width: `${progress}%` }}
-                      className="h-full gradient-primary rounded-full"
-                    />
-                  </div>
-                </div>
 
-                <div className="glass p-5 rounded-2xl border-white/5 bg-black/20 grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-[8px] text-slate-600 font-black uppercase tracking-[0.2em] mb-1">Total Profits</p>
-                    <p className="text-sm font-black text-white">${totalProfit.toFixed(2)}</p>
+                  <div className="glass p-4 rounded-xl border-white/5 grid grid-cols-2 gap-4">
+                    <div className="space-y-0.5">
+                      <p className="text-[10px] text-slate-700 font-medium">Total Profit</p>
+                      <p className="text-sm font-bold text-slate-400">${totalProfit.toFixed(2)}</p>
+                    </div>
+                    <div className="text-right space-y-0.5">
+                      <p className="text-[10px] text-slate-700 font-medium">Earned So Far</p>
+                      <p className="text-sm font-bold text-nexus-primary">${currentEarnings.toFixed(2)}</p>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-[8px] text-slate-600 font-black uppercase tracking-[0.2em] mb-1">Harvested</p>
-                    <p className="text-sm font-black text-nexus-primary">${currentEarnings.toFixed(2)}</p>
-                  </div>
-                </div>
 
-                <div className="pt-4 border-t border-white/5 flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-slate-600">
-                  <div className="flex items-center gap-2">
-                    <Calendar size={12} />
-                    <span>Incept: {new Date(inv.createdAt).toLocaleDateString()}</span>
+                  <div className="flex justify-between items-center text-[10px] font-medium text-slate-700">
+                    <div className="flex items-center gap-1.5">
+                      <Calendar size={11} />
+                      <span>Started: {new Date(inv.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Clock size={11} />
+                      <span>{Math.max(inv.planId.durationDays - Math.floor((progress/100) * inv.planId.durationDays), 0)}d left</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Clock size={12} />
-                    <span>Cycle Ends In {Math.max(inv.planId.durationDays - Math.floor((progress/100) * inv.planId.durationDays), 0)}D</span>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
+                </motion.div>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      {/* Info Banner */}
+      <div className="p-5 bento-card border-none bg-black/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="w-9 h-9 glass rounded-xl flex items-center justify-center border-white/5">
+            <AlertCircle size={18} className="text-slate-600" />
+          </div>
+          <div>
+            <h4 className="text-xs font-semibold text-slate-300">Note</h4>
+            <p className="text-[10px] text-slate-600 mt-0.5">New investments may take up to 24 hours to show their first yield.</p>
+          </div>
         </div>
-      )}
+        <Link to="/dashboard/support" className="px-5 py-2 glass border-white/5 text-[10px] font-semibold text-slate-500 hover:text-white rounded-lg transition-all whitespace-nowrap">Get Support</Link>
+      </div>
     </div>
   );
 };

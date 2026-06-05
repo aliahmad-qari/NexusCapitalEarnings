@@ -67,11 +67,11 @@ export const AdminDashboard = () => {
             <Shield size={18} />
             <span className="text-[10px] font-black uppercase tracking-[0.4em]">Administrative Hub</span>
           </div>
-          <h2 className="text-3xl md:text-5xl font-black tracking-tighter uppercase">Nexus <span className="text-gradient">Control</span></h2>
+          <h2 className="text-3xl md:text-5xl font-black tracking-tighter uppercase">ROI <span className="text-gradient">Control</span></h2>
           <p className="text-slate-500 text-sm max-w-md normal-case font-medium uppercase tracking-widest">Global oversight of institutional strategy nodes and network integrity.</p>
         </div>
         <div className="flex items-center gap-4">
-           <Link to="/admin/transactions" className="gradient-primary px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-900 shadow-xl shadow-nexus-primary/20 hover:scale-105 active:scale-95 transition-all">
+           <Link to="/dashboard/admin/transactions" className="gradient-primary px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-900 shadow-xl shadow-nexus-primary/20 hover:scale-105 active:scale-95 transition-all">
               Settlement Queue
            </Link>
         </div>
@@ -124,7 +124,7 @@ export const AdminDashboard = () => {
         <div className="lg:col-span-8 space-y-6">
            <div className="flex items-center justify-between px-2">
               <h3 className="text-sm font-black uppercase tracking-widest text-white">Institutional Audit Trail</h3>
-              <Link to="/admin/logs" className="text-[10px] font-black text-nexus-primary uppercase tracking-widest hover:underline">View Full Registry</Link>
+              <Link to="/dashboard/admin/logs" className="text-[10px] font-black text-nexus-primary uppercase tracking-widest hover:underline">View Full Registry</Link>
            </div>
            <div className="nexus-card p-0 overflow-hidden border-white/5">
               <div className="overflow-x-auto">
@@ -174,9 +174,9 @@ export const AdminDashboard = () => {
               <h4 className="text-sm font-black uppercase tracking-widest text-white leading-none">Management Nodes</h4>
               <div className="space-y-4">
                  {[
-                   { label: 'Register Strategy', path: '/plans', icon: Briefcase, color: 'text-nexus-primary' },
-                   { label: 'Node Directory', path: '/admin/users', icon: Users, color: 'text-nexus-magenta' },
-                   { label: 'Syndicate Audit', path: '/admin/logs', icon: ShieldCheck, color: 'text-nexus-primary' },
+                   { label: 'Register Strategy', path: '/dashboard/plans', icon: Briefcase, color: 'text-nexus-primary' },
+                   { label: 'Node Directory', path: '/dashboard/admin/users', icon: Users, color: 'text-nexus-magenta' },
+                   { label: 'Syndicate Audit', path: '/dashboard/admin/logs', icon: ShieldCheck, color: 'text-nexus-primary' },
                  ].map((nav, i) => (
                     <Link key={i} to={nav.path} className="flex items-center justify-between p-5 glass border-white/5 rounded-3xl group hover:border-white/10 transition-all">
                        <div className="flex items-center gap-4">

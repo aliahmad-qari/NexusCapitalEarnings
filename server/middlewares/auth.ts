@@ -2,8 +2,6 @@ import jwt from 'jsonwebtoken';
 import { Response, NextFunction } from 'express';
 import { User } from '../models/User.ts';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-
 export const auth = async (req: any, res: Response, next: NextFunction) => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
@@ -11,7 +9,7 @@ export const auth = async (req: any, res: Response, next: NextFunction) => {
       return res.status(401).json({ message: 'Authentication required' });
     }
 
-    const decodedData: any = jwt.verify(token, JWT_SECRET);
+    const decodedData: any = jwt.verify(token, process.env.JWT_SECRET!);
     req.userId = decodedData?.userId;
 
     // Optional: Check if user is blocked

@@ -7,49 +7,49 @@ const testimonials = [
     location: 'London, UK',
     avatar: 'https://i.pravatar.cc/80?u=marcus-t',
     plan: 'Gold Plan',
-    quote:
-      "I've been investing with NexusCapital for 6 months and the consistency of daily payouts is unmatched. My Gold plan has returned over 180% of my initial investment.",
-    earned: '$47,200',
-    rating: 5,
-  },
-  {
-    name: 'Priya S.',
-    location: 'Singapore',
-    avatar: 'https://i.pravatar.cc/80?u=priya-s',
-    plan: 'VIP Plan',
-    quote:
-      "The dedicated wealth manager assigned to my VIP account is outstanding. Real-time insights, instant withdrawals, and returns that beat every traditional fund I've used.",
-    earned: '$284,500',
-    rating: 5,
-  },
-  {
-    name: 'James O.',
-    location: 'Toronto, CA',
-    avatar: 'https://i.pravatar.cc/80?u=james-o',
-    plan: 'Silver Plan',
-    quote:
-      "Started with the Silver plan 3 months ago. The platform is transparent, withdrawals are instant, and the support team responds within minutes. Highly recommended.",
-    earned: '$18,900',
-    rating: 5,
-  },
-];
+      quote:
+        "I've been investing with ROI for 6 months and the consistency of daily payouts is unmatched. My Gold plan has returned over 180% of my initial investment.",
+      earned: '$47,200',
+      rating: 5,
+    },
+    {
+      name: 'Priya S.',
+      location: 'Singapore',
+      avatar: 'https://i.pravatar.cc/80?u=priya-s',
+      plan: 'VIP Plan',
+      quote:
+        "The dedicated wealth manager assigned to my VIP account is outstanding. Real-time insights, instant withdrawals, and returns that beat every traditional fund I've used.",
+      earned: '$284,500',
+      rating: 5,
+    },
+    {
+      name: 'James O.',
+      location: 'Toronto, CA',
+      avatar: 'https://i.pravatar.cc/80?u=james-o',
+      plan: 'Silver Plan',
+      quote:
+        "Started with the Silver plan 3 months ago. The platform is transparent, withdrawals are instant, and the support team responds within minutes. Highly recommended.",
+      earned: '$18,900',
+      rating: 5,
+    },
+  ];
 
-export const Testimonials = () => {
-  return (
-    <section className="py-28 px-5 sm:px-10">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-20">
-          <p className="text-nexus-primary text-xs font-semibold uppercase tracking-widest mb-4">
-            Investor Stories
-          </p>
-          <h2 className="text-headline-lg font-headline-lg text-white mb-4">
-            What Our Investors Say
-          </h2>
-          <p className="text-slate-400 text-body-md max-w-xl mx-auto">
-            Join 12,000+ investors who trust NexusCapital with their financial future.
-          </p>
-        </div>
+  export const Testimonials = () => {
+    return (
+      <section className="py-28 px-5 sm:px-10">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-20">
+            <p className="text-nexus-primary text-xs font-semibold uppercase tracking-widest mb-4">
+              Investor Stories
+            </p>
+            <h2 className="text-headline-lg font-headline-lg text-white mb-4">
+              What Our Investors Say
+            </h2>
+            <p className="text-slate-400 text-body-md max-w-xl mx-auto">
+              Join 12,000+ investors who trust ROI with their financial future.
+            </p>
+          </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {testimonials.map(({ name, location, avatar, plan, quote, earned, rating }) => (

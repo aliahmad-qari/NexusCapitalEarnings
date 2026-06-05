@@ -10,7 +10,7 @@ import apiRoutes from './server/routes/api.ts';
 import { initCronJobs } from './server/jobs/profitJob.ts';
 import { InvestmentPlan } from './server/models/Investment.ts';
 
-dotenv.config();
+dotenv.config({ path: '.env' });
 
 if (!process.env.MONGODB_URI || !process.env.JWT_SECRET) {
   console.error('Missing required environment variables: MONGODB_URI, JWT_SECRET');

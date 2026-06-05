@@ -4,8 +4,6 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { User } from '../models/User.ts';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-
 export const register = async (req: Request, res: Response) => {
   try {
     const { name, email, password, referredBy } = req.body;
@@ -37,7 +35,7 @@ export const register = async (req: Request, res: Response) => {
 
     await user.save();
 
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, { expiresIn: '7d' });
 
     res.status(201).json({
       token,
@@ -79,7 +77,7 @@ export const login = async (req: Request, res: Response) => {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, { expiresIn: '7d' });
 
     res.status(200).json({
       token,

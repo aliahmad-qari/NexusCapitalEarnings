@@ -20,12 +20,12 @@ export const ComingSoon = ({ title }: { title: string }) => {
           <span className="text-[10px] font-black uppercase tracking-[0.4em]">Optimizing Node...</span>
         </div>
         <p className="text-slate-500 max-w-md mx-auto text-sm normal-case font-medium leading-relaxed">
-          Our engineering team is currently synchronizing this module with the main nexus registry. Deployment is scheduled for the next harvesting cycle.
+          Our engineering team is currently synchronizing this module with the main ROI registry. Deployment is scheduled for the next harvesting cycle.
         </p>
       </div>
 
       <Link 
-        to="/"
+        to="/dashboard"
         className="flex items-center gap-3 px-8 py-4 glass border-white/5 text-slate-400 hover:text-white hover:border-white/20 rounded-2xl transition-all font-black text-[10px] uppercase tracking-widest"
       >
         <ArrowLeft size={16} /> Return to Dashboard

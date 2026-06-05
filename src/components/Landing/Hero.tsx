@@ -1,19 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, ShieldCheck, TrendingUp, Zap } from 'lucide-react';
-
-const portfolioReturns = [
-  { plan: 'Gold Plan', amount: '+$847.20', time: 'Today', color: '#F59E0B' },
-  { plan: 'Silver Plan', amount: '+$234.15', time: 'Yesterday', color: '#94a3b8' },
-  { plan: 'Starter Plan', amount: '+$89.50', time: '2 days ago', color: '#00F5A0' },
-];
-
-const bars = [42, 58, 45, 72, 55, 85, 68, 91, 74, 88, 95, 100];
+import { ChevronRight, ShieldCheck, Zap, Headphones, Users } from 'lucide-react';
 
 const trustBadges = [
-  { icon: ShieldCheck, label: 'Bank-Grade Security' },
+  { icon: ShieldCheck, label: 'Bank Grade Security' },
   { icon: Zap, label: 'Instant Withdrawals' },
-  { icon: TrendingUp, label: 'Daily Returns' },
+  { icon: Headphones, label: '24/7 Support' },
+  { icon: Users, label: 'Trusted by 10K+ Users' },
 ];
 
 export const Hero = () => {
@@ -27,34 +20,32 @@ export const Hero = () => {
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
         {/* Left: Text Content */}
-        <div className="z-10">
+        <div className="z-10 space-y-6">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-nexus-primary/10 border border-nexus-primary/20 rounded-full px-4 py-1.5 mb-8">
+          <div className="inline-flex items-center gap-2 bg-nexus-primary/10 border border-nexus-primary/20 rounded-full px-4 py-1.5">
             <span className="flex h-2 w-2 rounded-full bg-nexus-primary animate-pulse" />
             <span className="text-nexus-primary text-xs font-semibold uppercase tracking-widest">
-              Institutional Grade Platform
+              Smart Investments
             </span>
           </div>
 
           {/* Headline */}
-          <h1 className="text-display-lg font-display-lg text-white mb-6">
-            Smart Investments.{' '}
-            <span className="text-gradient">Real Returns.</span>
+          <h1 className="text-display-lg font-display-lg text-white">
+            Grow Your Wealth With <br />
+            <span className="text-gradient">Daily Profits</span>
           </h1>
 
-          <p className="text-body-lg font-body-lg text-slate-400 max-w-lg mb-10">
-            Join thousands of investors earning consistent daily returns through
-            our algorithmically-driven wealth management platform built for
-            institutional performance.
+          <p className="text-body-lg font-body-lg text-slate-400 max-w-lg">
+            Invest once and earn daily profits. Secure. Transparent. Profitable.
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-wrap gap-4 mb-12">
+          <div className="flex flex-wrap gap-4 pt-4">
             <button
               onClick={() => navigate('/register')}
-              className="primary-gradient text-nexus-bg font-bold text-sm px-8 py-4 rounded-xl shadow-xl shadow-nexus-primary/20 hover:opacity-90 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
+              className="primary-gradient text-nexus-bg font-extrabold text-sm px-8 py-4 rounded-xl shadow-xl shadow-nexus-primary/20 hover:opacity-90 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
             >
-              Start Investing
+              Invest Now
               <ChevronRight size={16} strokeWidth={3} />
             </button>
             <button
@@ -66,83 +57,41 @@ export const Hero = () => {
           </div>
 
           {/* Trust Badges */}
-          <div className="flex flex-wrap gap-4">
+          <div className="grid grid-cols-2 gap-4 pt-8 border-t border-white/5">
             {trustBadges.map(({ icon: Icon, label }) => (
-              <div key={label} className="flex items-center gap-2 text-slate-400 text-xs">
-                <Icon size={14} className="text-nexus-primary" />
-                <span>{label}</span>
+              <div key={label} className="flex items-center gap-3 text-slate-400 text-sm">
+                <div className="p-2 rounded-lg bg-white/5 border border-white/8 text-nexus-primary">
+                  <Icon size={16} />
+                </div>
+                <span className="font-semibold">{label}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Right: Animated Portfolio Card */}
-        <div className="relative hidden lg:block z-10">
-          {/* Glow behind card */}
-          <div className="absolute inset-0 bg-nexus-primary/10 blur-3xl rounded-full scale-75" />
+        {/* Right: Modern 3D Illustration Placeholder */}
+        <div className="relative hidden lg:flex items-center justify-center z-10 h-[450px]">
+          {/* Glowing circles */}
+          <div className="absolute w-[350px] h-[350px] rounded-full border border-nexus-primary/20 animate-[spin_40s_linear_infinite]" />
+          <div className="absolute w-[280px] h-[280px] rounded-full border border-dashed border-nexus-secondary/15 animate-[spin_20s_linear_infinite_reverse]" />
+          <div className="absolute w-[400px] h-[400px] bg-nexus-primary/5 blur-3xl rounded-full" />
 
-          <div className="glass-card inner-glow-top rounded-3xl p-7 relative">
-            {/* Header */}
-            <div className="flex justify-between items-start mb-6">
-              <div>
-                <p className="text-slate-500 text-xs uppercase tracking-widest font-semibold mb-1.5">
-                  Portfolio Value
-                </p>
-                <p className="text-white text-4xl font-black tracking-tight">
-                  $48,392<span className="text-2xl text-slate-400">.50</span>
-                </p>
-              </div>
-              <div className="flex items-center gap-1.5 bg-nexus-primary/10 border border-nexus-primary/20 rounded-xl px-3 py-1.5">
-                <TrendingUp size={14} className="text-nexus-primary" />
-                <span className="text-nexus-primary text-sm font-bold">+12.4%</span>
+          {/* Central CSS 3D Cube/Shield Structure */}
+          <div className="relative w-48 h-48 flex items-center justify-center">
+            {/* Core Shield */}
+            <div className="absolute w-36 h-36 rounded-[2.5rem] bg-gradient-to-tr from-nexus-primary to-nexus-secondary opacity-20 blur-xl animate-pulse" />
+            <div className="absolute w-32 h-32 rounded-[2rem] border border-nexus-primary/40 bg-gradient-to-br from-white/[0.07] to-transparent backdrop-blur-2xl flex items-center justify-center shadow-2xl group hover:border-nexus-primary/60 transition-colors duration-500">
+              <div className="w-16 h-16 rounded-full bg-nexus-primary/10 border border-nexus-primary/30 flex items-center justify-center text-nexus-primary">
+                <ShieldCheck size={36} className="animate-[pulse_3s_ease-in-out_infinite]" />
               </div>
             </div>
-
-            {/* Mini Bar Chart */}
-            <div className="flex items-end gap-1 h-20 mb-6 px-1">
-              {bars.map((h, i) => (
-                <div
-                  key={i}
-                  className="flex-1 rounded-sm transition-all"
-                  style={{
-                    height: `${h}%`,
-                    background: `rgba(0,245,160,${0.15 + (h / 100) * 0.65})`,
-                  }}
-                />
-              ))}
+            
+            {/* Orbiting particles */}
+            <div className="absolute -top-4 -right-4 w-12 h-12 rounded-2xl glass-premium flex items-center justify-center border-nexus-gold/40 shadow-lg animate-[bounce_4s_ease-in-out_infinite]">
+              <span className="text-nexus-gold font-extrabold text-sm">$</span>
             </div>
-
-            {/* Recent Returns */}
-            <div className="space-y-2.5">
-              <p className="text-slate-500 text-xs uppercase tracking-widest font-semibold mb-3">
-                Recent Returns
-              </p>
-              {portfolioReturns.map((item, i) => (
-                <div
-                  key={i}
-                  className="flex justify-between items-center p-3.5 bg-white/4 hover:bg-white/6 rounded-xl transition-colors"
-                >
-                  <div className="flex items-center gap-2.5">
-                    <div
-                      className="w-2 h-2 rounded-full"
-                      style={{ backgroundColor: item.color }}
-                    />
-                    <span className="text-slate-300 text-sm">{item.plan}</span>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-nexus-primary text-sm font-bold">{item.amount}</span>
-                    <span className="text-slate-500 text-xs ml-2">{item.time}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Bottom divider */}
-            <div className="mt-5 pt-5 border-t border-white/6 flex justify-between items-center">
-              <span className="text-slate-500 text-xs">Next payout in</span>
-              <span className="text-nexus-primary text-sm font-bold font-mono">
-                06:42:18
-              </span>
+            <div className="absolute -bottom-2 -left-6 w-10 h-10 rounded-xl glass flex items-center justify-center border-nexus-primary/30 shadow-lg animate-[bounce_5s_ease-in-out_infinite_1s]">
+              <Zap size={16} className="text-nexus-primary" />
             </div>
           </div>
         </div>

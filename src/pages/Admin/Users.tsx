@@ -124,7 +124,7 @@ export const UserManagement = () => {
             <span className="text-[10px] font-black uppercase tracking-[0.4em]">Node Directory Matrix</span>
           </div>
           <h2 className="text-3xl md:text-5xl font-black tracking-tighter uppercase">Peer <span className="text-gradient">Management</span></h2>
-          <p className="text-slate-500 text-sm max-w-md normal-case font-medium uppercase tracking-widest">Controlling protocol permissions and network access for all nexus nodes.</p>
+          <p className="text-slate-500 text-sm max-w-md normal-case font-medium uppercase tracking-widest">Controlling protocol permissions and network access for all ROI nodes.</p>
         </div>
         <div className="flex flex-col lg:flex-row items-center gap-4 w-full md:w-auto">
            <div className="relative w-full sm:w-80">

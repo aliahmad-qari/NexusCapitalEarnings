@@ -1,25 +1,16 @@
 import { useEffect, useState } from 'react';
-import { 
-  ArrowUpRight, ArrowDownRight, CreditCard, TrendingUp, 
-  History as HistoryIcon, Clock, Filter, Activity, Search
-} from 'lucide-react';
-import { motion } from 'motion/react';
+import { History as HistoryIcon, Filter, Search, ArrowUpRight, ArrowDownRight, Activity, Download } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 export const History = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const [filterType, setFilterType] = useState('all');
+  const [searchQuery, setSearchType] = useState('');
 
   useEffect(() => {
     fetchHistory();
-
-    // Periodic polling to keep history and user balance in sync
-    const interval = setInterval(() => {
-      if (document.visibilityState === 'visible') {
-        fetchHistory();
-      }
-    }, 15000);
-
+    const interval = setInterval(() => { if (document.visibilityState === 'visible') fetchHistory(); }, 15000);
     return () => clearInterval(interval);
   }, []);
 
@@ -28,29 +19,21 @@ export const History = () => {
     try {
       const token = localStorage.getItem('token');
       const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const res = await fetch(`${apiBase}/api/wallet/history`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await fetch(`${apiBase}/api/wallet/history`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
-      if (Array.isArray(data)) {
-        setHistory(data);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+      if (Array.isArray(data)) setHistory(data);
+    } catch (err) { console.error(err); } finally { setLoading(false); }
   };
 
   const filteredHistory = history.filter((item: any) => {
-    if (filterType === 'all') return true;
-    return item.type === filterType;
+    const matchesFilter = filterType === 'all' || item.type === filterType;
+    const matchesSearch = item._id.toLowerCase().includes(searchQuery.toLowerCase()) || item.type.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesFilter && matchesSearch;
   });
 
   const getStatusColor = (status: string) => {
     switch(status) {
-      case 'completed':
-      case 'approved': return 'text-emerald-400 bg-emerald-500/10 border-emerald-400/20';
+      case 'completed': case 'approved': return 'text-emerald-400 bg-emerald-500/10 border-emerald-400/20';
       case 'pending': return 'text-yellow-500 bg-yellow-500/10 border-yellow-500/20';
       case 'rejected': return 'text-rose-500 bg-rose-500/10 border-rose-500/20';
       default: return 'text-white/40 bg-white/5 border-white/5';
@@ -58,116 +41,103 @@ export const History = () => {
   };
 
   return (
-    <div className="px-4 md:px-8 lg:px-12 pt-4 md:pt-8 lg:pt-12 max-w-[1600px] mx-auto space-y-12 text-slate-200 uppercase tracking-tight">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-4">
-        <div className="space-y-2">
+    <div className="px-4 md:px-8 lg:px-12 pt-6 pb-16 max-w-[1700px] mx-auto space-y-6 selection:bg-nexus-primary/20 selection:text-nexus-primary">
+      
+      {/* Header */}
+      <header className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
+        <div className="space-y-1">
           <div className="flex items-center gap-2 text-nexus-primary">
-            <HistoryIcon size={18} />
-            <span className="text-[10px] font-black uppercase tracking-[0.4em]">Audit Registry</span>
+            <HistoryIcon size={14} className="animate-pulse" />
+            <span className="text-[10px] font-semibold uppercase tracking-widest">Transaction History</span>
           </div>
-          <h2 className="text-3xl md:text-5xl font-black tracking-tighter uppercase">Capital <span className="text-gradient">Registry</span></h2>
-          <p className="text-slate-500 text-sm max-w-md normal-case font-medium">Comprehensive audit trail of institutional settlements and capital node deployments.</p>
+          <h2 className="text-xl font-bold text-white">Audit Ledger</h2>
+          <p className="text-slate-500 text-xs">Complete record of all deposits, withdrawals, profits and investments.</p>
         </div>
-        <div className="flex items-center gap-3 w-full md:w-auto">
-          <div className="flex-1 md:flex-none relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600" size={16} />
-            <input 
-              type="text" 
-              placeholder="SEARCH REF_ID..." 
-              className="w-full md:w-64 glass py-3.5 pl-12 pr-6 rounded-2xl border-white/5 outline-none focus:border-nexus-primary/30 text-[10px] font-black tracking-widest placeholder:text-slate-800"
-            />
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full xl:w-auto">
+          <div className="flex-1 sm:w-72 relative group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-700 group-focus-within:text-nexus-primary transition-colors" size={15} />
+            <input type="text" placeholder="Search transactions..." value={searchQuery} onChange={(e) => setSearchType(e.target.value)} className="w-full bg-white/[0.03] border border-white/5 py-2.5 pl-10 pr-4 rounded-xl outline-none focus:border-nexus-primary/30 text-xs font-medium placeholder:text-slate-700 text-white transition-all" />
           </div>
-          <button className="gradient-primary px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-900 shadow-lg shadow-nexus-primary/20 hover:scale-105 active:scale-95 transition-all">
-             Export CSV
+          <button className="h-10 px-5 gradient-primary rounded-xl text-xs font-semibold text-slate-900 shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 whitespace-nowrap">
+            <Download size={14} /> Export CSV
           </button>
         </div>
       </header>
 
-      <div className="space-y-8">
-        <div className="flex items-center justify-between px-2">
-          <div className="flex items-center gap-2">
-            <Filter size={14} className="text-slate-700" />
-            <span className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">Filter History</span>
-          </div>
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
-            {['all', 'deposit', 'withdraw', 'profit', 'investment'].map(t => (
-              <button 
-                key={t}
-                onClick={() => setFilterType(t)}
-                className={`px-4 py-2 rounded-xl border text-[9px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${filterType === t ? 'bg-nexus-primary/10 border-nexus-primary/30 text-nexus-primary' : 'bg-white/[0.02] border-white/5 text-slate-600 hover:text-white'}`}
-              >
-                {t}
-              </button>
-            ))}
-          </div>
+      {/* Filters */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+        <div className="p-2 glass rounded-xl border-white/5 shrink-0">
+          <Filter size={13} className="text-slate-600" />
         </div>
+        {['all', 'deposit', 'withdraw', 'profit', 'investment', 'referral'].map(t => (
+          <button key={t} onClick={() => setFilterType(t)}
+            className={`px-4 py-2 rounded-xl border text-[10px] font-semibold uppercase tracking-wider transition-all whitespace-nowrap ${filterType === t ? 'bg-nexus-primary/10 border-nexus-primary/30 text-nexus-primary' : 'bg-white/[0.01] border-white/5 text-slate-600 hover:text-white hover:bg-white/[0.03]'}`}>
+            {t}
+          </button>
+        ))}
+      </div>
 
-        {loading ? (
-          <div className="p-20 flex flex-col items-center justify-center gap-6">
-             <div className="w-12 h-12 border-4 border-nexus-primary/20 border-t-nexus-primary rounded-full animate-spin"></div>
-             <p className="text-nexus-primary/40 font-black uppercase tracking-[0.4em] text-[10px]">Synchronizing Ledger Registry...</p>
-          </div>
+      {/* Table */}
+      <AnimatePresence mode="wait">
+        {loading && history.length === 0 ? (
+          <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-20 flex flex-col items-center justify-center gap-4">
+            <div className="w-10 h-10 border-4 border-nexus-primary/10 border-t-nexus-primary rounded-full animate-spin"></div>
+            <p className="text-nexus-primary/50 font-medium text-xs">Loading transactions...</p>
+          </motion.div>
         ) : filteredHistory.length === 0 ? (
-          <div className="nexus-card rounded-[48px] p-24 flex flex-col items-center border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent">
-             <div className="w-20 h-20 bg-white/5 border border-white/5 rounded-[32px] flex items-center justify-center mb-8">
-                <HistoryIcon className="text-slate-800" size={32} />
-             </div>
-             <h3 className="text-xl font-black mb-3 tracking-tighter uppercase">Audit Status: Null</h3>
-             <p className="text-slate-600 text-center max-w-xs text-xs leading-relaxed font-bold uppercase tracking-widest">Perform a capital sequence to initiate audit logs.</p>
-          </div>
+          <motion.div key="empty" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="nexus-card rounded-2xl p-16 flex flex-col items-center border-white/5">
+            <Activity className="text-slate-800 mb-4" size={36} />
+            <h3 className="text-sm font-bold mb-2 text-white">No Transactions Found</h3>
+            <p className="text-slate-600 text-center text-xs">No records match your current filter.</p>
+          </motion.div>
         ) : (
-          <div className="nexus-card p-0 overflow-hidden border-white/5">
+          <motion.div key="table" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="nexus-card p-0 overflow-hidden border-white/5 shadow-2xl">
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
+              <table className="w-full text-left border-collapse min-w-[800px]">
                 <thead>
-                  <tr className="border-b border-white/5 bg-white/[0.01]">
-                    <th className="px-8 py-6 text-[10px] font-black text-slate-600 uppercase tracking-widest">Entry Date</th>
-                    <th className="px-8 py-6 text-[10px] font-black text-slate-600 uppercase tracking-widest">Operation Type</th>
-                    <th className="px-8 py-6 text-[10px] font-black text-slate-600 uppercase tracking-widest">Amount (USD)</th>
-                    <th className="px-8 py-6 text-[10px] font-black text-slate-600 uppercase tracking-widest">Status</th>
-                    <th className="px-8 py-6 text-[10px] font-black text-slate-600 uppercase tracking-widest text-right">Reference</th>
+                  <tr className="border-b border-white/10 bg-white/[0.02]">
+                    <th className="px-6 py-4 text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Date</th>
+                    <th className="px-6 py-4 text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Type</th>
+                    <th className="px-6 py-4 text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Amount (USD)</th>
+                    <th className="px-6 py-4 text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-4 text-[10px] font-semibold text-slate-500 uppercase tracking-wider text-right">Reference ID</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {filteredHistory.map((item: any) => (
                     <tr key={item._id} className="hover:bg-white/[0.02] transition-colors group">
-                      <td className="px-8 py-8 whitespace-nowrap">
-                        <div className="flex items-center gap-3">
-                          <Clock size={14} className="text-slate-700" />
-                          <span className="text-xs font-black text-slate-300">
-                            {new Date(item.createdAt).toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' })}
-                          </span>
-                        </div>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="text-xs font-medium text-slate-300">
+                          {new Date(item.createdAt).toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' })}
+                        </span>
                       </td>
-                      <td className="px-8 py-8">
-                        <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-lg border text-[9px] font-black uppercase tracking-widest ${
-                          item.type === 'withdraw' ? 'border-rose-500/20 bg-rose-500/5 text-rose-500' :
-                          'border-nexus-primary/20 bg-nexus-primary/5 text-nexus-primary'
-                        }`}>
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-[10px] font-semibold uppercase tracking-wider ${item.type === 'withdraw' ? 'border-rose-500/20 bg-rose-500/5 text-rose-500' : 'border-nexus-primary/20 bg-nexus-primary/5 text-nexus-primary'}`}>
+                          {item.type === 'withdraw' ? <ArrowUpRight size={11} /> : <ArrowDownRight size={11} />}
                           {item.type}
                         </span>
                       </td>
-                      <td className="px-8 py-8 whitespace-nowrap">
-                        <span className={`text-lg font-black tracking-tighter ${item.type === 'withdraw' ? 'text-rose-500' : 'text-slate-200'}`}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`text-sm font-bold ${item.type === 'withdraw' ? 'text-rose-500' : 'text-white'}`}>
                           {item.type === 'withdraw' ? '-' : '+'}${item.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                         </span>
                       </td>
-                      <td className="px-8 py-8">
-                        <span className={`text-[9px] font-black px-3 py-1.5 rounded-lg border uppercase tracking-[0.2em] ${getStatusColor(item.status)}`}>
+                      <td className="px-6 py-4">
+                        <span className={`text-[10px] font-semibold px-3 py-1 rounded-lg border uppercase tracking-wider ${getStatusColor(item.status)}`}>
                           {item.status}
                         </span>
                       </td>
-                      <td className="px-8 py-8 text-right font-mono text-[10px] text-slate-700 uppercase tracking-tighter">
-                        REF_{item._id.slice(-8).toUpperCase()}
+                      <td className="px-6 py-4 text-right font-mono text-[10px] text-slate-700 uppercase tracking-wider group-hover:text-slate-500 transition-colors">
+                        #{item._id.slice(-10).toUpperCase()}
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-          </div>
+          </motion.div>
         )}
-      </div>
+      </AnimatePresence>
     </div>
   );
 };
