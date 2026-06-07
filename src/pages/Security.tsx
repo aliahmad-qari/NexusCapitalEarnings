@@ -11,15 +11,27 @@ export const Security = () => {
   return (
     <div className="px-4 md:px-8 lg:px-12 pt-6 pb-16 max-w-[1400px] mx-auto space-y-6 text-slate-200 selection:bg-nexus-primary/20 selection:text-nexus-primary">
       
-      {/* Header */}
-      <header className="space-y-1">
-        <div className="flex items-center gap-2 text-nexus-primary">
-          <Lock size={14} className="animate-pulse" />
-          <span className="text-[10px] font-semibold uppercase tracking-widest">Account Security</span>
+      {/* Hero Banner */}
+      <div className="relative overflow-hidden rounded-2xl border border-white/10">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0e1a] to-[#080c18]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-nexus-primary/8 via-transparent to-rose-500/5" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-nexus-primary/40 to-transparent" />
+        <div className="absolute -top-16 -right-16 w-48 h-48 bg-nexus-primary/8 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative z-10 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+          <div className="space-y-2">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-nexus-primary/30 bg-nexus-primary/10 w-fit">
+              <Lock size={11} className="text-nexus-primary" />
+              <span className="text-[10px] font-bold text-nexus-primary uppercase tracking-widest">Account Security</span>
+            </div>
+            <h2 className="text-2xl md:text-3xl font-black text-white">Security <span className="text-transparent bg-clip-text bg-gradient-to-r from-nexus-primary to-cyan-400">Settings</span></h2>
+            <p className="text-slate-500 text-xs max-w-md">Manage your passwords, two-factor authentication, and active sessions.</p>
+          </div>
+          <div className={`flex items-center gap-2 px-5 py-3 rounded-xl border text-xs font-semibold transition-all ${is2FAEnabled ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400' : 'border-rose-500/30 bg-rose-500/10 text-rose-400'}`}>
+            <Shield size={14} />
+            {is2FAEnabled ? '2FA Enabled' : '2FA Disabled'}
+          </div>
         </div>
-        <h2 className="text-xl font-bold text-white">Security Settings</h2>
-        <p className="text-slate-500 text-xs">Manage your account security and active sessions.</p>
-      </header>
+      </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
         

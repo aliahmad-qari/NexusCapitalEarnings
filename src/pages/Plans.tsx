@@ -134,15 +134,40 @@ export const Plans = () => {
   return (
     <div className="px-4 md:px-8 lg:px-12 pt-6 pb-16 max-w-[1700px] mx-auto space-y-8 text-slate-200 selection:bg-nexus-primary/20 selection:text-nexus-primary">
       
-      {/* Header */}
+      {/* Hero Banner */}
+      <div className="relative overflow-hidden rounded-2xl border border-white/10">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0e1a] to-[#080c18]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-nexus-primary/8 via-transparent to-nexus-magenta/8" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-nexus-primary/40 to-transparent" />
+        <div className="absolute -top-20 -right-20 w-60 h-60 bg-nexus-primary/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative z-10 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-nexus-primary/30 bg-nexus-primary/10">
+                <BarChart2 size={11} className="text-nexus-primary" />
+                <span className="text-[10px] font-bold text-nexus-primary uppercase tracking-widest">Investment Plans</span>
+              </div>
+            </div>
+            <h2 className="text-2xl md:text-3xl font-black text-white">Choose Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-nexus-primary to-cyan-400">Strategy</span></h2>
+            <p className="text-slate-500 text-xs max-w-xl">AI-driven investment strategies tailored to different risk appetites and capital amounts. Start earning today.</p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <div className="flex items-center gap-2 px-4 py-2.5 glass rounded-xl border border-white/8">
+              <div className="w-1.5 h-1.5 rounded-full bg-nexus-primary animate-ping" />
+              <span className="text-[10px] font-semibold text-white">Live Returns</span>
+            </div>
+            <div className="px-4 py-2.5 glass rounded-xl border border-white/8">
+              <span className="text-[10px] font-semibold text-slate-400">{plans.length} Active Plans</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Header controls */}
       <header className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-5">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-nexus-primary">
-            <BarChart2 size={14} className="animate-pulse" />
-            <span className="text-[10px] font-semibold uppercase tracking-widest">Investment Plans</span>
-          </div>
-          <h2 className="text-xl font-bold text-white">Strategy Matrix</h2>
-          <p className="text-slate-500 text-xs max-w-xl">Choose from AI-driven investment strategies tailored to different risk levels and capital amounts.</p>
+          <h3 className="text-base font-bold text-white">All Plans</h3>
+          <p className="text-slate-600 text-xs">Filter, sort and compare plans before investing.</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">

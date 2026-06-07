@@ -66,51 +66,69 @@ export const Wallet = () => {
   return (
     <div className="px-4 md:px-8 lg:px-12 pt-6 pb-16 max-w-[1700px] mx-auto space-y-6 selection:bg-nexus-primary/20 selection:text-nexus-primary">
       
-      {/* Header */}
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-5">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-nexus-primary">
-            <WalletIcon size={14} className="animate-pulse" />
-            <span className="text-[10px] font-semibold uppercase tracking-widest">Wallet</span>
+      {/* Hero Banner */}
+      <div className="relative overflow-hidden rounded-2xl border border-white/10">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0e1a] to-[#080c18]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/8 via-transparent to-nexus-primary/8" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent" />
+        <div className="absolute -bottom-16 -right-16 w-56 h-56 bg-nexus-primary/8 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative z-10 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+          <div className="space-y-2">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-cyan-400/30 bg-cyan-400/10 w-fit">
+              <WalletIcon size={11} className="text-cyan-400" />
+              <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-widest">My Wallet</span>
+            </div>
+            <h2 className="text-2xl md:text-3xl font-black text-white">Manage Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-nexus-primary">Funds</span></h2>
+            <p className="text-slate-500 text-xs max-w-md">Deposit, withdraw and track all your transactions in one secure place.</p>
           </div>
-          <h2 className="text-xl font-bold text-white">My Wallet</h2>
-          <p className="text-slate-500 text-xs">Manage your deposits, withdrawals, and transaction history.</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="px-4 py-3 glass rounded-xl border border-white/8 text-center">
+              <p className="text-[9px] text-slate-600 uppercase tracking-wider mb-0.5">Balance</p>
+              <p className="text-sm font-bold text-white">${user?.wallet.totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+            </div>
+            <div className="px-4 py-3 glass rounded-xl border border-white/8 text-center">
+              <p className="text-[9px] text-slate-600 uppercase tracking-wider mb-0.5">Profits</p>
+              <p className="text-sm font-bold text-nexus-primary">+${user?.wallet.profitBalance.toFixed(2)}</p>
+            </div>
+          </div>
         </div>
-        <AnimatePresence>
-          {alert && (
-            <motion.div initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 16 }}
-              className={`p-4 rounded-2xl border flex items-center gap-3 shadow-xl ${alert.type === 'success' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : alert.type === 'error' ? 'bg-rose-500/10 border-rose-500/20 text-rose-500' : 'bg-nexus-primary/10 border-nexus-primary/20 text-nexus-primary'}`}>
-              <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
-                {alert.type === 'success' ? <CheckCircle2 size={16} /> : alert.type === 'error' ? <AlertCircle size={16} /> : <Cpu size={16} className="animate-spin" />}
-              </div>
-              <span className="text-xs font-medium max-w-[180px] leading-relaxed">{alert.message}</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </header>
+      </div>
 
       {/* Stats */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
           { label: 'Available Balance', value: user?.wallet.totalBalance, icon: WalletIcon, color: 'text-nexus-primary', trend: 'Total funds' },
           { label: 'Total Deposited', value: user?.wallet.depositBalance, icon: Download, color: 'text-nexus-primary', trend: 'Cumulative' },
           { label: 'Total Withdrawn', value: totalWithdrawn, icon: Upload, color: 'text-nexus-magenta', trend: 'Completed' },
           { label: 'Profit Earned', value: user?.wallet.profitBalance, icon: Award, color: 'text-nexus-primary', trend: 'From investments' },
         ].map((item) => (
-          <div key={item.label} className="nexus-card p-5 flex flex-col justify-between h-36 group hover:border-white/10">
+          <div key={item.label} className="nexus-card  flex flex-col justify-between h-[110px] group">
             <div className="flex justify-between items-start">
-              <div className="p-2 glass rounded-xl border-white/5 group-hover:border-nexus-primary/20 transition-colors">
-                <item.icon className={item.color} size={16} />
+              <div className="p-1.5 glass rounded-lg border-white/5 group-hover:border-nexus-primary/20 transition-colors">
+                <item.icon className={item.color} size={14} />
               </div>
-              <span className="text-[10px] text-slate-700">{item.trend}</span>
+              <span className="text-[8px] text-slate-700">{item.trend}</span>
             </div>
             <div>
-              <p className="text-slate-500 text-[10px] font-medium uppercase tracking-wider mb-1">{item.label}</p>
-              <h3 className="text-lg font-bold text-white">${item.value?.toLocaleString(undefined, { minimumFractionDigits: 2 })}</h3>
+              <p className="text-slate-500 text-[8px] font-medium uppercase tracking-wider mb-0.5">{item.label}</p>
+              <h3 className="text-sm font-bold text-white">${item.value?.toLocaleString(undefined, { minimumFractionDigits: 2 })}</h3>
             </div>
           </div>
         ))}
       </section>
+
+      {/* Alert */}
+      <AnimatePresence>
+        {alert && (
+          <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+            className={`p-4 rounded-2xl border flex items-center gap-3 shadow-xl ${alert.type === 'success' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : alert.type === 'error' ? 'bg-rose-500/10 border-rose-500/20 text-rose-500' : 'bg-nexus-primary/10 border-nexus-primary/20 text-nexus-primary'}`}>
+            <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
+              {alert.type === 'success' ? <CheckCircle2 size={16} /> : alert.type === 'error' ? <AlertCircle size={16} /> : <Cpu size={16} className="animate-spin" />}
+            </div>
+            <span className="text-xs font-medium leading-relaxed">{alert.message}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Actions */}
       <section className="space-y-4">

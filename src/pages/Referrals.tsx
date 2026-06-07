@@ -24,15 +24,33 @@ export const Referrals = () => {
   return (
     <div className="px-4 md:px-8 lg:px-12 pt-6 pb-16 max-w-[1700px] mx-auto space-y-6 text-slate-200 selection:bg-nexus-primary/20 selection:text-nexus-primary">
       
-      {/* Header */}
-      <header className="space-y-1">
-        <div className="flex items-center gap-2 text-nexus-primary">
-          <Users size={14} className="animate-pulse" />
-          <span className="text-[10px] font-semibold uppercase tracking-widest">Referral Program</span>
+      {/* Hero Banner */}
+      <div className="relative overflow-hidden rounded-2xl border border-white/10">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0e1a] to-[#080c18]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-nexus-magenta/8 via-transparent to-purple-500/8" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-nexus-magenta/40 to-transparent" />
+        <div className="absolute -top-20 -right-20 w-56 h-56 bg-nexus-magenta/8 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative z-10 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+          <div className="space-y-2">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-nexus-magenta/30 bg-nexus-magenta/10 w-fit">
+              <Users size={11} className="text-nexus-magenta" />
+              <span className="text-[10px] font-bold text-nexus-magenta uppercase tracking-widest">Referral Program</span>
+            </div>
+            <h2 className="text-2xl md:text-3xl font-black text-white">Earn While You <span className="text-transparent bg-clip-text bg-gradient-to-r from-nexus-magenta to-purple-400">Share</span></h2>
+            <p className="text-slate-500 text-xs max-w-md">Invite friends and earn <span className="text-nexus-primary font-semibold">10% commission</span> on every investment they make — forever.</p>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="px-4 py-3 glass rounded-xl border border-white/8 text-center">
+              <p className="text-[9px] text-slate-600 uppercase tracking-wider mb-0.5">Earned</p>
+              <p className="text-sm font-bold text-nexus-magenta">${user?.wallet.referralEarnings.toFixed(2)}</p>
+            </div>
+            <div className="px-4 py-3 glass rounded-xl border border-white/8 text-center">
+              <p className="text-[9px] text-slate-600 uppercase tracking-wider mb-0.5">Referrals</p>
+              <p className="text-sm font-bold text-white">{mockReferredUsers.length}</p>
+            </div>
+          </div>
         </div>
-        <h2 className="text-xl font-bold text-white">Affiliate Registry</h2>
-        <p className="text-slate-500 text-xs max-w-xl">Invite friends and earn passive income from their investments on the platform.</p>
-      </header>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         

@@ -43,26 +43,32 @@ export const History = () => {
   return (
     <div className="px-4 md:px-8 lg:px-12 pt-6 pb-16 max-w-[1700px] mx-auto space-y-6 selection:bg-nexus-primary/20 selection:text-nexus-primary">
       
-      {/* Header */}
-      <header className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-nexus-primary">
-            <HistoryIcon size={14} className="animate-pulse" />
-            <span className="text-[10px] font-semibold uppercase tracking-widest">Transaction History</span>
+      {/* Hero Banner */}
+      <div className="relative overflow-hidden rounded-2xl border border-white/10">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0e1a] to-[#080c18]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/8 via-transparent to-nexus-primary/8" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-400/40 to-transparent" />
+        <div className="absolute -top-20 -right-20 w-56 h-56 bg-purple-500/8 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative z-10 p-6 md:p-8 flex flex-col xl:flex-row items-start xl:items-center justify-between gap-5">
+          <div className="space-y-2">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-purple-400/30 bg-purple-400/10 w-fit">
+              <HistoryIcon size={11} className="text-purple-400" />
+              <span className="text-[10px] font-bold text-purple-400 uppercase tracking-widest">Audit Ledger</span>
+            </div>
+            <h2 className="text-2xl md:text-3xl font-black text-white">Transaction <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-nexus-primary">History</span></h2>
+            <p className="text-slate-500 text-xs max-w-md">Full audit trail of all deposits, withdrawals, profits and investments.</p>
           </div>
-          <h2 className="text-xl font-bold text-white">Audit Ledger</h2>
-          <p className="text-slate-500 text-xs">Complete record of all deposits, withdrawals, profits and investments.</p>
-        </div>
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full xl:w-auto">
-          <div className="flex-1 sm:w-72 relative group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-700 group-focus-within:text-nexus-primary transition-colors" size={15} />
-            <input type="text" placeholder="Search transactions..." value={searchQuery} onChange={(e) => setSearchType(e.target.value)} className="w-full bg-white/[0.03] border border-white/5 py-2.5 pl-10 pr-4 rounded-xl outline-none focus:border-nexus-primary/30 text-xs font-medium placeholder:text-slate-700 text-white transition-all" />
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full xl:w-auto">
+            <div className="flex-1 sm:w-72 relative group">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-700 group-focus-within:text-nexus-primary transition-colors" size={15} />
+              <input type="text" placeholder="Search transactions..." value={searchQuery} onChange={(e) => setSearchType(e.target.value)} className="w-full bg-black/50 border border-white/8 py-2.5 pl-10 pr-4 rounded-xl outline-none focus:border-nexus-primary/30 text-xs font-medium placeholder:text-slate-700 text-white transition-all" />
+            </div>
+            <button className="h-10 px-5 gradient-primary rounded-xl text-xs font-semibold text-slate-900 shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 whitespace-nowrap">
+              <Download size={14} /> Export CSV
+            </button>
           </div>
-          <button className="h-10 px-5 gradient-primary rounded-xl text-xs font-semibold text-slate-900 shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 whitespace-nowrap">
-            <Download size={14} /> Export CSV
-          </button>
         </div>
-      </header>
+      </div>
 
       {/* Filters */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">

@@ -36,24 +36,64 @@ export const Login = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-nexus-bg p-6 md:p-12 relative overflow-hidden selection:bg-nexus-primary/20 selection:text-nexus-primary">
+    <div className="flex min-h-screen bg-nexus-bg relative overflow-hidden selection:bg-nexus-primary/20 selection:text-nexus-primary">
+      {/* Background blobs */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-nexus-primary/5 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute -top-40 -right-40 w-[400px] h-[400px] bg-nexus-magenta/5 blur-[100px] rounded-full pointer-events-none" />
+      <div className="absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-purple-500/5 blur-[100px] rounded-full pointer-events-none" />
 
-      <motion.div
-        initial={{ opacity: 0, scale: 0.97 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-md mx-auto my-auto relative z-10"
-      >
+      {/* Left branding panel — desktop only */}
+      <div className="hidden lg:flex lg:w-1/2 xl:w-[55%] flex-col justify-between p-12 relative z-10">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center shadow-lg shadow-nexus-primary/20">
+            <Shield size={18} className="text-slate-900" />
+          </div>
+          <span className="text-base font-black text-white tracking-tight">Nexus Capital</span>
+        </div>
+        <div className="space-y-6">
+          <div className="space-y-3">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-nexus-primary/30 bg-nexus-primary/10 w-fit">
+              <div className="w-1.5 h-1.5 rounded-full bg-nexus-primary animate-ping" />
+              <span className="text-[10px] font-bold text-nexus-primary uppercase tracking-widest">Live Platform</span>
+            </div>
+            <h1 className="text-4xl xl:text-5xl font-black text-white leading-tight">
+              Grow Your <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-nexus-primary via-cyan-400 to-purple-400">Wealth Daily</span>
+            </h1>
+            <p className="text-slate-500 text-sm max-w-sm leading-relaxed">AI-powered investment strategies generating consistent daily returns. Join thousands of smart investors.</p>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            {[
+              { label: 'Daily Returns', value: 'Up to 3%' },
+              { label: 'Active Users', value: '12,400+' },
+              { label: 'Secured', value: 'AES-512' },
+            ].map(s => (
+              <div key={s.label} className="p-4 glass rounded-xl border border-white/8">
+                <p className="text-[9px] text-slate-600 uppercase tracking-wider mb-1">{s.label}</p>
+                <p className="text-sm font-bold text-white">{s.value}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <p className="text-[10px] text-slate-700">© 2025 Nexus Capital. All rights reserved.</p>
+      </div>
+
+      {/* Right form panel */}
+      <div className="flex-1 flex items-center justify-center p-6 md:p-12 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.97 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full max-w-md"
+        >
         <div className="action-island p-7 md:p-10 inner-glow-top border-white/8">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-2 mb-5 p-1.5 glass rounded-xl border-white/5 pr-4">
+            <div className="inline-flex items-center gap-2 mb-5 p-1.5 glass rounded-xl border-white/5 pr-4 lg:hidden">
               <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center shadow-lg shadow-nexus-primary/20">
                 <Shield size={16} className="text-slate-900" />
               </div>
-              <span className="text-[10px] font-semibold tracking-widest text-white uppercase opacity-70">Secure Login</span>
+              <span className="text-[10px] font-semibold tracking-widest text-white uppercase opacity-70">Nexus Capital</span>
             </div>
             <h1 className="text-2xl font-bold text-white mb-2">Welcome Back</h1>
             <p className="text-slate-500 text-xs">Sign in to your Nexus Capital account</p>
@@ -123,12 +163,11 @@ export const Login = () => {
           </div>
         </div>
 
-        <div className="text-center mt-6">
-          <p className="text-[10px] text-slate-700 leading-relaxed px-4">
-            Your session is protected with end-to-end encryption.
-          </p>
-        </div>
-      </motion.div>
+        <p className="text-center mt-5 text-[10px] text-slate-700 leading-relaxed px-4">
+          Your session is protected with end-to-end encryption.
+        </p>
+        </motion.div>
+      </div>
     </div>
   );
 };

@@ -8,15 +8,20 @@ export const Settings = () => {
   return (
     <div className="px-4 md:px-8 lg:px-12 pt-6 pb-16 max-w-[1400px] mx-auto space-y-6 text-slate-200 selection:bg-nexus-primary/20 selection:text-nexus-primary">
       
-      {/* Header */}
-      <header className="space-y-1">
-        <div className="flex items-center gap-2 text-nexus-primary">
-          <SettingsIcon size={14} className="animate-pulse" />
-          <span className="text-[10px] font-semibold uppercase tracking-widest">Settings</span>
+      {/* Hero Banner */}
+      <div className="relative overflow-hidden rounded-2xl border border-white/10">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0e1a] to-[#080c18]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-500/8 via-transparent to-nexus-primary/8" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+        <div className="relative z-10 p-6 md:p-8">
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/15 bg-white/5 w-fit mb-3">
+            <SettingsIcon size={11} className="text-slate-400" />
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Settings</span>
+          </div>
+          <h2 className="text-2xl md:text-3xl font-black text-white">Account <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-300 to-nexus-primary">Settings</span></h2>
+          <p className="text-slate-500 text-xs mt-1">Manage your notification preferences and display options.</p>
         </div>
-        <h2 className="text-xl font-bold text-white">Account Settings</h2>
-        <p className="text-slate-500 text-xs">Manage your notification preferences and display options.</p>
-      </header>
+      </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
         

@@ -30,20 +30,29 @@ export const MyInvestments = () => {
   return (
     <div className="px-4 md:px-8 lg:px-12 pt-6 pb-16 max-w-[1700px] mx-auto space-y-6 text-slate-200 selection:bg-nexus-primary/20 selection:text-nexus-primary">
       
-      {/* Header */}
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-5">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-nexus-primary">
-            <PieChart size={14} className="animate-pulse" />
-            <span className="text-[10px] font-semibold uppercase tracking-widest">My Portfolio</span>
+      {/* Hero Banner */}
+      <div className="relative overflow-hidden rounded-2xl border border-white/10">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0e1a] to-[#080c18]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-nexus-magenta/8 via-transparent to-nexus-primary/8" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-nexus-primary/40 to-transparent" />
+        <div className="absolute -top-20 -left-20 w-56 h-56 bg-nexus-magenta/8 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative z-10 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+          <div className="space-y-2">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-nexus-primary/30 bg-nexus-primary/10 w-fit">
+              <PieChart size={11} className="text-nexus-primary" />
+              <span className="text-[10px] font-bold text-nexus-primary uppercase tracking-widest">My Portfolio</span>
+            </div>
+            <h2 className="text-2xl md:text-3xl font-black text-white">Active <span className="text-transparent bg-clip-text bg-gradient-to-r from-nexus-primary to-nexus-magenta">Investments</span></h2>
+            <p className="text-slate-500 text-xs max-w-md">Track your active investment plans, yield cycles and earnings in real-time.</p>
           </div>
-          <h2 className="text-xl font-bold text-white">My Investments</h2>
-          <p className="text-slate-500 text-xs max-w-xl">Track your active investment plans and yield harvesting cycles.</p>
+          <Link to="/dashboard/plans" className="group relative">
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-nexus-primary to-cyan-400 rounded-xl opacity-50 blur group-hover:opacity-80 transition-opacity" />
+            <div className="relative px-6 py-3 gradient-primary text-slate-900 rounded-xl font-bold text-xs flex items-center gap-2 shadow-xl">
+              <Zap size={14} /> New Investment
+            </div>
+          </Link>
         </div>
-        <Link to="/dashboard/plans" className="gradient-primary px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-900 shadow-lg hover:scale-[1.03] active:scale-95 transition-all flex items-center gap-2">
-          <Zap size={14} /> New Investment
-        </Link>
-      </header>
+      </div>
 
       {/* Content */}
       <section>

@@ -38,19 +38,60 @@ export const Register = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-nexus-bg p-6 md:p-12 relative overflow-y-auto selection:bg-nexus-primary/20 selection:text-nexus-primary">
+    <div className="flex min-h-screen bg-nexus-bg relative overflow-hidden selection:bg-nexus-primary/20 selection:text-nexus-primary">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-nexus-primary/5 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute top-20 -left-40 w-[400px] h-[400px] bg-nexus-secondary/5 blur-[100px] rounded-full pointer-events-none" />
+      <div className="absolute -bottom-40 -right-40 w-[400px] h-[400px] bg-nexus-magenta/5 blur-[100px] rounded-full pointer-events-none" />
 
-      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="w-full max-w-lg mx-auto my-auto relative z-10 py-10">
+      {/* Left branding panel */}
+      <div className="hidden lg:flex lg:w-[40%] xl:w-[42%] flex-col justify-between p-12 relative z-10">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center shadow-lg shadow-nexus-primary/20">
+            <UserPlus size={16} className="text-slate-900" />
+          </div>
+          <span className="text-base font-black text-white tracking-tight">Nexus Capital</span>
+        </div>
+        <div className="space-y-6">
+          <div className="space-y-3">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-nexus-primary/30 bg-nexus-primary/10 w-fit">
+              <div className="w-1.5 h-1.5 rounded-full bg-nexus-primary animate-ping" />
+              <span className="text-[10px] font-bold text-nexus-primary uppercase tracking-widest">Join Today</span>
+            </div>
+            <h1 className="text-3xl xl:text-4xl font-black text-white leading-tight">
+              Start Your <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-nexus-primary via-cyan-400 to-purple-400">Investment Journey</span>
+            </h1>
+            <p className="text-slate-500 text-sm max-w-xs leading-relaxed">Create your free account and start earning daily passive income within minutes.</p>
+          </div>
+          <div className="space-y-3">
+            {[
+              { icon: Shield, label: 'Bank-grade security & encryption' },
+              { icon: CheckCircle2, label: 'No hidden fees, ever' },
+              { icon: UserPlus, label: 'Earn 10% referral commission' },
+            ].map(({ icon: Icon, label }) => (
+              <div key={label} className="flex items-center gap-3">
+                <div className="w-7 h-7 rounded-lg bg-nexus-primary/10 border border-nexus-primary/20 flex items-center justify-center">
+                  <Icon size={13} className="text-nexus-primary" />
+                </div>
+                <span className="text-xs text-slate-400">{label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <p className="text-[10px] text-slate-700">© 2025 Nexus Capital. All rights reserved.</p>
+      </div>
+
+      {/* Right form panel */}
+      <div className="flex-1 flex items-center justify-center p-6 md:p-10 relative z-10 overflow-y-auto">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="w-full max-w-lg py-10">
         <div className="action-island p-7 md:p-10 inner-glow-top border-white/8">
           {/* Header */}
           <div className="text-center mb-7">
-            <div className="inline-flex items-center gap-2 mb-5 p-1.5 glass rounded-xl border-white/5 pr-4">
+            <div className="inline-flex items-center gap-2 mb-5 p-1.5 glass rounded-xl border-white/5 pr-4 lg:hidden">
               <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center shadow-lg shadow-nexus-primary/20">
                 <UserPlus size={16} className="text-slate-900" />
               </div>
-              <span className="text-[10px] font-semibold tracking-widest text-white uppercase opacity-70">Create Account</span>
+              <span className="text-[10px] font-semibold tracking-widest text-white uppercase opacity-70">Nexus Capital</span>
             </div>
             <h1 className="text-2xl font-bold text-white mb-2">Get Started</h1>
             <p className="text-slate-500 text-xs">Create your Nexus Capital account today</p>
@@ -144,10 +185,9 @@ export const Register = () => {
           </div>
         </div>
 
-        <div className="text-center mt-5">
-          <p className="text-[10px] text-slate-700 leading-relaxed px-4">Nexus Capital is a regulated investment platform. All data is encrypted and secure.</p>
-        </div>
-      </motion.div>
+        <p className="text-center mt-5 text-[10px] text-slate-700 leading-relaxed px-4">Nexus Capital is a regulated investment platform. All data is encrypted and secure.</p>
+        </motion.div>
+      </div>
     </div>
   );
 };

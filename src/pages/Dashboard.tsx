@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { 
-  ArrowUpRight, ArrowDownRight, Activity,
+import {
+  ArrowUpRight, ArrowDownRight, Activity, TrendingUp,
   Briefcase, Zap, Bell, Copy, CheckCircle2, Clock,
-  Target, Calendar, Edit3, X, Cpu, ZapOff, Wallet, Users, ChevronRight
+  Target, Calendar, X, ZapOff, Wallet, Users, ChevronRight,
+  ShieldCheck, BarChart2
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.tsx';
 import { motion, AnimatePresence } from 'motion/react';
@@ -20,12 +21,6 @@ export const Dashboard = () => {
   const [isEditingGoal, setIsEditingGoal] = useState(false);
   const [goalAmount, setGoalAmount] = useState(user?.investmentGoal?.targetAmount || 0);
   const [goalDate, setGoalDate] = useState(user?.investmentGoal?.targetDate ? new Date(user.investmentGoal.targetDate).toISOString().split('T')[0] : '');
-
-  const marketAssets = [
-    { name: 'Bitcoin', symbol: 'BTC', price: '68,432.10', change: '+1.25%', trend: 'up' },
-    { name: 'Ethereum', symbol: 'ETH', price: '3,845.20', change: '+2.10%', trend: 'up' },
-    { name: 'Solana', symbol: 'SOL', price: '168.45', change: '-1.40%', trend: 'down' },
-  ];
 
   useEffect(() => {
     refreshUser();
@@ -58,7 +53,7 @@ export const Dashboard = () => {
       const res = await fetch(`${apiBase}/api/wallet/history`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
       if (!Array.isArray(data)) return;
-      setRecentTransactions(data.slice(0, 4));
+      setRecentTransactions(data.slice(0, 5));
     } catch (err) { console.error(err); }
   };
 
@@ -93,249 +88,310 @@ export const Dashboard = () => {
     } catch (err) { console.error(err); }
   };
 
-  const goalProgress = user?.investmentGoal?.targetAmount && user.investmentGoal.targetAmount > 0
-    ? Math.min(Math.round((stats.totalInvested / user.investmentGoal.targetAmount) * 100), 100) : 0;
-
-  const daysLeft = user?.investmentGoal?.targetDate
-    ? Math.max(0, Math.ceil((new Date(user.investmentGoal.targetDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))) : null;
-
   return (
-    <div className="px-4 md:px-8 lg:px-12 pt-6 pb-10 max-w-[1700px] mx-auto space-y-6 selection:bg-nexus-primary/20 selection:text-nexus-primary">
-      
-      {/* Header */}
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-nexus-primary">
-            <Activity size={14} className="animate-pulse" />
-            <span className="text-[10px] font-semibold uppercase tracking-widest">Live Dashboard</span>
-          </div>
-          <h1 className="text-xl font-bold text-white">
-            Welcome back, <span className="text-gradient">{user?.name?.split(' ')[0]}</span>
-          </h1>
-          <p className="text-slate-500 text-xs">Your portfolio overview and recent activity</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="px-3 py-2 glass rounded-xl border-nexus-primary/20 flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-nexus-primary animate-ping" />
-            <span className="text-[10px] font-semibold text-white">System Online</span>
-          </div>
-          <Link to="/dashboard/notifications" className="relative p-2.5 hover:bg-white/5 rounded-xl transition-all group">
-            <Bell size={18} className="text-slate-500 group-hover:text-white transition-colors" />
-            <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-nexus-magenta rounded-full"></span>
-          </Link>
-        </div>
-      </header>
+    <div className="px-4 md:px-8 lg:px-12 pt-4 md:pt-6 pb-16 max-w-[1700px] mx-auto space-y-5">
 
-      {/* Bento Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
-        
-        {/* Row 1: Stats */}
-        <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Wallet */}
-          <div className="bento-card bg-gradient-to-br from-nexus-primary/[0.03] to-transparent border-nexus-primary/10 flex flex-col justify-between h-[200px]">
-            <div className="flex justify-between items-start">
-              <div className="p-2.5 bg-nexus-primary/10 border border-nexus-primary/20 rounded-xl text-nexus-primary">
-                <Wallet size={18} />
+      {/* ── TOP BANNER ─────────────────────────────────────────────── */}
+      <div className="relative overflow-hidden rounded-2xl border border-white/8">
+        {/* bg layers */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#070b14] via-[#0b1120] to-[#060910]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,230,160,0.08),transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(168,85,247,0.06),transparent_60%)]" />
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-nexus-primary/40 to-transparent" />
+
+        <div className="relative z-10 px-6 md:px-8 py-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          {/* Left: greeting */}
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <div className="w-11 h-11 rounded-xl overflow-hidden border border-white/10 bg-black/40">
+                <img
+                  src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`}
+                  alt="avatar"
+                  className="w-full h-full object-cover scale-110"
+                  referrerPolicy="no-referrer"
+                />
               </div>
-              <div className="text-right">
-                <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Available Balance</p>
-                <h2 className="text-xl font-bold text-white">${user?.wallet.totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}</h2>
-              </div>
+              <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-nexus-primary border-2 border-[#070b14]" />
             </div>
-            <div className="flex gap-2">
-              <Link to="/dashboard/wallet" className="flex-1 py-3 bg-nexus-primary text-slate-900 rounded-xl font-semibold text-xs uppercase tracking-wider text-center hover:scale-[1.02] transition-all">Deposit</Link>
-              <Link to="/dashboard/wallet" className="flex-1 py-3 glass border-white/10 text-white rounded-xl font-semibold text-xs uppercase tracking-wider text-center hover:bg-white/5 transition-all">Withdraw</Link>
+            <div>
+              <p className="text-[10px] text-slate-500 font-medium">Good day,</p>
+              <h1 className="text-base font-bold text-white leading-tight">
+                {user?.name?.split(' ')[0]} <span className="text-slate-500 font-normal text-sm">— welcome back</span>
+              </h1>
             </div>
           </div>
 
-          {/* Performance */}
-          <div className="bento-card flex flex-col justify-between h-[200px]">
-            <div className="flex justify-between items-start">
-              <div className="p-2.5 bg-nexus-magenta/10 border border-nexus-magenta/20 rounded-xl text-nexus-magenta">
-                <Briefcase size={18} />
-              </div>
-              <div className="text-right">
-                <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Total Invested</p>
-                <h2 className="text-xl font-bold text-white">${stats.totalInvested.toLocaleString()}</h2>
-              </div>
-            </div>
-            <div className="p-4 glass border-white/5 rounded-xl flex items-center justify-between">
-              <div className="space-y-0.5">
-                <p className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider">Total Profits</p>
-                <p className="text-base font-bold text-nexus-primary">+${user?.wallet.profitBalance.toFixed(2)}</p>
-              </div>
-              <div className="w-px h-8 bg-white/5" />
-              <div className="text-right space-y-0.5">
-                <p className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider">Active Plans</p>
-                <p className="text-base font-bold text-white">{stats.activeInvestments}</p>
-              </div>
+          {/* Center: live balance */}
+          <div className="flex flex-col items-start md:items-center gap-0.5">
+            <p className="text-[9px] text-slate-600 uppercase tracking-widest font-semibold">Total Balance</p>
+            <motion.p
+              className="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-nexus-primary via-cyan-300 to-nexus-primary"
+              animate={{ opacity: [0.85, 1, 0.85] }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              ${user?.wallet.totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+            </motion.p>
+            <div className="flex items-center gap-1.5">
+              <TrendingUp size={10} className="text-nexus-primary" />
+              <span className="text-[10px] text-slate-400">+<span className="text-nexus-primary font-semibold">${stats.dailyProfit.toFixed(2)}</span> today</span>
             </div>
           </div>
-        </div>
 
-        {/* Referral */}
-        <div className="lg:col-span-4">
-          <div className="bento-card h-full bg-gradient-to-tr from-nexus-purple/[0.05] to-transparent border-nexus-purple/10 flex flex-col justify-between py-5">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="p-2 bg-nexus-purple/10 border border-nexus-purple/20 rounded-lg text-nexus-purple">
-                <Users size={15} />
-              </div>
-              <h4 className="text-xs font-semibold text-white">Referral Program</h4>
+          {/* Right: actions + status */}
+          <div className="flex items-center gap-2.5">
+            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 glass rounded-xl border border-nexus-primary/20">
+              <div className="w-1.5 h-1.5 rounded-full bg-nexus-primary animate-ping" />
+              <span className="text-[10px] font-semibold text-nexus-primary">Live</span>
             </div>
-            <div onClick={handleCopyCode} className="bg-black/40 border border-white/5 rounded-xl p-3 flex items-center justify-between group cursor-pointer hover:border-nexus-purple/30 transition-all mb-3">
-              <span className="text-sm font-bold tracking-widest text-white group-hover:text-nexus-purple transition-colors">{user?.referralCode}</span>
-              {copied ? <CheckCircle2 className="text-nexus-primary" size={16} /> : <Copy className="text-slate-700" size={16} />}
-            </div>
-            <p className="text-[10px] text-slate-600 leading-relaxed">Refer users and earn commission bonuses. Earned so far: <span className="text-nexus-purple font-semibold">${user?.wallet.referralEarnings.toFixed(2)}</span></p>
+            <Link
+              to="/dashboard/plans"
+              className="px-4 py-2 gradient-primary text-slate-900 rounded-xl font-bold text-[11px] flex items-center gap-1.5 shadow-lg shadow-nexus-primary/20 hover:scale-[1.03] active:scale-95 transition-all"
+            >
+              <Zap size={12} />
+              Start Earning
+            </Link>
+            <Link to="/dashboard/notifications" className="relative p-2.5 glass rounded-xl border border-white/8 hover:border-white/20 transition-all">
+              <Bell size={15} className="text-slate-400" />
+              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-nexus-magenta rounded-full" />
+            </Link>
           </div>
         </div>
+      </div>
 
-        {/* Chart */}
-        <div className="lg:col-span-8 bento-card min-h-[380px] flex flex-col space-y-4">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 glass rounded-xl border-nexus-primary/20 text-nexus-primary">
-                <Activity size={16} />
+      {/* ── STAT CARDS ─────────────────────────────────────────────── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {[
+          {
+            label: 'Available Balance', value: `$${user?.wallet.totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
+            icon: Wallet, accent: 'text-nexus-primary', border: 'border-nexus-primary/15', bg: 'bg-nexus-primary/5',
+            sub: 'Withdrawable funds', trend: null
+          },
+          {
+            label: 'Total Invested', value: `$${stats.totalInvested.toLocaleString()}`,
+            icon: Briefcase, accent: 'text-purple-400', border: 'border-purple-400/15', bg: 'bg-purple-400/5',
+            sub: 'Across all plans', trend: null
+          },
+          {
+            label: 'Total Profit', value: `$${user?.wallet.profitBalance.toFixed(2)}`,
+            icon: TrendingUp, accent: 'text-cyan-400', border: 'border-cyan-400/15', bg: 'bg-cyan-400/5',
+            sub: 'All-time earnings', trend: '+' + stats.dailyProfit.toFixed(2) + ' today'
+          },
+          {
+            label: 'Active Plans', value: String(stats.activeInvestments),
+            icon: BarChart2, accent: 'text-nexus-magenta', border: 'border-nexus-magenta/15', bg: 'bg-nexus-magenta/5',
+            sub: 'Running strategies', trend: null
+          },
+        ].map((card) => (
+          <motion.div
+            key={card.label}
+            whileHover={{ y: -2 }}
+            className={`nexus-card border ${card.border} flex flex-col justify-between h-[110px] md:h-[120px] group gap-1 cursor-default`}
+          >
+            <div className="flex items-start justify-between">
+              <div className={`p-2 rounded-lg ${card.bg} border ${card.border}`}>
+                <card.icon size={15} className={card.accent} />
+              </div>
+              {card.trend && (
+                <span className="text-[9px] font-semibold text-nexus-primary bg-nexus-primary/10 px-2 py-0.5 rounded-full border border-nexus-primary/20">
+                  {card.trend}
+                </span>
+              )}
+            </div>
+            <div>
+              <p className="text-[9px] text-slate-600 font-medium uppercase tracking-wider mb-0.5">{card.label}</p>
+              <p className={`text-lg font-bold ${card.accent}`}>{card.value}</p>
+              <p className="text-[9px] text-slate-700 mt-0.5">{card.sub}</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* ── MAIN GRID ──────────────────────────────────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+
+        {/* Performance Chart */}
+        <div className="lg:col-span-8 nexus-card flex flex-col gap-4">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 glass rounded-lg border-nexus-primary/20 text-nexus-primary">
+                <Activity size={14} />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-white">Performance Chart</h3>
-                <p className="text-[10px] text-slate-600">Strategy analytics over time</p>
+                <p className="text-xs font-bold text-white">Performance Analytics</p>
+                <p className="text-[9px] text-slate-600">Portfolio growth over time</p>
               </div>
             </div>
-            <div className="flex bg-white/[0.03] border border-white/5 rounded-xl p-1 gap-1">
+            <div className="flex items-center gap-1 bg-black/40 border border-white/5 rounded-lg p-1 shrink-0">
               {['7D', '1M', '3M', 'ALL'].map((r) => (
-                <button key={r} onClick={() => setChartRange(r)}
-                  className={`px-4 py-1.5 rounded-lg text-[10px] font-semibold tracking-wider transition-all ${chartRange === r ? 'gradient-primary text-slate-900 shadow-xl' : 'text-slate-600 hover:text-white hover:bg-white/5'}`}>
+                <button
+                  key={r}
+                  onClick={() => setChartRange(r)}
+                  className={`px-2.5 sm:px-3 py-1.5 rounded-md text-[10px] font-bold transition-all whitespace-nowrap ${chartRange === r ? 'gradient-primary text-slate-900 shadow-md' : 'text-slate-500 hover:text-slate-200'}`}
+                >
                   {r}
                 </button>
               ))}
             </div>
           </div>
-          <div className="flex-1 w-full min-h-[260px]">
+          <div className="w-full h-[240px] md:h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData.length > 0 ? chartData : []} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <AreaChart data={chartData.length > 0 ? chartData : []} margin={{ top: 10, right: 5, left: -25, bottom: 0 }}>
                 <defs>
-                  <linearGradient id="flowGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#00e6a0" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#00e6a0" stopOpacity={0}/>
+                  <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#00e6a0" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#00e6a0" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.03)" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#475569', fontSize: 10 }} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#475569', fontSize: 10 }} dx={-10} />
-                <Tooltip contentStyle={{ backgroundColor: 'rgba(10, 14, 26, 0.9)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '12px' }} itemStyle={{ color: '#00e6a0', fontWeight: '600', fontSize: '13px' }} labelStyle={{ color: '#64748b', fontSize: '10px' }} cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1 }} />
-                <Area type="monotone" dataKey="value" stroke="#00e6a0" strokeWidth={2} fillOpacity={1} fill="url(#flowGrad)" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#334155', fontSize: 9 }} dy={8} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#334155', fontSize: 9 }} dx={-5} />
+                <Tooltip
+                  contentStyle={{ backgroundColor: 'rgba(7,11,20,0.95)', backdropFilter: 'blur(20px)', border: '1px solid rgba(0,230,160,0.15)', borderRadius: '12px', padding: '10px 14px' }}
+                  itemStyle={{ color: '#00e6a0', fontWeight: '700', fontSize: '13px' }}
+                  labelStyle={{ color: '#475569', fontSize: '10px', marginBottom: '4px' }}
+                  cursor={{ stroke: 'rgba(0,230,160,0.15)', strokeWidth: 1 }}
+                />
+                <Area type="monotone" dataKey="value" stroke="#00e6a0" strokeWidth={2} fillOpacity={1} fill="url(#chartGrad)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Right Column */}
-        <div className="lg:col-span-4 space-y-4">
-          {/* Goal */}
-          <div className="bento-card bg-gradient-to-br from-nexus-gold/[0.03] to-transparent border-nexus-gold/10">
-            <div className="flex justify-between items-center mb-5">
-              <div className="flex items-center gap-2">
-                <div className="p-2 bg-nexus-gold/10 border border-nexus-gold/20 rounded-lg text-nexus-gold">
-                  <Target size={15} />
+        {/* Right column: Quick Actions + Referral */}
+        <div className="lg:col-span-4 flex flex-col gap-4">
+
+          {/* Quick Actions */}
+          <div className="nexus-card border-white/8 space-y-3">
+            <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">Quick Actions</p>
+            <div className="grid grid-cols-2 gap-2">
+              <Link to="/dashboard/wallet" className="flex flex-col items-center gap-1.5 p-3.5 glass rounded-xl border border-white/8 hover:border-nexus-primary/30 hover:bg-nexus-primary/5 transition-all group">
+                <div className="p-2 bg-nexus-primary/10 rounded-lg border border-nexus-primary/20 group-hover:scale-110 transition-transform">
+                  <ArrowDownRight size={14} className="text-nexus-primary" />
                 </div>
-                <h4 className="text-xs font-semibold text-white">Investment Goal</h4>
-              </div>
-              <button onClick={() => setIsEditingGoal(true)} className="p-1.5 hover:bg-white/5 rounded-lg transition-all"><Edit3 size={13} className="text-slate-600" /></button>
-            </div>
-            <div className="space-y-4">
-              <div className="flex justify-between items-end">
-                <div>
-                  <p className="text-2xl font-bold text-white">{goalProgress}%</p>
-                  <p className="text-[10px] font-medium text-slate-600 mt-1">Completion</p>
+                <span className="text-[10px] font-semibold text-slate-300 group-hover:text-white transition-colors">Deposit</span>
+              </Link>
+              <Link to="/dashboard/wallet" className="flex flex-col items-center gap-1.5 p-3.5 glass rounded-xl border border-white/8 hover:border-nexus-magenta/30 hover:bg-nexus-magenta/5 transition-all group">
+                <div className="p-2 bg-nexus-magenta/10 rounded-lg border border-nexus-magenta/20 group-hover:scale-110 transition-transform">
+                  <ArrowUpRight size={14} className="text-nexus-magenta" />
                 </div>
-                <div className="text-right">
-                  <p className="text-base font-semibold text-slate-300">{daysLeft !== null ? `${daysLeft} days` : 'N/A'}</p>
-                  <p className="text-[10px] font-medium text-slate-600">Remaining</p>
+                <span className="text-[10px] font-semibold text-slate-300 group-hover:text-white transition-colors">Withdraw</span>
+              </Link>
+              <Link to="/dashboard/plans" className="flex flex-col items-center gap-1.5 p-3.5 glass rounded-xl border border-white/8 hover:border-cyan-400/30 hover:bg-cyan-400/5 transition-all group">
+                <div className="p-2 bg-cyan-400/10 rounded-lg border border-cyan-400/20 group-hover:scale-110 transition-transform">
+                  <Zap size={14} className="text-cyan-400" />
                 </div>
-              </div>
-              <div className="h-2 bg-white/[0.03] border border-white/5 rounded-full overflow-hidden">
-                <motion.div initial={{ width: 0 }} animate={{ width: `${goalProgress}%` }} transition={{ duration: 1.5, ease: 'easeOut' }} className="h-full rounded-full bg-nexus-gold shadow-[0_0_10px_rgba(212,165,116,0.3)]" />
-              </div>
-              <div className="flex justify-between items-center">
-                <p className="text-[10px] text-slate-700">Current: ${stats.totalInvested.toLocaleString()}</p>
-                <p className="text-[10px] text-slate-700">Target: ${user?.investmentGoal?.targetAmount?.toLocaleString() || '0'}</p>
-              </div>
+                <span className="text-[10px] font-semibold text-slate-300 group-hover:text-white transition-colors">Invest</span>
+              </Link>
+              <Link to="/dashboard/history" className="flex flex-col items-center gap-1.5 p-3.5 glass rounded-xl border border-white/8 hover:border-purple-400/30 hover:bg-purple-400/5 transition-all group">
+                <div className="p-2 bg-purple-400/10 rounded-lg border border-purple-400/20 group-hover:scale-110 transition-transform">
+                  <Clock size={14} className="text-purple-400" />
+                </div>
+                <span className="text-[10px] font-semibold text-slate-300 group-hover:text-white transition-colors">History</span>
+              </Link>
             </div>
           </div>
 
-          {/* Market */}
-          <div className="bento-card border-white/5 bg-black/20">
-            <h4 className="text-[10px] font-semibold uppercase tracking-widest text-slate-600 mb-4">Live Market</h4>
-            <div className="space-y-3">
-              {marketAssets.map(asset => (
-                <div key={asset.symbol} className="flex justify-between items-center group">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center font-semibold text-xs text-slate-400 group-hover:border-nexus-primary/30 group-hover:text-nexus-primary transition-all">
-                      {asset.symbol[0]}
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold text-slate-200">{asset.name}</p>
-                      <p className="text-[10px] text-slate-600">{asset.symbol}</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs font-bold text-white">${asset.price}</p>
-                    <div className={`flex items-center justify-end gap-1 text-[10px] font-semibold mt-0.5 ${asset.trend === 'up' ? 'text-nexus-primary' : 'text-nexus-magenta'}`}>
-                      {asset.trend === 'up' ? <ArrowUpRight size={10} /> : <ArrowDownRight size={10} />}
-                      {asset.change}
-                    </div>
-                  </div>
+          {/* Referral */}
+          <div className="nexus-card border-white/8 flex-1 flex flex-col justify-between space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-purple-500/10 border border-purple-500/20 rounded-lg text-purple-400">
+                  <Users size={13} />
                 </div>
-              ))}
+                <p className="text-xs font-bold text-white">Referral</p>
+              </div>
+              <Link to="/dashboard/referrals" className="text-[9px] font-semibold text-nexus-primary hover:underline">Details →</Link>
+            </div>
+
+            <div
+              onClick={handleCopyCode}
+              className="flex items-center justify-between gap-2 bg-black/50 border border-white/8 rounded-xl px-3 py-2.5 cursor-pointer hover:border-purple-400/30 transition-all group"
+            >
+              <div>
+                <p className="text-[8px] text-slate-600 uppercase tracking-wider mb-0.5">Your code</p>
+                <span className="text-sm font-bold tracking-widest text-white group-hover:text-purple-300 transition-colors">{user?.referralCode}</span>
+              </div>
+              {copied
+                ? <CheckCircle2 size={15} className="text-nexus-primary shrink-0" />
+                : <Copy size={13} className="text-slate-700 group-hover:text-purple-400 shrink-0 transition-colors" />
+              }
+            </div>
+
+            <div className="flex items-center justify-between px-1">
+              <p className="text-[9px] text-slate-600">Commission earned</p>
+              <p className="text-sm font-bold text-purple-400">${user?.wallet.referralEarnings.toFixed(2)}</p>
             </div>
           </div>
         </div>
 
         {/* Active Investments */}
-        <div className="lg:col-span-8 space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <Zap size={16} className="text-nexus-primary" />
-              Active Investments
-            </h3>
-            <Link to="/dashboard/plans" className="text-[10px] font-semibold text-nexus-primary hover:underline">View Plans</Link>
+        <div className="lg:col-span-8 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 glass rounded-lg border-nexus-primary/20 text-nexus-primary">
+                <Zap size={13} />
+              </div>
+              <p className="text-xs font-bold text-white">Active Investments</p>
+            </div>
+            <Link to="/dashboard/plans" className="text-[9px] font-semibold text-nexus-primary hover:underline flex items-center gap-1">
+              Browse Plans <ChevronRight size={11} />
+            </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {investments.filter(i => i.status === 'active').map((inv) => (
-              <div key={inv._id} className="bento-card group relative overflow-hidden">
-                <div className="flex justify-between items-start mb-5">
-                  <div className="space-y-1">
-                    <h5 className="text-sm font-bold text-white">{inv.planName}</h5>
-                    <div className="flex items-center gap-1.5">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {investments.filter(i => i.status === 'active').map((inv, idx) => (
+              <motion.div
+                key={inv._id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.05 }}
+                className="nexus-card border-white/8 group hover:border-nexus-primary/20 transition-all"
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <div className="flex items-center gap-1.5 mb-1">
                       <div className="w-1.5 h-1.5 rounded-full bg-nexus-primary animate-pulse" />
-                      <span className="text-[10px] font-semibold text-nexus-primary">Active</span>
+                      <span className="text-[9px] font-semibold text-nexus-primary uppercase tracking-wider">Active</span>
                     </div>
+                    <h5 className="text-sm font-bold text-white">{inv.planName}</h5>
                   </div>
                   <div className="text-right">
-                    <p className="text-base font-bold text-slate-200">${inv.amount.toLocaleString()}</p>
-                    <p className="text-[10px] text-slate-600">Invested</p>
+                    <p className="text-sm font-bold text-white">${inv.amount.toLocaleString()}</p>
+                    <p className="text-[9px] text-slate-600">invested</p>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between text-[10px] font-medium text-slate-600">
+                  <div className="flex justify-between text-[9px] font-medium text-slate-600">
                     <span>Daily Return</span>
-                    <span className="text-nexus-primary">+{inv.dailyProfitPercent}%</span>
+                    <span className="text-nexus-primary font-bold">+{inv.dailyProfitPercent}%</span>
                   </div>
-                  <div className="w-full bg-white/[0.03] h-1.5 rounded-full overflow-hidden border border-white/5">
-                    <motion.div initial={{ width: 0 }} animate={{ width: '45%' }} className="h-full gradient-primary rounded-full" />
+                  <div className="w-full bg-white/[0.04] h-1 rounded-full overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: '45%' }}
+                      transition={{ duration: 1.2, ease: 'easeOut' }}
+                      className="h-full gradient-primary rounded-full"
+                    />
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
+
             {investments.filter(i => i.status === 'active').length === 0 && (
-              <div className="md:col-span-2 bento-card flex flex-col items-center justify-center text-center py-10 space-y-4 border-dashed border-white/10 bg-black/20">
-                <ZapOff size={32} className="text-slate-800" />
-                <div className="space-y-1">
-                  <h4 className="text-sm font-semibold text-slate-400">No Active Investments</h4>
-                  <p className="text-[10px] text-slate-600">Start investing to see your portfolio here</p>
+              <div className="md:col-span-2 nexus-card flex flex-col items-center justify-center text-center py-12 border-dashed border-white/8 bg-black/20 space-y-4">
+                <div className="w-12 h-12 glass rounded-2xl flex items-center justify-center border border-white/5">
+                  <ZapOff size={22} className="text-slate-700" />
                 </div>
-                <Link to="/dashboard/plans" className="px-6 py-2.5 gradient-primary text-slate-900 rounded-xl font-semibold text-xs uppercase tracking-wider shadow-xl shadow-nexus-primary/20">Browse Plans</Link>
+                <div>
+                  <p className="text-sm font-semibold text-slate-400 mb-1">No Active Investments</p>
+                  <p className="text-[10px] text-slate-600">Start a plan to grow your portfolio</p>
+                </div>
+                <Link
+                  to="/dashboard/plans"
+                  className="px-6 py-2.5 gradient-primary text-slate-900 rounded-xl font-bold text-xs shadow-lg shadow-nexus-primary/20 hover:scale-[1.02] active:scale-95 transition-all"
+                >
+                  Browse Plans
+                </Link>
               </div>
             )}
           </div>
@@ -343,80 +399,165 @@ export const Dashboard = () => {
 
         {/* Recent Transactions */}
         <div className="lg:col-span-4">
-          <div className="bento-card border-white/5 h-full">
-            <h4 className="text-xs font-semibold text-slate-500 mb-4 pb-3 border-b border-white/5">Recent Transactions</h4>
-            <div className="space-y-2">
+          <div className="nexus-card border-white/8 h-full flex flex-col">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 glass rounded-lg border-white/8 text-slate-500">
+                  <Clock size={13} />
+                </div>
+                <p className="text-xs font-bold text-white">Recent Transactions</p>
+              </div>
+              <Link to="/dashboard/history" className="text-[9px] font-semibold text-nexus-primary hover:underline">View all</Link>
+            </div>
+
+            <div className="flex-1 space-y-1">
               {recentTransactions.map((tx: any) => (
-                <div key={tx._id} className="flex items-center justify-between p-3 hover:bg-white/[0.02] rounded-xl border border-transparent hover:border-white/5 transition-all">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg border ${tx.type === 'withdraw' ? 'border-nexus-magenta/20 bg-nexus-magenta/5 text-nexus-magenta' : 'border-nexus-primary/20 bg-nexus-primary/5 text-nexus-primary'}`}>
-                      {tx.type === 'withdraw' ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
+                <div
+                  key={tx._id}
+                  className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-white/[0.03] border border-transparent hover:border-white/5 transition-all group"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className={`p-1.5 rounded-lg border ${tx.type === 'withdraw' ? 'border-nexus-magenta/20 bg-nexus-magenta/8 text-nexus-magenta' : 'border-nexus-primary/20 bg-nexus-primary/8 text-nexus-primary'}`}>
+                      {tx.type === 'withdraw' ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
                     </div>
                     <div>
-                      <p className="text-xs font-semibold capitalize text-slate-200">{tx.type}</p>
-                      <p className="text-[10px] text-slate-600">{tx.status}</p>
+                      <p className="text-[11px] font-semibold capitalize text-slate-200">{tx.type}</p>
+                      <p className="text-[9px] text-slate-600">{new Date(tx.createdAt).toLocaleDateString(undefined, { day: '2-digit', month: 'short' })}</p>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className={`text-xs font-bold ${tx.type === 'withdraw' ? 'text-nexus-magenta' : 'text-nexus-primary'}`}>
-                      {tx.type === 'withdraw' ? '-' : '+'}${tx.amount.toLocaleString()}
+                      {tx.type === 'withdraw' ? '−' : '+'}${tx.amount.toLocaleString()}
                     </p>
-                    <p className="text-[10px] text-slate-700">{new Date(tx.createdAt).toLocaleDateString()}</p>
+                    <span className={`text-[8px] font-medium px-1.5 py-0.5 rounded-md ${tx.status === 'completed' || tx.status === 'approved' ? 'text-emerald-400 bg-emerald-500/10' : tx.status === 'pending' ? 'text-yellow-400 bg-yellow-500/10' : 'text-rose-400 bg-rose-500/10'}`}>
+                      {tx.status}
+                    </span>
                   </div>
                 </div>
               ))}
+
               {recentTransactions.length === 0 && (
-                <div className="text-center py-10 opacity-30">
-                  <Clock className="mx-auto text-white mb-3" size={28} />
-                  <p className="text-[10px] font-semibold">No transactions yet</p>
+                <div className="flex flex-col items-center justify-center py-12 opacity-30 space-y-2">
+                  <Clock size={24} className="text-slate-600" />
+                  <p className="text-[10px] font-medium text-slate-600">No transactions yet</p>
                 </div>
               )}
             </div>
-            {recentTransactions.length > 0 && (
-              <Link to="/dashboard/history" className="w-full py-3 mt-4 glass border-white/5 text-[10px] font-semibold text-slate-500 hover:text-white hover:border-white/10 rounded-xl flex items-center justify-center gap-2 transition-all">
-                View All <ChevronRight size={12} />
-              </Link>
-            )}
           </div>
         </div>
+
+        {/* Live Earnings Banner (compact) */}
+        <div className="lg:col-span-12 relative overflow-hidden rounded-2xl border border-white/8">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#060a12] via-[#0c1426] to-[#060a12]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,230,160,0.07),transparent_70%)]" />
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-nexus-primary/30 to-transparent" />
+
+          <div className="relative z-10 px-6 md:px-8 py-5 flex flex-col md:flex-row items-center justify-between gap-5">
+            {/* Balance */}
+            <div className="flex items-center gap-5">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-nexus-primary/25 bg-nexus-primary/8">
+                <div className="w-1.5 h-1.5 rounded-full bg-nexus-primary animate-ping" />
+                <span className="text-[9px] font-bold text-nexus-primary uppercase tracking-widest">Live Earnings</span>
+              </div>
+              <div>
+                <p className="text-[9px] text-slate-600 uppercase tracking-wider">Current Balance</p>
+                <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-nexus-primary to-cyan-300">
+                  ${user?.wallet.totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                </p>
+              </div>
+            </div>
+
+            {/* Payout Timer */}
+            <div className="flex flex-col items-center gap-1">
+              <p className="text-[9px] text-slate-600 uppercase tracking-wider flex items-center gap-1">
+                <Zap size={9} className="text-yellow-400" /> Next payout
+              </p>
+              <div className="flex items-center gap-1">
+                {(['00', '00', '00'] as string[]).map((v, i) => (
+                  <span key={i} className="flex items-center gap-1">
+                    <motion.span
+                      animate={{ opacity: [1, 0.3, 1] }}
+                      transition={{ duration: 1, repeat: Infinity, delay: i * 0.33 }}
+                      className="w-9 h-9 flex items-center justify-center bg-black/60 border border-white/8 rounded-lg font-mono font-black text-base text-white"
+                    >
+                      {v}
+                    </motion.span>
+                    {i < 2 && <span className="text-slate-700 font-bold text-sm">:</span>}
+                  </span>
+                ))}
+              </div>
+              <p className="text-[8px] text-slate-700 tracking-wider">HH · MM · SS</p>
+            </div>
+
+            {/* Stats strip */}
+            <div className="flex items-center gap-6 md:gap-8">
+              {[
+                { label: 'Invested', value: `$${stats.totalInvested.toLocaleString()}` },
+                { label: 'Active Plans', value: stats.activeInvestments },
+                { label: 'Profit', value: `$${user?.wallet.profitBalance.toFixed(2)}`, highlight: true },
+              ].map((s) => (
+                <div key={s.label} className="text-center">
+                  <p className="text-[8px] text-slate-600 uppercase tracking-wider">{s.label}</p>
+                  <p className={`text-sm font-bold ${s.highlight ? 'text-nexus-primary' : 'text-white'}`}>{s.value}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA */}
+            <Link to="/dashboard/plans" className="group relative shrink-0">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-nexus-primary to-cyan-400 rounded-xl opacity-40 blur group-hover:opacity-70 transition-opacity" />
+              <motion.div
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                className="relative px-6 py-2.5 gradient-primary rounded-xl font-bold text-sm text-slate-900 flex items-center gap-2 shadow-xl"
+              >
+                <Zap size={14} className="text-slate-800" />
+                Start Earning Now
+                <ChevronRight size={14} />
+              </motion.div>
+            </Link>
+          </div>
+        </div>
+
       </div>
 
-      {/* Goal Edit Modal */}
+      {/* ── GOAL MODAL ─────────────────────────────────────────────── */}
       <AnimatePresence>
         {isEditingGoal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsEditingGoal(false)} className="absolute inset-0 bg-slate-950/90 backdrop-blur-xl" />
-            <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} className="nexus-card w-full max-w-md p-8 border-white/10 relative z-10 shadow-2xl">
+            <motion.div initial={{ scale: 0.92, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.92, opacity: 0 }} className="nexus-card w-full max-w-md p-8 border-white/10 relative z-10 shadow-2xl">
               <div className="flex justify-between items-center mb-6">
                 <div>
                   <h3 className="text-base font-bold text-white">Set Investment Goal</h3>
-                  <p className="text-[10px] text-nexus-gold mt-0.5">Update your financial target</p>
+                  <p className="text-[10px] text-slate-600 mt-0.5">Define your financial target</p>
                 </div>
-                <button onClick={() => setIsEditingGoal(false)} className="p-2 bg-white/5 rounded-lg hover:bg-white/10 text-slate-500 hover:text-white transition-all"><X size={18} /></button>
+                <button onClick={() => setIsEditingGoal(false)} className="p-2 glass rounded-lg hover:bg-white/10 text-slate-500 hover:text-white transition-all border-white/5"><X size={16} /></button>
               </div>
-              <div className="space-y-5">
-                <div className="space-y-2">
-                  <p className="text-[10px] text-slate-600 font-medium uppercase tracking-wider">Target Amount ($)</p>
+              <div className="space-y-4">
+                <div className="space-y-1.5">
+                  <p className="text-[9px] text-slate-600 font-semibold uppercase tracking-wider">Target Amount ($)</p>
                   <div className="relative group">
-                    <Target className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-700 group-focus-within:text-nexus-gold transition-colors" size={16} />
-                    <input type="number" value={goalAmount} onChange={(e) => setGoalAmount(Number(e.target.value))} className="w-full bg-black/40 border border-white/5 rounded-xl py-3 pl-10 pr-4 outline-none focus:border-nexus-gold/40 transition-all font-bold text-sm text-white" autoFocus />
+                    <Target className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-700 group-focus-within:text-nexus-primary transition-colors" size={14} />
+                    <input type="number" value={goalAmount} onChange={(e) => setGoalAmount(Number(e.target.value))} className="w-full bg-black/40 border border-white/5 rounded-xl py-3 pl-10 pr-4 outline-none focus:border-nexus-primary/30 transition-all font-bold text-sm text-white" autoFocus />
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <p className="text-[10px] text-slate-600 font-medium uppercase tracking-wider">Target Date</p>
+                <div className="space-y-1.5">
+                  <p className="text-[9px] text-slate-600 font-semibold uppercase tracking-wider">Target Date</p>
                   <div className="relative group">
-                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-700 group-focus-within:text-nexus-gold transition-colors" size={16} />
-                    <input type="date" value={goalDate} onChange={(e) => setGoalDate(e.target.value)} className="w-full bg-black/40 border border-white/5 rounded-xl py-3 pl-10 pr-4 outline-none focus:border-nexus-gold/40 transition-all font-medium text-sm text-white" />
+                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-700 group-focus-within:text-nexus-primary transition-colors" size={14} />
+                    <input type="date" value={goalDate} onChange={(e) => setGoalDate(e.target.value)} className="w-full bg-black/40 border border-white/5 rounded-xl py-3 pl-10 pr-4 outline-none focus:border-nexus-primary/30 transition-all text-sm text-white" />
                   </div>
                 </div>
-                <button onClick={handleSaveGoal} className="w-full py-3 bg-nexus-gold text-slate-900 font-bold rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg hover:scale-[1.02] active:scale-95 text-sm">
-                  Save Goal <CheckCircle2 size={16} />
+                <button onClick={handleSaveGoal} className="w-full py-3 gradient-primary text-slate-900 font-bold rounded-xl flex items-center justify-center gap-2 text-sm shadow-lg hover:scale-[1.02] active:scale-95 transition-all">
+                  Save Goal <CheckCircle2 size={15} />
                 </button>
               </div>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
+
     </div>
   );
 };

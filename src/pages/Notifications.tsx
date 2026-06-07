@@ -44,25 +44,28 @@ export const Notifications = () => {
   return (
     <div className="px-4 md:px-8 lg:px-12 pt-6 pb-16 max-w-[1400px] mx-auto space-y-6 selection:bg-nexus-primary/20 selection:text-nexus-primary">
       
-      {/* Header */}
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-5">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-nexus-primary">
-            <Bell size={14} className="animate-pulse" />
-            <span className="text-[10px] font-semibold uppercase tracking-widest">Notifications</span>
+      {/* Hero Banner */}
+      <div className="relative overflow-hidden rounded-2xl border border-white/10">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0e1a] to-[#080c18]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-nexus-primary/8 via-transparent to-yellow-500/5" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-nexus-primary/40 to-transparent" />
+        <div className="relative z-10 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+          <div className="space-y-2">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-nexus-primary/30 bg-nexus-primary/10 w-fit">
+              <Bell size={11} className="text-nexus-primary" />
+              <span className="text-[10px] font-bold text-nexus-primary uppercase tracking-widest">Notifications</span>
+              {unreadCount > 0 && (
+                <span className="ml-1 px-1.5 py-0.5 bg-nexus-primary text-slate-900 text-[9px] font-black rounded-full">{unreadCount}</span>
+              )}
+            </div>
+            <h2 className="text-2xl md:text-3xl font-black text-white">Alerts & <span className="text-transparent bg-clip-text bg-gradient-to-r from-nexus-primary to-cyan-400">Updates</span></h2>
+            <p className="text-slate-500 text-xs">Stay updated with your account activity and system alerts.</p>
           </div>
-          <div className="flex items-center gap-3">
-            <h2 className="text-xl font-bold text-white">Alerts & Updates</h2>
-            {unreadCount > 0 && (
-              <span className="px-2 py-0.5 bg-nexus-primary/20 text-nexus-primary text-[10px] font-bold rounded-full border border-nexus-primary/30">{unreadCount} new</span>
-            )}
-          </div>
-          <p className="text-slate-500 text-xs">Stay updated with your account activity and system alerts.</p>
+          <button onClick={markAllRead} className="px-5 py-2.5 glass border border-nexus-primary/20 text-xs font-semibold text-nexus-primary hover:bg-nexus-primary/10 rounded-xl transition-all">
+            Mark All Read
+          </button>
         </div>
-        <button onClick={markAllRead} className="px-5 py-2.5 glass border-white/5 text-xs font-semibold text-nexus-primary hover:text-white hover:border-nexus-primary/30 rounded-xl transition-all">
-          Mark All Read
-        </button>
-      </header>
+      </div>
 
       {/* Filters */}
       <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar bg-white/[0.02] border border-white/5 p-1.5 rounded-2xl w-fit">

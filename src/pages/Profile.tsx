@@ -52,44 +52,50 @@ export const Profile = () => {
     <div className="px-4 md:px-8 lg:px-12 pt-6 pb-16 max-w-[1700px] mx-auto space-y-6 text-slate-200 selection:bg-nexus-primary/20 selection:text-nexus-primary">
       
       {/* Identity Card */}
-      <section className="nexus-card p-6 md:p-8 relative overflow-hidden bg-gradient-to-br from-nexus-primary/[0.03] to-transparent border-white/8 shadow-xl">
-        <div className="flex flex-col xl:flex-row items-center xl:items-start gap-8 xl:gap-12">
-          <div className="relative">
-            <div className="w-24 h-24 rounded-2xl gradient-primary p-0.5 shadow-lg">
-              <div className="w-full h-full rounded-[calc(1rem-2px)] bg-[#030408] flex items-center justify-center overflow-hidden">
-                <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`} alt="avatar" className="w-full h-full object-cover scale-110" referrerPolicy="no-referrer" />
-              </div>
-            </div>
-            <button onClick={() => setIsEditing(true)} className="absolute -bottom-1 -right-1 bg-white text-slate-900 p-2 rounded-xl shadow-lg hover:scale-110 transition-all">
-              <Settings size={14} />
-            </button>
-          </div>
-
-          <div className="text-center xl:text-left space-y-4 flex-1">
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 glass rounded-full border-nexus-primary/20 text-nexus-primary">
-                <div className="w-1.5 h-1.5 rounded-full bg-nexus-primary animate-ping" />
-                <span className="text-[10px] font-semibold">Account Active</span>
-              </div>
-              <h2 className="text-2xl font-bold text-white">{user?.name}</h2>
-              <div className="flex flex-wrap items-center justify-center xl:justify-start gap-4">
-                <div className="flex items-center gap-2 text-slate-500">
-                  <Mail size={13} className="text-nexus-primary opacity-50" />
-                  <span className="text-xs">{user?.email}</span>
-                </div>
-                <div className="flex items-center gap-2 text-slate-500">
-                  <Shield size={13} className="text-nexus-primary opacity-50" />
-                  <span className="text-xs font-mono">ID: {user?.id.slice(-8).toUpperCase()}</span>
+      <section className="relative overflow-hidden rounded-2xl border border-white/10">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0e1a] via-[#0d1225] to-[#080c18]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-nexus-primary/8 via-transparent to-nexus-magenta/8" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-nexus-primary/40 to-transparent" />
+        <div className="absolute -top-24 -right-24 w-64 h-64 bg-nexus-primary/8 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-nexus-magenta/6 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative z-10 p-6 md:p-8">
+          <div className="flex flex-col xl:flex-row items-center xl:items-start gap-8 xl:gap-12">
+            <div className="relative">
+              <div className="w-24 h-24 rounded-2xl p-0.5 shadow-lg" style={{background: 'linear-gradient(135deg, #00e6a0, #a855f7)'}}>
+                <div className="w-full h-full rounded-[calc(1rem-2px)] bg-[#030408] flex items-center justify-center overflow-hidden">
+                  <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`} alt="avatar" className="w-full h-full object-cover scale-110" referrerPolicy="no-referrer" />
                 </div>
               </div>
+              <button onClick={() => setIsEditing(true)} className="absolute -bottom-1 -right-1 bg-white text-slate-900 p-2 rounded-xl shadow-lg hover:scale-110 transition-all">
+                <Settings size={14} />
+              </button>
             </div>
-            <div className="flex flex-wrap items-center justify-center xl:justify-start gap-3">
-              <button onClick={() => setIsEditing(true)} className="px-5 py-2.5 gradient-primary text-slate-900 font-semibold rounded-xl text-xs hover:scale-[1.03] active:scale-95 transition-all shadow-lg">
-                Edit Profile
-              </button>
-              <button onClick={logout} className="px-5 py-2.5 glass border-white/10 text-slate-400 font-semibold rounded-xl text-xs hover:text-rose-500 hover:border-rose-500/30 transition-all flex items-center gap-2">
-                <LogOut size={13} /> Sign Out
-              </button>
+            <div className="text-center xl:text-left space-y-4 flex-1">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-2 px-3 py-1 glass rounded-full border-nexus-primary/20 text-nexus-primary">
+                  <div className="w-1.5 h-1.5 rounded-full bg-nexus-primary animate-ping" />
+                  <span className="text-[10px] font-semibold">Account Active</span>
+                </div>
+                <h2 className="text-2xl md:text-3xl font-black text-white">{user?.name}</h2>
+                <div className="flex flex-wrap items-center justify-center xl:justify-start gap-4">
+                  <div className="flex items-center gap-2 text-slate-500">
+                    <Mail size={13} className="text-nexus-primary opacity-50" />
+                    <span className="text-xs">{user?.email}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-slate-500">
+                    <Shield size={13} className="text-nexus-primary opacity-50" />
+                    <span className="text-xs font-mono">ID: {user?.id.slice(-8).toUpperCase()}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-wrap items-center justify-center xl:justify-start gap-3">
+                <button onClick={() => setIsEditing(true)} className="px-5 py-2.5 gradient-primary text-slate-900 font-semibold rounded-xl text-xs hover:scale-[1.03] active:scale-95 transition-all shadow-lg">
+                  Edit Profile
+                </button>
+                <button onClick={logout} className="px-5 py-2.5 glass border-white/10 text-slate-400 font-semibold rounded-xl text-xs hover:text-rose-500 hover:border-rose-500/30 transition-all flex items-center gap-2">
+                  <LogOut size={13} /> Sign Out
+                </button>
+              </div>
             </div>
           </div>
         </div>
