@@ -12,12 +12,18 @@ import { getReferralReward } from '../models/ReferralSetting.ts';
 // ─────────────────────────────────────────────────────────────────────────────
 export const getPlans = async (_req: Request, res: Response) => {
   try {
-    const plans = await InvestmentPlan.find({ isActive: true, investmentAmount: { $exists: true, $gt: 0 } });
+    // Only return plans that have all required numeric fields set and are active
+    const plans = await InvestmentPlan.find({
+      isActive: true,
+      investmentAmount: { $exists: true, $gt: 0 },
+      dailyROI:         { $exists: true, $gt: 0 },
+      durationDays:     { $exists: true, $gt: 0 },
+    }).sort({ investmentAmount: 1 });
 
     res.json(plans.map(plan => {
-      const amt    = plan.investmentAmount!;
-      const roi    = plan.dailyROI!;
-      const days   = plan.durationDays!;
+      const amt    = Number(plan.investmentAmount) || 0;
+      const roi    = Number(plan.dailyROI)         || 0;
+      const days   = Number(plan.durationDays)     || 0;
       const profit = Math.round((amt * roi * days) / 100);
       return {
         _id:              plan._id,

@@ -3,21 +3,20 @@ services:
     name: nexuscapital-backend
     env: node
     plan: free
-    buildCommand: npm install
-    startCommand: npm start
+    buildCommand: npm install && npm run build
+    startCommand: npx tsx server.ts
     envVars:
-      - key: MONGODB_URI
-        scope: build
-        value: mongodb+srv://username:password@cluster.mongodb.net/nexuscapital
-      - key: JWT_SECRET
-        scope: build
-        value: your_super_secret_jwt_key_change_this_in_production
       - key: NODE_ENV
-        scope: build
         value: production
-      - key: FRONTEND_URL
-        scope: build
-        value: https://roiwealth.vercel.app
       - key: PORT
-        scope: build
         value: 3000
+      - key: MONGODB_URI
+        sync: false   # set this in Render dashboard → Environment → Secret
+      - key: JWT_SECRET
+        sync: false   # set this in Render dashboard → Environment → Secret
+      - key: FRONTEND_URL
+        value: https://nexus-capital-earnings.vercel.app
+      - key: ADDITIONAL_ORIGINS
+        value: https://roiwealth.vercel.app
+      - key: REFERRAL_REWARD_PKR
+        value: "85"

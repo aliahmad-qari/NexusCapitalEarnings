@@ -91,8 +91,38 @@ async function startServer() {
   });
 
   // CORS Configuration - MUST be first middleware
-  const corsOptions = {
-    origin: ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173', 'https://nexus-capital-earnings.vercel.app', 'https://roiwealth.vercel.app', process.env.FRONTEND_URL].filter(Boolean),
+  // Uses a function so we can match dynamic Vercel preview URLs (*.vercel.app)
+  // alongside the hardcoded production origins.
+  const allowedOrigins = new Set([
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'http://127.0.0.1:5173',
+    'https://nexus-capital-earnings.vercel.app',
+    'https://roiwealth.vercel.app',
+    ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
+    ...(process.env.ADDITIONAL_ORIGINS
+      ? process.env.ADDITIONAL_ORIGINS.split(',').map(s => s.trim()).filter(Boolean)
+      : []),
+  ]);
+
+  const corsOptions: cors.CorsOptions = {
+    origin: (origin, callback) => {
+      // Allow requests with no origin (curl, mobile apps, server-to-server)
+      if (!origin) return callback(null, true);
+
+      // Exact match against allowlist
+      if (allowedOrigins.has(origin)) return callback(null, true);
+
+      // Allow ANY Vercel preview / deployment URL (*.vercel.app)
+      if (/^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(origin)) return callback(null, true);
+
+      // Allow local network IPs during development
+      if (/^http:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+)(:\d+)?$/.test(origin)) {
+        return callback(null, true);
+      }
+
+      callback(new Error(`CORS blocked: ${origin}`));
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
@@ -102,7 +132,7 @@ async function startServer() {
   // Apply CORS to all routes
   app.use(cors(corsOptions));
 
-  // Explicit preflight handler
+  // Explicit preflight handler — must be before any route handlers
   app.options('*', cors(corsOptions));
 
   app.use(express.json());
