@@ -1,354 +1,198 @@
 import { useEffect, useState } from 'react';
-import { 
-  Users, Search, Shield, ShieldOff, Trash2, 
-  ChevronRight, Filter, MoreVertical, CheckCircle2,
-  AlertTriangle, Mail, User as UserIcon
-} from 'lucide-react';
+import { Users, Search, Shield, ShieldOff, Trash2, X, Filter, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { formatPKR } from '../../utils/currency.ts';
 
 export const UserManagement = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
-  const [filterRole, setFilterRole] = useState('all');
-  const [sortBy, setSortBy] = useState('createdAt');
-  const [sortOrder, setSortOrder] = useState('desc');
   const [selectedUser, setSelectedUser] = useState<any>(null);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  useEffect(() => { fetchUsers(); }, []);
 
   const fetchUsers = async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
       const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const res = await fetch(`${apiBase}/api/admin/users`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await fetch(`${apiBase}/api/admin/users`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
-      if (Array.isArray(data)) {
-        setUsers(data);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+      if (Array.isArray(data)) setUsers(data);
+    } catch (err) { console.error(err); } finally { setLoading(false); }
   };
 
-  const updateUserStatus = async (userId: string, newStatus: string) => {
+  const updateStatus = async (userId: string, status: string) => {
     try {
       const token = localStorage.getItem('token');
       const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
       const res = await fetch(`${apiBase}/api/admin/user-status`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ userId, status: newStatus })
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ userId, status }),
       });
-      if (res.ok) {
-        fetchUsers();
-        if (selectedUser?._id === userId) {
-          setSelectedUser({ ...selectedUser, isBlocked: newStatus === 'blocked' });
-        }
-      }
-    } catch (err) {
-      console.error(err);
-    }
+      if (res.ok) { fetchUsers(); if (selectedUser?._id === userId) setSelectedUser({ ...selectedUser, isBlocked: status === 'blocked' }); }
+    } catch (err) { console.error(err); }
   };
 
   const deleteUser = async (userId: string) => {
-    if (!window.confirm('CRITICAL: Permanent deletion of user node. Proceed?')) return;
+    if (!window.confirm('Delete this user permanently?')) return;
     try {
       const token = localStorage.getItem('token');
       const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const res = await fetch(`${apiBase}/api/admin/user/${userId}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (res.ok) {
-        fetchUsers();
-        setSelectedUser(null);
-      }
-    } catch (err) {
-      console.error(err);
-    }
+      const res = await fetch(`${apiBase}/api/admin/user/${userId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) { fetchUsers(); setSelectedUser(null); }
+    } catch (err) { console.error(err); }
   };
 
-  const filteredUsers = users
-    .filter((u: any) => {
-      const matchesSearch = u.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                           u.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           u._id.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesStatus = filterStatus === 'all' ? true : 
-                           filterStatus === 'blocked' ? u.isBlocked : !u.isBlocked;
-      const matchesRole = filterRole === 'all' ? true :
-                         filterRole === 'admin' ? u.isAdmin : !u.isAdmin;
-      return matchesSearch && matchesStatus && matchesRole;
-    })
-    .sort((a, b) => {
-      let valA = a[sortBy];
-      let valB = b[sortBy];
-      
-      // Handle nested wallet balance
-      if (sortBy === 'balance') {
-        valA = a.wallet.totalBalance;
-        valB = b.wallet.totalBalance;
-      }
-
-      if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
-      if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
-      return 0;
-    });
-
-  const toggleSort = (field: string) => {
-    if (sortBy === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortBy(field);
-      setSortOrder('desc');
-    }
-  };
+  const filtered = users.filter((u) => {
+    const q = searchQuery.toLowerCase();
+    const matchSearch = !q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
+    const matchStatus = filterStatus === 'all' || (filterStatus === 'blocked' ? u.isBlocked : !u.isBlocked);
+    return matchSearch && matchStatus;
+  });
 
   return (
-    <div className="p-4 md:p-8 lg:p-12 max-w-[1600px] mx-auto space-y-12">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-4">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-nexus-primary">
-            <Users size={18} />
-            <span className="text-[10px] font-black uppercase tracking-[0.4em]">Node Directory Matrix</span>
-          </div>
-          <h2 className="text-3xl md:text-5xl font-black tracking-tighter uppercase">Peer <span className="text-gradient">Management</span></h2>
-          <p className="text-slate-500 text-sm max-w-md normal-case font-medium uppercase tracking-widest">Controlling protocol permissions and network access for all ROI nodes.</p>
-        </div>
-        <div className="flex flex-col lg:flex-row items-center gap-4 w-full md:w-auto">
-           <div className="relative w-full sm:w-80">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-700" size={16} />
-              <input 
-                type="text" 
-                placeholder="SEARCH BY NAME, EMAIL, OR ID..." 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full glass py-4 pl-12 pr-6 rounded-2xl border-white/5 outline-none focus:border-nexus-primary/30 text-[10px] font-black tracking-widest text-white placeholder:text-slate-800"
-              />
-           </div>
-           <div className="flex flex-wrap gap-2 w-full lg:w-auto">
-              <div className="flex items-center gap-2 glass px-4 py-3 rounded-2xl border-white/5">
-                <Shield size={14} className="text-slate-600" />
-                <select 
-                  value={filterRole}
-                  onChange={(e) => setFilterRole(e.target.value)}
-                  className="bg-transparent outline-none text-[10px] font-black uppercase tracking-widest text-slate-300"
-                >
-                   <option value="all">Global Roles</option>
-                   <option value="user">Investors</option>
-                   <option value="admin">Controllers</option>
-                </select>
-              </div>
-              <div className="flex items-center gap-2 glass px-4 py-3 rounded-2xl border-white/5">
-                <Filter size={14} className="text-slate-600" />
-                <select 
-                  value={filterStatus}
-                  onChange={(e) => setFilterStatus(e.target.value)}
-                  className="bg-transparent outline-none text-[10px] font-black uppercase tracking-widest text-slate-300"
-                >
-                   <option value="all">All Statuses</option>
-                   <option value="active">Active Nodes</option>
-                   <option value="blocked">Restricted</option>
-                </select>
-              </div>
-           </div>
-        </div>
-      </header>
+    <div className="p-4 md:p-6 lg:p-8 max-w-[1600px] mx-auto space-y-5">
 
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-xl font-bold text-white">Users</h1>
+          <p className="text-xs text-slate-500 mt-0.5">{users.length} registered users</p>
+        </div>
+        <button onClick={fetchUsers} className="flex items-center gap-2 px-4 py-2 glass rounded-xl border border-white/8 text-xs font-semibold text-slate-400 hover:text-white transition-all">
+          <RefreshCw size={13} /> Refresh
+        </button>
+      </div>
+
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600" size={14} />
+          <input type="text" placeholder="Search by name or email..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-9 pr-4 py-2.5 glass rounded-xl border border-white/8 outline-none focus:border-nexus-primary/30 text-xs text-white placeholder-slate-700" />
+        </div>
+        <div className="flex gap-2">
+          {['all', 'active', 'blocked'].map((s) => (
+            <button key={s} onClick={() => setFilterStatus(s)}
+              className={`px-3 py-2 rounded-lg border text-[10px] font-semibold uppercase transition-all ${filterStatus === s ? 'bg-nexus-primary/10 border-nexus-primary/30 text-nexus-primary' : 'border-white/8 text-slate-600 hover:text-white'}`}>
+              {s}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Table */}
       {loading ? (
-        <div className="p-20 flex flex-col items-center justify-center gap-6">
-           <div className="w-12 h-12 border-4 border-nexus-primary/20 border-t-nexus-primary rounded-full animate-spin"></div>
-           <p className="text-nexus-primary/40 font-black uppercase tracking-[0.4em] text-[10px]">Scanning Identity Matrix...</p>
+        <div className="flex items-center justify-center py-20">
+          <div className="w-8 h-8 border-2 border-nexus-primary/20 border-t-nexus-primary rounded-full animate-spin" />
         </div>
       ) : (
-        <div className="nexus-card p-0 overflow-hidden border-white/5">
-           <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                 <thead>
-                    <tr className="bg-white/[0.01] border-b border-white/5">
-                       <th className="px-8 py-6 text-[10px] font-black text-slate-600 uppercase tracking-widest cursor-pointer hover:text-white" onClick={() => toggleSort('name')}>Peer Identity</th>
-                       <th className="px-8 py-6 text-[10px] font-black text-slate-600 uppercase tracking-widest">Auth Level</th>
-                       <th className="px-8 py-6 text-[10px] font-black text-slate-600 uppercase tracking-widest">Network Status</th>
-                       <th className="px-8 py-6 text-[10px] font-black text-slate-600 uppercase tracking-widest cursor-pointer hover:text-white" onClick={() => toggleSort('balance')}>Capital Units</th>
-                       <th className="px-8 py-6 text-[10px] font-black text-slate-600 uppercase tracking-widest cursor-pointer hover:text-white" onClick={() => toggleSort('createdAt')}>Joined Pulse</th>
-                       <th className="px-8 py-6 text-[10px] font-black text-slate-600 uppercase tracking-widest text-right">Terminal Actions</th>
-                    </tr>
-                 </thead>
-                 <tbody className="divide-y divide-white/5">
-                    {filteredUsers.map((u: any) => (
-                       <tr key={u._id} className="hover:bg-white/[0.02] transition-colors group">
-                          <td className="px-8 py-8">
-                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center font-black text-xs text-slate-500 overflow-hidden shrink-0">
-                                   <img 
-                                     src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${u.name}`} 
-                                     alt="avatar" 
-                                     className="w-full h-full object-cover" 
-                                     referrerPolicy="no-referrer"
-                                   />
-                                </div>
-                                <div className="space-y-1">
-                                   <p className="text-sm font-black text-white uppercase tracking-tight">{u.name}</p>
-                                   <div className="flex items-center gap-2 text-slate-600">
-                                      <p className="text-[10px] font-bold uppercase tracking-widest">ID_{u._id.slice(-6).toUpperCase()}</p>
-                                   </div>
-                                </div>
-                             </div>
-                          </td>
-                          <td className="px-8 py-8">
-                             <span className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border ${u.isAdmin ? 'border-nexus-magenta/20 bg-nexus-magenta/5 text-nexus-magenta' : 'border-slate-800 bg-slate-900/40 text-slate-500'}`}>
-                                {u.isAdmin ? 'Controller' : 'Investor'}
-                             </span>
-                          </td>
-                          <td className="px-8 py-8">
-                             <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-xl border text-[9px] font-black uppercase tracking-widest ${
-                                u.isBlocked ? 'border-rose-500/20 bg-rose-500/5 text-rose-500' : 'border-nexus-primary/20 bg-nexus-primary/5 text-nexus-primary'
-                             }`}>
-                                {u.isBlocked ? <ShieldOff size={12} /> : <Shield size={12} />}
-                                {u.isBlocked ? 'Restricted' : 'Synchronized'}
-                             </span>
-                          </td>
-                          <td className="px-8 py-8">
-                             <div className="space-y-1">
-                                <p className="text-xs font-black text-slate-200">${u.wallet?.totalBalance.toLocaleString() || '0'}</p>
-                                <p className="text-[9px] text-slate-600 font-bold uppercase tracking-widest">Liquidity Signal</p>
-                             </div>
-                          </td>
-                          <td className="px-8 py-8 whitespace-nowrap">
-                             <div className="space-y-1">
-                                <p className="text-xs font-black text-slate-400">{new Date(u.createdAt).toLocaleDateString()}</p>
-                             </div>
-                          </td>
-                          <td className="px-8 py-8 text-right">
-                             <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all">
-                                <button 
-                                  onClick={() => setSelectedUser(u)}
-                                  className="p-3 glass rounded-xl text-slate-600 hover:text-white transition-all"
-                                  title="View Credentials"
-                                >
-                                   <Search size={18} />
-                                </button>
-                                <button 
-                                  onClick={() => updateUserStatus(u._id, u.isBlocked ? 'active' : 'blocked')}
-                                  title={u.isBlocked ? 'Re-authorize Node' : 'Restrict Node'}
-                                  className={`p-3 rounded-xl border transition-all ${u.isBlocked ? 'border-nexus-primary/20 bg-nexus-primary/5 text-nexus-primary hover:bg-nexus-primary/20' : 'border-rose-500/20 bg-rose-500/5 text-rose-500 hover:bg-rose-500/20'}`}
-                                >
-                                   {u.isBlocked ? <Shield size={18} /> : <ShieldOff size={18} />}
-                                </button>
-                                <button 
-                                  onClick={() => deleteUser(u._id)}
-                                  title="Purge Node"
-                                  className="p-3 rounded-xl border border-white/5 bg-white/5 text-slate-500 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
-                                >
-                                   <Trash2 size={18} />
-                                </button>
-                             </div>
-                          </td>
-                       </tr>
-                    ))}
-                    {filteredUsers.length === 0 && (
-                       <tr>
-                          <td colSpan={6} className="p-24 text-center">
-                             <div className="w-16 h-16 bg-white/5 rounded-[24px] flex items-center justify-center mx-auto mb-6">
-                                <Search size={24} className="text-slate-800" />
-                             </div>
-                             <p className="text-[10px] font-black text-slate-700 uppercase tracking-[0.4em]">No matching identity nodes found</p>
-                          </td>
-                       </tr>
-                    )}
-                 </tbody>
-              </table>
-           </div>
+        <div className="nexus-card p-0 overflow-hidden border-white/8">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left min-w-[650px]">
+              <thead>
+                <tr className="border-b border-white/5 bg-white/[0.01]">
+                  <th className="px-5 py-3 text-[9px] text-slate-600 uppercase tracking-wider">User</th>
+                  <th className="px-5 py-3 text-[9px] text-slate-600 uppercase tracking-wider">Role</th>
+                  <th className="px-5 py-3 text-[9px] text-slate-600 uppercase tracking-wider">Status</th>
+                  <th className="px-5 py-3 text-[9px] text-slate-600 uppercase tracking-wider">Balance</th>
+                  <th className="px-5 py-3 text-[9px] text-slate-600 uppercase tracking-wider">Joined</th>
+                  <th className="px-5 py-3 text-[9px] text-slate-600 uppercase tracking-wider text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {filtered.map((u) => (
+                  <tr key={u._id} className="hover:bg-white/[0.02] transition-colors group">
+                    <td className="px-5 py-3">
+                      <div className="flex items-center gap-3">
+                        <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${u.name}`} alt="" className="w-8 h-8 rounded-lg border border-white/10" referrerPolicy="no-referrer" />
+                        <div>
+                          <p className="text-xs font-semibold text-white">{u.name}</p>
+                          <p className="text-[9px] text-slate-600">{u.email}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-5 py-3">
+                      <span className={`px-2 py-0.5 rounded text-[9px] font-semibold border ${u.isAdmin ? 'border-nexus-magenta/20 bg-nexus-magenta/5 text-nexus-magenta' : 'border-white/8 text-slate-500'}`}>
+                        {u.isAdmin ? 'Admin' : 'User'}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3">
+                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[9px] font-semibold border ${u.isBlocked ? 'border-rose-500/20 bg-rose-500/5 text-rose-400' : 'border-emerald-500/20 bg-emerald-500/5 text-emerald-400'}`}>
+                        {u.isBlocked ? <ShieldOff size={9} /> : <Shield size={9} />}
+                        {u.isBlocked ? 'Blocked' : 'Active'}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3 text-xs font-semibold text-slate-300">{formatPKR(u.wallet?.totalBalance || 0)}</td>
+                    <td className="px-5 py-3 text-[10px] text-slate-500">{new Date(u.createdAt).toLocaleDateString()}</td>
+                    <td className="px-5 py-3 text-right">
+                      <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                        <button onClick={() => setSelectedUser(u)} className="p-1.5 glass rounded-lg text-slate-500 hover:text-white border border-white/5 transition-all">
+                          <Search size={13} />
+                        </button>
+                        <button onClick={() => updateStatus(u._id, u.isBlocked ? 'active' : 'blocked')}
+                          className={`p-1.5 rounded-lg border transition-all ${u.isBlocked ? 'border-emerald-500/20 bg-emerald-500/5 text-emerald-400 hover:bg-emerald-500 hover:text-white' : 'border-rose-500/20 bg-rose-500/5 text-rose-400 hover:bg-rose-500 hover:text-white'}`}>
+                          {u.isBlocked ? <Shield size={13} /> : <ShieldOff size={13} />}
+                        </button>
+                        <button onClick={() => deleteUser(u._id)} className="p-1.5 rounded-lg border border-white/8 text-slate-600 hover:bg-rose-500 hover:text-white hover:border-rose-500 transition-all">
+                          <Trash2 size={13} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                {filtered.length === 0 && (
+                  <tr><td colSpan={6} className="py-16 text-center text-xs text-slate-700">No users found</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
-      {/* User Details Modal */}
+      {/* User Detail Modal */}
       <AnimatePresence>
         {selectedUser && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedUser(null)}
-              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-            />
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="relative nexus-card w-full max-w-lg p-10 bg-[#0a0b10] border-white/10 overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 p-10 pointer-events-none opacity-[0.03]">
-                 <UserIcon size={200} className="text-nexus-primary" />
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedUser(null)} className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+            <motion.div initial={{ scale: 0.93, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.93, opacity: 0 }}
+              className="relative nexus-card w-full max-w-sm p-6 border-white/10 space-y-5">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-bold text-white">User Details</h3>
+                <button onClick={() => setSelectedUser(null)} className="p-1.5 hover:bg-white/10 rounded-lg text-slate-500 hover:text-white transition-all"><X size={16} /></button>
               </div>
-
-              <div className="flex justify-between items-start mb-10 relative z-10">
-                <div className="flex items-center gap-6">
-                  <div className="w-20 h-20 rounded-3xl bg-white/5 border border-white/5 p-1">
-                     <img 
-                       src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${selectedUser.name}`} 
-                       alt="avatar" 
-                       className="w-full h-full object-cover rounded-2xl" 
-                       referrerPolicy="no-referrer"
-                     />
+              <div className="flex items-center gap-3">
+                <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${selectedUser.name}`} alt="" className="w-12 h-12 rounded-xl border border-white/10" referrerPolicy="no-referrer" />
+                <div>
+                  <p className="text-sm font-bold text-white">{selectedUser.name}</p>
+                  <p className="text-[10px] text-slate-500">{selectedUser.email}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { label: 'Role', value: selectedUser.isAdmin ? 'Admin' : 'User' },
+                  { label: 'Status', value: selectedUser.isBlocked ? 'Blocked' : 'Active' },
+                  { label: 'Balance', value: formatPKR(selectedUser.wallet?.totalBalance || 0) },
+                  { label: 'Referrals', value: selectedUser.referralCount || 0 },
+                  { label: 'Profit', value: formatPKR(selectedUser.wallet?.profitBalance || 0) },
+                  { label: 'Joined', value: new Date(selectedUser.createdAt).toLocaleDateString() },
+                ].map((r) => (
+                  <div key={r.label} className="p-3 rounded-lg bg-white/[0.03] border border-white/5">
+                    <p className="text-[9px] text-slate-600 uppercase">{r.label}</p>
+                    <p className="text-xs font-semibold text-slate-200 mt-0.5">{r.value}</p>
                   </div>
-                  <div className="space-y-1">
-                    <h3 className="text-2xl font-black text-white tracking-tighter uppercase">{selectedUser.name}</h3>
-                    <p className="text-[10px] font-black text-nexus-primary uppercase tracking-[0.2em]">{selectedUser.email}</p>
-                  </div>
-                </div>
-                <button onClick={() => setSelectedUser(null)} className="p-2 hover:bg-white/5 rounded-xl transition-colors">
-                  <ChevronRight size={24} className="rotate-90 text-slate-500" />
-                </button>
+                ))}
               </div>
-
-              <div className="grid grid-cols-2 gap-6 relative z-10 mb-10">
-                <div className="space-y-1">
-                  <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Protocol Role</p>
-                  <p className="text-sm font-black text-slate-200">{selectedUser.isAdmin ? 'Network Controller' : 'Capital Investor'}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Sync Status</p>
-                  <p className={`text-sm font-black ${selectedUser.isBlocked ? 'text-rose-500' : 'text-nexus-primary'}`}>
-                    {selectedUser.isBlocked ? 'Restricted' : 'Synchronized'}
-                  </p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Net liquidity</p>
-                  <p className="text-sm font-black text-nexus-primary">${selectedUser.wallet?.totalBalance.toLocaleString()}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Date Joined</p>
-                  <p className="text-sm font-black text-slate-200">{new Date(selectedUser.createdAt).toLocaleDateString()}</p>
-                </div>
-              </div>
-
-              <div className="flex gap-4 relative z-10">
-                <button 
-                  onClick={() => updateUserStatus(selectedUser._id, selectedUser.isBlocked ? 'active' : 'blocked')}
-                  className={`flex-1 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${
-                    selectedUser.isBlocked ? 'gradient-primary text-slate-900' : 'bg-rose-500/10 border border-rose-500/20 text-rose-500 hover:bg-rose-500 hover:text-white'
-                  }`}
-                >
-                  {selectedUser.isBlocked ? 'Re-authorize Node' : 'Restrict Node'}
+              <div className="flex gap-3">
+                <button onClick={() => updateStatus(selectedUser._id, selectedUser.isBlocked ? 'active' : 'blocked')}
+                  className={`flex-1 py-2.5 rounded-xl font-semibold text-xs transition-all ${selectedUser.isBlocked ? 'gradient-primary text-slate-900' : 'bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500 hover:text-white'}`}>
+                  {selectedUser.isBlocked ? 'Unblock' : 'Block'}
                 </button>
-                <button 
-                  onClick={() => deleteUser(selectedUser._id)}
-                  className="px-6 py-4 rounded-2xl bg-white/5 border border-white/5 text-slate-600 hover:text-white transition-all"
-                >
-                  <Trash2 size={20} />
+                <button onClick={() => deleteUser(selectedUser._id)} className="px-4 py-2.5 rounded-xl border border-white/8 text-slate-500 hover:bg-rose-500 hover:text-white hover:border-rose-500 transition-all">
+                  <Trash2 size={15} />
                 </button>
               </div>
             </motion.div>

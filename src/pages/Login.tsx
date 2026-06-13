@@ -27,7 +27,8 @@ export const Login = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Login failed');
       login(data.token, data.user);
-      navigate('/dashboard');
+      // Admins go straight to their panel; regular users go to dashboard
+      navigate(data.user?.isAdmin === true ? '/dashboard/admin' : '/dashboard');
     } catch (err: any) {
       setError(err.message);
     } finally {

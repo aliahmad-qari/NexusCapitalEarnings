@@ -2,9 +2,9 @@ import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
 
 const stats = [
-  { label: 'Total Investors', value: '25,689', growth: '12.5%' },
-  { label: 'Total Invested', value: '$2,458,750', growth: '18.7%' },
-  { label: 'Total Payouts', value: '$1,154,890', growth: '15.3%' },
+  { label: 'Total Investors', value: '25,689',         growth: '12.5%' },
+  { label: 'Total Invested',  value: 'PKR 2,45,87,500', growth: '18.7%' },
+  { label: 'Total Payouts',   value: 'PKR 1,15,48,900', growth: '15.3%' },
 ];
 
 export const Stats = () => {

@@ -34,19 +34,43 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function seedPlans() {
-  const count = await InvestmentPlan.countDocuments();
-  if (count === 0) {
-    const plans = [
-      { name: 'Starter Plan', dailyProfitPercent: 5, minInvestment: 10, maxInvestment: 499, durationDays: 30, features: ['5% Daily Profit', 'Duration 30 Days', 'Automated Profits'] },
-      { name: 'Silver Plan', dailyProfitPercent: 7, minInvestment: 500, maxInvestment: 999, durationDays: 30, features: ['7% Daily Profit', 'Priority Support', 'Daily Withdrawals'] },
-      { name: 'Gold Plan', dailyProfitPercent: 10, minInvestment: 1000, maxInvestment: 4999, durationDays: 30, features: ['10% Daily Profit', 'Gold Badge', 'Instant Payouts'] },
-      { name: 'Platinum Plan', dailyProfitPercent: 12, minInvestment: 5000, maxInvestment: 9999, durationDays: 45, features: ['12% Daily Profit', 'Platinum Support', 'Lower Fees'] },
-      { name: 'VIP Plan', dailyProfitPercent: 15, minInvestment: 10000, maxInvestment: 50000, durationDays: 60, features: ['15% Daily Profit', 'Personal Manager', 'Zero Fees'] },
-      { name: 'Custom Plan', dailyProfitPercent: 20, minInvestment: 50000, maxInvestment: 1000000, durationDays: 90, features: ['20% Daily Profit', 'Custom Term', 'Elite Status'] },
-    ];
-    await InvestmentPlan.insertMany(plans);
-    logger.info('Initial plans seeded');
+  // ── Remove exact duplicate plan names (keep the oldest) ──────────
+  const allPlans = await InvestmentPlan.find().sort({ createdAt: 1 });
+  const seen = new Set<string>();
+  for (const p of allPlans) {
+    const key = `${p.name.toLowerCase().trim()}`;
+    if (seen.has(key)) {
+      await InvestmentPlan.findByIdAndDelete(p._id);
+      logger.info(`🗑 Removed duplicate plan: ${p.name}`);
+    } else {
+      seen.add(key);
+    }
   }
+
+  // ── Ensure the canonical 5 plans exist ───────────────────────────
+  const canonical = [
+    { name: 'Starter Plan',  investmentAmount: 300,   dailyROI: 10, durationDays: 7 },
+    { name: 'Bronze Plan',   investmentAmount: 1000,  dailyROI: 10, durationDays: 7 },
+    { name: 'Silver Plan',   investmentAmount: 3000,  dailyROI: 10, durationDays: 7 },
+    { name: 'Gold Plan',     investmentAmount: 5000,  dailyROI: 10, durationDays: 7 },
+    { name: 'Diamond Plan',  investmentAmount: 10000, dailyROI: 10, durationDays: 7 },
+  ];
+
+  for (const p of canonical) {
+    const exists = await InvestmentPlan.findOne({ name: p.name });
+    if (!exists) {
+      await InvestmentPlan.create({ ...p, isActive: true });
+      logger.info(`✅ Added missing plan: ${p.name} (PKR ${p.investmentAmount})`);
+    } else if (!exists.isActive) {
+      // Re-activate if it was accidentally deactivated
+      exists.isActive = true;
+      await exists.save();
+      logger.info(`✅ Re-activated plan: ${p.name}`);
+    }
+  }
+
+  const count = await InvestmentPlan.countDocuments();
+  logger.info(`📋 Plans ready: ${count} active in DB`);
 }
 
 async function startServer() {
@@ -90,6 +114,9 @@ async function startServer() {
   app.get('/api/health', (_req, res) => {
     res.json({ status: 'ok', database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected' });
   });
+
+  // Serve uploaded files (deposit screenshots, etc.)
+  app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
   // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { History as HistoryIcon, Filter, Search, ArrowUpRight, ArrowDownRight, Activity, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { formatPKR } from '../utils/currency.ts';
 
 export const History = () => {
   const [history, setHistory] = useState([]);
@@ -104,7 +105,7 @@ export const History = () => {
                   <tr className="border-b border-white/10 bg-white/[0.02]">
                     <th className="px-6 py-4 text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Date</th>
                     <th className="px-6 py-4 text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Type</th>
-                    <th className="px-6 py-4 text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Amount (USD)</th>
+                    <th className="px-6 py-4 text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Amount (PKR)</th>
                     <th className="px-6 py-4 text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Status</th>
                     <th className="px-6 py-4 text-[10px] font-semibold text-slate-500 uppercase tracking-wider text-right">Reference ID</th>
                   </tr>
@@ -125,7 +126,7 @@ export const History = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`text-sm font-bold ${item.type === 'withdraw' ? 'text-rose-500' : 'text-white'}`}>
-                          {item.type === 'withdraw' ? '-' : '+'}${item.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                          {item.type === 'withdraw' ? '-' : '+'}{formatPKR(item.amount)}
                         </span>
                       </td>
                       <td className="px-6 py-4">

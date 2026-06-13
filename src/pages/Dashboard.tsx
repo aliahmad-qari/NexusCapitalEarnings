@@ -9,6 +9,7 @@ import {
 import { useAuth } from '../hooks/useAuth.tsx';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
+import { formatPKR, formatPKRDecimal } from '../utils/currency.ts';
 
 export const Dashboard = () => {
   const { user, refreshUser } = useAuth();
@@ -22,11 +23,38 @@ export const Dashboard = () => {
   const [goalAmount, setGoalAmount] = useState(user?.investmentGoal?.targetAmount || 0);
   const [goalDate, setGoalDate] = useState(user?.investmentGoal?.targetDate ? new Date(user.investmentGoal.targetDate).toISOString().split('T')[0] : '');
 
+  // ── Live payout countdown ─────────────────────────────────────
+  const [countdown, setCountdown] = useState({ h: '00', m: '00', s: '00' });
   useEffect(() => {
-    refreshUser();
+    const tick = () => {
+      const active = investments.filter((i: any) => i.status === 'active' && i.nextPayoutDate);
+      if (active.length === 0) { setCountdown({ h: '00', m: '00', s: '00' }); return; }
+      // Find the soonest next payout among all active investments
+      const soonest = active.reduce((a: any, b: any) =>
+        new Date(a.nextPayoutDate).getTime() < new Date(b.nextPayoutDate).getTime() ? a : b
+      );
+      const diff = Math.max(0, new Date(soonest.nextPayoutDate).getTime() - Date.now());
+      const h  = Math.floor(diff / 3_600_000);
+      const m  = Math.floor((diff % 3_600_000) / 60_000);
+      const s  = Math.floor((diff % 60_000) / 1000);
+      const pad = (n: number) => String(n).padStart(2, '0');
+      setCountdown({ h: pad(h), m: pad(m), s: pad(s) });
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [investments]);
+
+  useEffect(() => {
+    refreshUser(); // Sync balance on mount
     fetchStats();
     fetchHistory();
     fetchPerformance('1M');
+    // Refresh balance every 10s and on tab focus
+    const poll = setInterval(() => { if (document.visibilityState === 'visible') refreshUser(); }, 10000);
+    const onVisible = () => { if (document.visibilityState === 'visible') { refreshUser(); fetchStats(); } };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => { clearInterval(poll); document.removeEventListener('visibilitychange', onVisible); };
   }, []);
 
   useEffect(() => { fetchPerformance(chartRange); }, [chartRange]);
@@ -39,9 +67,9 @@ export const Dashboard = () => {
       const data = await res.json();
       if (!Array.isArray(data)) return;
       setInvestments(data);
-      const total = data.reduce((acc: number, inv: any) => acc + inv.amount, 0);
+      const total = data.reduce((acc: number, inv: any) => acc + inv.principalAmount, 0);
       const active = data.filter((inv: any) => inv.status === 'active').length;
-      const daily = data.filter((inv: any) => inv.status === 'active').reduce((acc: number, inv: any) => acc + (inv.amount * inv.dailyProfitPercent) / 100, 0);
+      const daily = data.filter((inv: any) => inv.status === 'active').reduce((acc: number, inv: any) => acc + inv.dailyProfit, 0);
       setStats({ totalInvested: total, dailyProfit: daily, activeInvestments: active });
     } catch (err) { console.error(err); }
   };
@@ -129,11 +157,11 @@ export const Dashboard = () => {
               animate={{ opacity: [0.85, 1, 0.85] }}
               transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
             >
-              ${user?.wallet.totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+              {formatPKR(user?.wallet.totalBalance || 0)}
             </motion.p>
             <div className="flex items-center gap-1.5">
               <TrendingUp size={10} className="text-nexus-primary" />
-              <span className="text-[10px] text-slate-400">+<span className="text-nexus-primary font-semibold">${stats.dailyProfit.toFixed(2)}</span> today</span>
+              <span className="text-[10px] text-slate-400">+<span className="text-nexus-primary font-semibold">{formatPKR(stats.dailyProfit)}</span> today</span>
             </div>
           </div>
 
@@ -162,19 +190,19 @@ export const Dashboard = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
           {
-            label: 'Available Balance', value: `$${user?.wallet.totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
+            label: 'Available Balance', value: formatPKR(user?.wallet.totalBalance || 0),
             icon: Wallet, accent: 'text-nexus-primary', border: 'border-nexus-primary/15', bg: 'bg-nexus-primary/5',
             sub: 'Withdrawable funds', trend: null
           },
           {
-            label: 'Total Invested', value: `$${stats.totalInvested.toLocaleString()}`,
+            label: 'Total Invested', value: formatPKR(stats.totalInvested),
             icon: Briefcase, accent: 'text-purple-400', border: 'border-purple-400/15', bg: 'bg-purple-400/5',
             sub: 'Across all plans', trend: null
           },
           {
-            label: 'Total Profit', value: `$${user?.wallet.profitBalance.toFixed(2)}`,
+            label: 'Total Profit', value: formatPKR(user?.wallet.profitBalance || 0),
             icon: TrendingUp, accent: 'text-cyan-400', border: 'border-cyan-400/15', bg: 'bg-cyan-400/5',
-            sub: 'All-time earnings', trend: '+' + stats.dailyProfit.toFixed(2) + ' today'
+            sub: 'All-time earnings', trend: '+' + formatPKR(stats.dailyProfit) + ' today'
           },
           {
             label: 'Active Plans', value: String(stats.activeInvestments),
@@ -319,7 +347,7 @@ export const Dashboard = () => {
 
             <div className="flex items-center justify-between px-1">
               <p className="text-[9px] text-slate-600">Commission earned</p>
-              <p className="text-sm font-bold text-purple-400">${user?.wallet.referralEarnings.toFixed(2)}</p>
+              <p className="text-sm font-bold text-purple-400">{formatPKR(user?.wallet.referralEarnings || 0)}</p>
             </div>
           </div>
         </div>
@@ -356,22 +384,26 @@ export const Dashboard = () => {
                     <h5 className="text-sm font-bold text-white">{inv.planName}</h5>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-bold text-white">${inv.amount.toLocaleString()}</p>
+                    <p className="text-sm font-bold text-white">{formatPKR(inv.principalAmount)}</p>
                     <p className="text-[9px] text-slate-600">invested</p>
                   </div>
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between text-[9px] font-medium text-slate-600">
-                    <span>Daily Return</span>
-                    <span className="text-nexus-primary font-bold">+{inv.dailyProfitPercent}%</span>
+                    <span>Progress ({(inv.completedDays ?? (inv.totalDays - inv.remainingDays))}/{inv.totalDays} days)</span>
+                    <span className="text-nexus-primary font-bold">{inv.progressPct ?? Math.round(((inv.totalDays - inv.remainingDays) / inv.totalDays) * 100)}%</span>
                   </div>
                   <div className="w-full bg-white/[0.04] h-1 rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
-                      animate={{ width: '45%' }}
+                      animate={{ width: `${inv.progressPct ?? Math.round(((inv.totalDays - inv.remainingDays) / inv.totalDays) * 100)}%` }}
                       transition={{ duration: 1.2, ease: 'easeOut' }}
                       className="h-full gradient-primary rounded-full"
                     />
+                  </div>
+                  <div className="flex justify-between text-[9px] text-slate-700">
+                    <span>+{formatPKR(inv.dailyProfit ?? Math.round((inv.principalAmount * inv.dailyROI) / 100))}/day</span>
+                    <span>{inv.remainingDays} day{inv.remainingDays !== 1 ? 's' : ''} left</span>
                   </div>
                 </div>
               </motion.div>
@@ -427,7 +459,7 @@ export const Dashboard = () => {
                   </div>
                   <div className="text-right">
                     <p className={`text-xs font-bold ${tx.type === 'withdraw' ? 'text-nexus-magenta' : 'text-nexus-primary'}`}>
-                      {tx.type === 'withdraw' ? '−' : '+'}${tx.amount.toLocaleString()}
+                      {tx.type === 'withdraw' ? '−' : '+'}{ formatPKR(tx.amount)}
                     </p>
                     <span className={`text-[8px] font-medium px-1.5 py-0.5 rounded-md ${tx.status === 'completed' || tx.status === 'approved' ? 'text-emerald-400 bg-emerald-500/10' : tx.status === 'pending' ? 'text-yellow-400 bg-yellow-500/10' : 'text-rose-400 bg-rose-500/10'}`}>
                       {tx.status}
@@ -462,7 +494,7 @@ export const Dashboard = () => {
               <div>
                 <p className="text-[9px] text-slate-600 uppercase tracking-wider">Current Balance</p>
                 <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-nexus-primary to-cyan-300">
-                  ${user?.wallet.totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  {formatPKR(user?.wallet.totalBalance || 0)}
                 </p>
               </div>
             </div>
@@ -473,7 +505,7 @@ export const Dashboard = () => {
                 <Zap size={9} className="text-yellow-400" /> Next payout
               </p>
               <div className="flex items-center gap-1">
-                {(['00', '00', '00'] as string[]).map((v, i) => (
+                {[countdown.h, countdown.m, countdown.s].map((v, i) => (
                   <span key={i} className="flex items-center gap-1">
                     <motion.span
                       animate={{ opacity: [1, 0.3, 1] }}
@@ -492,9 +524,9 @@ export const Dashboard = () => {
             {/* Stats strip */}
             <div className="flex items-center gap-6 md:gap-8">
               {[
-                { label: 'Invested', value: `$${stats.totalInvested.toLocaleString()}` },
+                { label: 'Invested', value: formatPKR(stats.totalInvested) },
                 { label: 'Active Plans', value: stats.activeInvestments },
-                { label: 'Profit', value: `$${user?.wallet.profitBalance.toFixed(2)}`, highlight: true },
+                { label: 'Profit', value: formatPKR(user?.wallet.profitBalance || 0), highlight: true },
               ].map((s) => (
                 <div key={s.label} className="text-center">
                   <p className="text-[8px] text-slate-600 uppercase tracking-wider">{s.label}</p>

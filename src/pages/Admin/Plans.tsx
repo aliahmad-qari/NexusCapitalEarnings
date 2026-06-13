@@ -1,57 +1,100 @@
 import React, { useEffect, useState } from 'react';
-import { 
-  BarChart3, Plus, Trash2, Zap, Shield, 
-  ChevronRight, Activity, Percent, DollarSign,
-  Clock, List as ListIcon, X, CheckCircle2
-} from 'lucide-react';
+import { Plus, Trash2, Zap, X, Edit2, Gift, Save } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { formatPKR } from '../../utils/currency.ts';
 
 export const AdminPlans = () => {
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isCreating, setIsCreating] = useState(false);
-  const [newPlan, setNewPlan] = useState({
-    name: '',
-    dailyProfitPercent: 0,
-    minInvestment: 0,
-    maxInvestment: 0,
-    durationDays: 30,
-    features: ['']
-  });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingPlan, setEditingPlan] = useState<any>(null);
+  const [form, setForm] = useState({ name: '', investmentAmount: 1000, dailyROI: 10, durationDays: 7, isActive: true });
 
-  useEffect(() => {
-    fetchPlans();
-  }, []);
+  // Referral setting state
+  const [referralReward, setReferralReward] = useState<number>(85);
+  const [referralInput, setReferralInput] = useState<string>('85');
+  const [referralSaving, setReferralSaving] = useState(false);
+  const [referralMsg, setReferralMsg] = useState('');
+
+  useEffect(() => { fetchPlans(); fetchReferralSetting(); }, []);
+
+  const fetchReferralSetting = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/admin/referral-setting`, { headers: { Authorization: `Bearer ${token}` } });
+      const data = await res.json();
+      if (data.rewardAmount) { setReferralReward(data.rewardAmount); setReferralInput(String(data.rewardAmount)); }
+    } catch (err) { console.error(err); }
+  };
+
+  const saveReferralSetting = async () => {
+    const val = Number(referralInput);
+    if (!val || val <= 0) return;
+    setReferralSaving(true);
+    setReferralMsg('');
+    try {
+      const token = localStorage.getItem('token');
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBase}/api/admin/referral-setting`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ rewardAmount: val }),
+      });
+      const data = await res.json();
+      if (res.ok) { setReferralReward(val); setReferralMsg(`✅ Updated to PKR ${val}`); }
+      else setReferralMsg(data.message || 'Failed');
+    } catch { setReferralMsg('Error saving'); }
+    finally { setReferralSaving(false); setTimeout(() => setReferralMsg(''), 3000); }
+  };
 
   const fetchPlans = async () => {
     setLoading(true);
     try {
+      const token = localStorage.getItem('token');
       const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const res = await fetch(`${apiBase}/api/investment/plans`);
+      // Use admin endpoint — returns ALL plans including inactive
+      const res = await fetch(`${apiBase}/api/admin/plans/all`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       const data = await res.json();
-      if (Array.isArray(data)) {
-        setPlans(data);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+      if (Array.isArray(data)) setPlans(data);
+    } catch (err) { console.error(err); } finally { setLoading(false); }
   };
 
-  const handleAddFeature = () => {
-    setNewPlan({ ...newPlan, features: [...newPlan.features, ''] });
+  const openCreate = () => {
+    setEditingPlan(null);
+    setForm({ name: '', investmentAmount: 1000, dailyROI: 10, durationDays: 7, isActive: true });
+    setIsModalOpen(true);
   };
 
-  const handleFeatureChange = (index: number, value: string) => {
-    const updatedFeatures = [...newPlan.features];
-    updatedFeatures[index] = value;
-    setNewPlan({ ...newPlan, features: updatedFeatures });
+  const openEdit = (plan: any) => {
+    setEditingPlan(plan);
+    setForm({ name: plan.name, investmentAmount: plan.investmentAmount, dailyROI: plan.dailyROI, durationDays: plan.durationDays, isActive: plan.isActive });
+    setIsModalOpen(true);
   };
 
-  const handleRemoveFeature = (index: number) => {
-    const updatedFeatures = newPlan.features.filter((_, i) => i !== index);
-    setNewPlan({ ...newPlan, features: updatedFeatures });
+  const toggleActive = async (plan: any) => {
+    try {
+      const token = localStorage.getItem('token');
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      await fetch(`${apiBase}/api/admin/plan/${plan._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ isActive: !plan.isActive }),
+      });
+      fetchPlans();
+    } catch (err) { console.error(err); }
+  };
+
+  const deletePlan = async (planId: string) => {
+    if (!window.confirm('Delete this plan?')) return;
+    try {
+      const token = localStorage.getItem('token');
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      await fetch(`${apiBase}/api/admin/plan/${planId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+      fetchPlans();
+    } catch (err) { console.error(err); }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -59,237 +102,173 @@ export const AdminPlans = () => {
     try {
       const token = localStorage.getItem('token');
       const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const res = await fetch(`${apiBase}/api/admin/create-plan`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          ...newPlan,
-          features: newPlan.features.filter(f => f.trim() !== '')
-        })
+      const url = editingPlan ? `${apiBase}/api/admin/plan/${editingPlan._id}` : `${apiBase}/api/admin/create-plan`;
+      const res = await fetch(url, {
+        method: editingPlan ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(form),
       });
-      if (res.ok) {
-        setIsCreating(false);
-        setNewPlan({
-          name: '',
-          dailyProfitPercent: 0,
-          minInvestment: 0,
-          maxInvestment: 0,
-          durationDays: 30,
-          features: ['']
-        });
-        fetchPlans();
-      }
-    } catch (err) {
-      console.error(err);
-    }
+      if (res.ok) { setIsModalOpen(false); fetchPlans(); }
+      else { const d = await res.json(); alert(d.message || 'Failed'); }
+    } catch (err) { console.error(err); }
   };
 
+  const totalProfit = (plan: any) => Math.round((plan.investmentAmount * plan.dailyROI * plan.durationDays) / 100);
+
   return (
-    <div className="p-4 md:p-8 lg:p-12 max-w-[1600px] mx-auto space-y-12">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-4">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-nexus-magenta">
-            <BarChart3 size={18} />
-            <span className="text-[10px] font-black uppercase tracking-[0.4em]">Strategy Configurator</span>
-          </div>
-          <h2 className="text-3xl md:text-5xl font-black tracking-tighter uppercase">Investment <span className="text-gradient">Architect</span></h2>
-          <p className="text-slate-500 text-sm max-w-md normal-case font-medium uppercase tracking-widest">Engineering high-performance yield protocols and institutional strategy nodes.</p>
+    <div className="p-4 md:p-6 lg:p-8 max-w-[1600px] mx-auto space-y-5">
+
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-xl font-bold text-white">Investment Plans</h1>
+          <p className="text-xs text-slate-500 mt-0.5">{plans.length} plans configured</p>
         </div>
-        <button 
-          onClick={() => setIsCreating(true)}
-          className="gradient-primary px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-900 shadow-xl shadow-nexus-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
-        >
-          <Plus size={18} /> New Protocol
+        <button onClick={openCreate} className="flex items-center gap-2 px-4 py-2 gradient-primary text-slate-900 rounded-xl font-semibold text-xs shadow-lg shadow-nexus-primary/20 hover:scale-[1.02] transition-all">
+          <Plus size={14} /> New Plan
         </button>
-      </header>
-
-      {/* Plans Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {loading ? (
-          Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="nexus-card h-80 animate-pulse border-white/5 bg-white/[0.01]" />
-          ))
-        ) : plans.map((plan: any) => (
-          <div key={plan._id} className="nexus-card p-10 group relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none group-hover:scale-110 transition-transform duration-1000">
-               <Zap size={120} className="text-nexus-primary" />
-            </div>
-            
-            <div className="space-y-6 relative z-10">
-              <div className="flex justify-between items-start">
-                <div className="space-y-1">
-                  <h4 className="text-2xl font-black tracking-tighter text-white uppercase">{plan.name}</h4>
-                  <p className="text-nexus-primary text-[10px] font-black uppercase tracking-widest">Strategy Alpha</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-3xl font-black text-nexus-primary tracking-tighter">+{plan.dailyProfitPercent}%</p>
-                  <p className="text-[9px] text-slate-600 font-bold uppercase tracking-widest">Daily Yield</p>
-                </div>
-              </div>
-
-              <div className="pt-6 border-t border-white/5 grid grid-cols-2 gap-4">
-                 <div>
-                    <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest mb-1">Scale Limit</p>
-                    <p className="text-sm font-black text-slate-200">${plan.minInvestment.toLocaleString()} - ${plan.maxInvestment.toLocaleString()}</p>
-                 </div>
-                 <div className="text-right">
-                    <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest mb-1">Cycle Duration</p>
-                    <p className="text-sm font-black text-slate-200">{plan.durationDays} Pulse Units</p>
-                 </div>
-              </div>
-
-              <div className="space-y-3">
-                 <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest">Capabilities</p>
-                 <ul className="space-y-2">
-                    {plan.features.slice(0, 3).map((f: string, i: number) => (
-                       <li key={i} className="flex items-center gap-2 text-[10px] font-bold text-slate-400">
-                          <CheckCircle2 size={12} className="text-nexus-primary" />
-                          {f}
-                       </li>
-                    ))}
-                 </ul>
-              </div>
-            </div>
-          </div>
-        ))}
       </div>
 
-      {/* Create Plan Modal */}
+      {/* Referral Reward Setting */}
+      <div className="nexus-card border-white/8 p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-purple-500/10 border border-purple-500/20 rounded-lg">
+            <Gift size={16} className="text-purple-400" />
+          </div>
+          <div>
+            <p className="text-sm font-bold text-white">Referral Reward</p>
+            <p className="text-[10px] text-slate-500 mt-0.5">PKR credited to referrer per new signup</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] text-slate-600 font-semibold">PKR</span>
+          <input
+            type="number"
+            value={referralInput}
+            onChange={(e) => setReferralInput(e.target.value)}
+            className="w-24 glass px-3 py-2 rounded-xl border border-white/8 text-xs text-white outline-none focus:border-purple-500/30 text-center font-bold"
+            min={0}
+          />
+          <button
+            onClick={saveReferralSetting}
+            disabled={referralSaving}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 hover:bg-purple-500 hover:text-white text-[10px] font-semibold transition-all disabled:opacity-50"
+          >
+            <Save size={12} /> {referralSaving ? 'Saving...' : 'Save'}
+          </button>
+          {referralMsg && <span className="text-[10px] text-nexus-primary">{referralMsg}</span>}
+        </div>
+      </div>
+
+      {/* Plans Grid */}
+      {loading ? (
+        <div className="flex items-center justify-center py-20">
+          <div className="w-8 h-8 border-2 border-nexus-primary/20 border-t-nexus-primary rounded-full animate-spin" />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {plans.map((plan: any) => (
+            <div key={plan._id} className={`nexus-card group relative border ${plan.isActive ? 'border-white/8' : 'border-rose-500/20 bg-rose-500/[0.02]'}`}>
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-bold text-white">{plan.name}</h3>
+                    {!plan.isActive && <span className="px-1.5 py-0.5 rounded text-[8px] bg-rose-500/10 border border-rose-500/20 text-rose-400">Off</span>}
+                  </div>
+                  <p className="text-[9px] text-slate-500 mt-0.5">{plan.durationDays} days duration</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-lg font-bold text-nexus-primary">+{plan.dailyROI}%</p>
+                  <p className="text-[9px] text-slate-600">daily ROI</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 mb-4">
+                <div className="p-2.5 rounded-lg bg-white/[0.03] border border-white/5">
+                  <p className="text-[9px] text-slate-600">Investment</p>
+                  <p className="text-xs font-bold text-slate-200 mt-0.5">{formatPKR(plan.investmentAmount)}</p>
+                </div>
+                <div className="p-2.5 rounded-lg bg-white/[0.03] border border-white/5">
+                  <p className="text-[9px] text-slate-600">Total Profit</p>
+                  <p className="text-xs font-bold text-nexus-primary mt-0.5">+{formatPKR(totalProfit(plan))}</p>
+                </div>
+              </div>
+
+              <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onClick={() => toggleActive(plan)}
+                  className={`flex-1 py-2 rounded-lg border text-[10px] font-semibold transition-all ${plan.isActive ? 'border-yellow-500/20 bg-yellow-500/5 text-yellow-400 hover:bg-yellow-500/10' : 'border-emerald-500/20 bg-emerald-500/5 text-emerald-400 hover:bg-emerald-500/10'}`}>
+                  {plan.isActive ? 'Deactivate' : 'Activate'}
+                </button>
+                <button onClick={() => openEdit(plan)} className="px-3 py-2 rounded-lg border border-white/10 text-slate-400 hover:text-white hover:border-white/20 transition-all">
+                  <Edit2 size={12} />
+                </button>
+                <button onClick={() => deletePlan(plan._id)} className="px-3 py-2 rounded-lg border border-rose-500/20 bg-rose-500/5 text-rose-400 hover:bg-rose-500 hover:text-white transition-all">
+                  <Trash2 size={12} />
+                </button>
+              </div>
+            </div>
+          ))}
+          {plans.length === 0 && (
+            <div className="col-span-full py-16 text-center">
+              <Zap size={32} className="text-slate-700 mx-auto mb-3" />
+              <p className="text-xs text-slate-600">No plans yet. Create your first plan.</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Create/Edit Modal */}
       <AnimatePresence>
-        {isCreating && (
+        {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsCreating(false)}
-              className="absolute inset-0 bg-black/90 backdrop-blur-md"
-            />
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="relative nexus-card w-full max-w-2xl p-10 bg-[#0a0b10] border-white/10"
-            >
-               <h3 className="text-3xl font-black mb-8 tracking-tighter uppercase flex items-center gap-4">
-                  <Shield className="text-nexus-magenta" size={28} />
-                  Initialize <span className="text-nexus-magenta">New Protocol</span>
-               </h3>
-
-               <form onSubmit={handleSubmit} className="space-y-8 h-[60vh] overflow-y-auto pr-4 no-scrollbar">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 pl-1">Protocol Designation</label>
-                        <input 
-                           type="text"
-                           required
-                           placeholder="e.g., NEURON GOLD"
-                           value={newPlan.name}
-                           onChange={(e) => setNewPlan({ ...newPlan, name: e.target.value })}
-                           className="w-full glass p-4 rounded-xl border-white/5 text-sm font-black outline-none focus:border-nexus-magenta/30"
-                        />
-                     </div>
-                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 pl-1">Daily Yield Signal (%)</label>
-                        <input 
-                           type="number"
-                           step="0.01"
-                           required
-                           placeholder="e.g., 2.5"
-                           value={newPlan.dailyProfitPercent}
-                           onChange={(e) => setNewPlan({ ...newPlan, dailyProfitPercent: Number(e.target.value) })}
-                           className="w-full glass p-4 rounded-xl border-white/5 text-sm font-black outline-none focus:border-nexus-magenta/30"
-                        />
-                     </div>
-                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 pl-1">Min Threshold ($)</label>
-                        <input 
-                           type="number"
-                           required
-                           placeholder="100"
-                           value={newPlan.minInvestment}
-                           onChange={(e) => setNewPlan({ ...newPlan, minInvestment: Number(e.target.value) })}
-                           className="w-full glass p-4 rounded-xl border-white/5 text-sm font-black outline-none focus:border-nexus-magenta/30"
-                        />
-                     </div>
-                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 pl-1">Max Capacity ($)</label>
-                        <input 
-                           type="number"
-                           required
-                           placeholder="10000"
-                           value={newPlan.maxInvestment}
-                           onChange={(e) => setNewPlan({ ...newPlan, maxInvestment: Number(e.target.value) })}
-                           className="w-full glass p-4 rounded-xl border-white/5 text-sm font-black outline-none focus:border-nexus-magenta/30"
-                        />
-                     </div>
-                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 pl-1">Pulse Duration (Days)</label>
-                        <input 
-                           type="number"
-                           required
-                           placeholder="30"
-                           value={newPlan.durationDays}
-                           onChange={(e) => setNewPlan({ ...newPlan, durationDays: Number(e.target.value) })}
-                           className="w-full glass p-4 rounded-xl border-white/5 text-sm font-black outline-none focus:border-nexus-magenta/30"
-                        />
-                     </div>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsModalOpen(false)} className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+            <motion.div initial={{ scale: 0.93, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.93, opacity: 0 }}
+              className="relative nexus-card w-full max-w-md p-6 border-white/10">
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="text-sm font-bold text-white">{editingPlan ? 'Edit Plan' : 'New Plan'}</h3>
+                <button onClick={() => setIsModalOpen(false)} className="p-1.5 hover:bg-white/10 rounded-lg text-slate-500 transition-all"><X size={16} /></button>
+              </div>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] text-slate-500 uppercase tracking-wider">Plan Name</label>
+                  <input required type="text" placeholder="e.g. Bronze Plan" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    className="w-full glass px-4 py-2.5 rounded-xl border border-white/8 text-xs text-white outline-none focus:border-nexus-primary/30" />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-slate-500 uppercase tracking-wider">Amount (PKR)</label>
+                    <input required type="number" value={form.investmentAmount} onChange={(e) => setForm({ ...form, investmentAmount: Number(e.target.value) })}
+                      className="w-full glass px-4 py-2.5 rounded-xl border border-white/8 text-xs text-white outline-none focus:border-nexus-primary/30" />
                   </div>
-
-                  <div className="space-y-4">
-                     <div className="flex justify-between items-center px-1">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Core Capabilities</label>
-                        <button 
-                           type="button" 
-                           onClick={handleAddFeature}
-                           className="text-[10px] font-black text-nexus-primary uppercase tracking-widest hover:text-white"
-                        >
-                           Add Vector
-                        </button>
-                     </div>
-                     <div className="grid grid-cols-1 gap-3">
-                        {newPlan.features.map((feature, index) => (
-                           <div key={index} className="flex gap-2">
-                              <input 
-                                 type="text"
-                                 placeholder="Protocol feature..."
-                                 value={feature}
-                                 onChange={(e) => handleFeatureChange(index, e.target.value)}
-                                 className="flex-1 glass p-4 rounded-xl border-white/5 text-xs font-bold outline-none focus:border-nexus-primary/30"
-                              />
-                              {newPlan.features.length > 1 && (
-                                 <button 
-                                    type="button" 
-                                    onClick={() => handleRemoveFeature(index)}
-                                    className="p-4 bg-rose-500/10 text-rose-500 rounded-xl hover:bg-rose-500 hover:text-white transition-colors"
-                                 >
-                                    <X size={16} />
-                                 </button>
-                              )}
-                           </div>
-                        ))}
-                     </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-slate-500 uppercase tracking-wider">Daily ROI (%)</label>
+                    <input required type="number" value={form.dailyROI} onChange={(e) => setForm({ ...form, dailyROI: Number(e.target.value) })}
+                      className="w-full glass px-4 py-2.5 rounded-xl border border-white/8 text-xs text-white outline-none focus:border-nexus-primary/30" />
                   </div>
-
-                  <div className="pt-8 flex gap-4">
-                     <button 
-                        type="submit"
-                        className="flex-1 gradient-primary py-5 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-900 shadow-xl shadow-nexus-primary/20 hover:scale-[1.02] active:scale-95 transition-all"
-                     >
-                        Confirm Architecture Deployment
-                     </button>
-                     <button 
-                        type="button"
-                        onClick={() => setIsCreating(false)}
-                        className="px-10 py-5 rounded-2xl bg-white/5 border border-white/5 text-slate-600 hover:text-white transition-all font-black text-[10px] uppercase tracking-widest"
-                     >
-                        Abort
-                     </button>
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-slate-500 uppercase tracking-wider">Duration (days)</label>
+                    <input required type="number" value={form.durationDays} onChange={(e) => setForm({ ...form, durationDays: Number(e.target.value) })}
+                      className="w-full glass px-4 py-2.5 rounded-xl border border-white/8 text-xs text-white outline-none focus:border-nexus-primary/30" />
                   </div>
-               </form>
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-slate-500 uppercase tracking-wider">Status</label>
+                    <div className="flex gap-2">
+                      <button type="button" onClick={() => setForm({ ...form, isActive: true })}
+                        className={`flex-1 py-2 rounded-lg border text-[10px] font-semibold transition-all ${form.isActive ? 'border-nexus-primary bg-nexus-primary/10 text-nexus-primary' : 'border-white/8 text-slate-600'}`}>On</button>
+                      <button type="button" onClick={() => setForm({ ...form, isActive: false })}
+                        className={`flex-1 py-2 rounded-lg border text-[10px] font-semibold transition-all ${!form.isActive ? 'border-rose-500 bg-rose-500/10 text-rose-400' : 'border-white/8 text-slate-600'}`}>Off</button>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-3 pt-2">
+                  <button type="submit" className="flex-1 py-2.5 gradient-primary text-slate-900 rounded-xl font-semibold text-xs shadow-lg">
+                    {editingPlan ? 'Save Changes' : 'Create Plan'}
+                  </button>
+                  <button type="button" onClick={() => setIsModalOpen(false)} className="px-5 py-2.5 glass rounded-xl border border-white/8 text-xs text-slate-400 hover:text-white transition-all">
+                    Cancel
+                  </button>
+                </div>
+              </form>
             </motion.div>
           </div>
         )}

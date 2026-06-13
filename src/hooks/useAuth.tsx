@@ -5,6 +5,7 @@ interface User {
   name: string;
   email: string;
   referralCode: string;
+  referralCount: number;
   wallet: {
     totalBalance: number;
     depositBalance: number;
@@ -33,18 +34,56 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('user');
     const token = localStorage.getItem('token');
-    if (savedUser && token) {
-      setUser(JSON.parse(savedUser));
+    if (!token) {
+      setLoading(false);
+      return;
     }
-    setLoading(false);
+    // Always fetch fresh data from the server on startup.
+    // This ensures DB-level changes (e.g. isAdmin, isBlocked) are picked up
+    // immediately without requiring a logout/login cycle.
+    const init = async () => {
+      try {
+        const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+        const res = await fetch(`${apiBase}/api/auth/profile`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const userData = {
+            id: data._id,
+            name: data.name,
+            email: data.email,
+            referralCode: data.referralCode,
+            referralCount: data.referralCount ?? 0,
+            wallet: data.wallet,
+            isAdmin: data.isAdmin === true,
+            investmentGoal: data.investmentGoal,
+          };
+          setUser(userData);
+          localStorage.setItem('user', JSON.stringify(userData));
+        } else {
+          // Token invalid or expired — clear stale session
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+        }
+      } catch {
+        // Network error — fall back to cached user so the app still works offline
+        const savedUser = localStorage.getItem('user');
+        if (savedUser) setUser(JSON.parse(savedUser));
+      } finally {
+        setLoading(false);
+      }
+    };
+    init();
   }, []);
 
   const login = (token: string, userData: User) => {
+    // Ensure isAdmin is a strict boolean so sidebar checks work correctly
+    const normalised = { ...userData, isAdmin: userData.isAdmin === true };
     localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(normalised));
+    setUser(normalised);
   };
 
   const logout = () => {
@@ -68,8 +107,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           name: data.name,
           email: data.email,
           referralCode: data.referralCode,
+          referralCount: data.referralCount ?? 0,
           wallet: data.wallet,
-          isAdmin: data.isAdmin,
+          isAdmin: data.isAdmin === true,   // strict boolean, never undefined
           investmentGoal: data.investmentGoal,
         };
         setUser(userData);

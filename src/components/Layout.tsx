@@ -2,20 +2,24 @@ import { useState } from 'react';
 import { Outlet, useLocation, Link } from 'react-router-dom';
 import { BottomNav } from './BottomNav.tsx';
 import { Sidebar } from './Sidebar.tsx';
+import { WelcomeModal } from './WelcomeModal.tsx';
 import { Menu, Bell, Shield } from 'lucide-react';
+import { useAuth } from '../hooks/useAuth.tsx';
 
 export const Layout = () => {
   const location = useLocation();
+  const { user } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const hideNavPaths = ['/login', '/register'];
   const shouldHideNav = hideNavPaths.includes(location.pathname);
+  const isAdminPage = location.pathname.startsWith('/dashboard/admin');
 
   return (
     <div className="min-h-screen bg-nexus-bg text-white flex selection:bg-nexus-primary/20 selection:text-nexus-primary">
       {!shouldHideNav && (
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       )}
-      
+
       <main className={`flex-1 min-h-screen relative overflow-x-hidden`}>
         {!shouldHideNav && (
           <header className="lg:hidden flex items-center justify-between px-6 py-5 border-b border-white/5 bg-[#0a0e1a]/80 backdrop-blur-2xl sticky top-0 z-40">
@@ -34,16 +38,22 @@ export const Layout = () => {
             </Link>
           </header>
         )}
-        
+
         <div className={`${shouldHideNav ? '' : 'w-full mx-auto pb-32 lg:pb-12'}`}>
           <Outlet />
         </div>
       </main>
 
-      {!shouldHideNav && (
+      {/* Hide BottomNav on admin pages */}
+      {!shouldHideNav && !isAdminPage && (
         <div className="lg:hidden">
           <BottomNav />
         </div>
+      )}
+
+      {/* Welcome modal — only for regular users (not admin panel) */}
+      {!shouldHideNav && !isAdminPage && user && !user.isAdmin && (
+        <WelcomeModal />
       )}
     </div>
   );

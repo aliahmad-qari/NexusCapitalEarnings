@@ -3,36 +3,33 @@ import { Star } from 'lucide-react';
 
 const testimonials = [
   {
-    name: 'Marcus T.',
-    location: 'London, UK',
-    avatar: 'https://i.pravatar.cc/80?u=marcus-t',
+    name: 'Usman T.',
+    location: 'Karachi, PK',
+    avatar: 'https://i.pravatar.cc/80?u=usman-t',
     plan: 'Gold Plan',
-      quote:
-        "I've been investing with ROI for 6 months and the consistency of daily payouts is unmatched. My Gold plan has returned over 180% of my initial investment.",
-      earned: '$47,200',
-      rating: 5,
-    },
-    {
-      name: 'Priya S.',
-      location: 'Singapore',
-      avatar: 'https://i.pravatar.cc/80?u=priya-s',
-      plan: 'VIP Plan',
-      quote:
-        "The dedicated wealth manager assigned to my VIP account is outstanding. Real-time insights, instant withdrawals, and returns that beat every traditional fund I've used.",
-      earned: '$284,500',
-      rating: 5,
-    },
-    {
-      name: 'James O.',
-      location: 'Toronto, CA',
-      avatar: 'https://i.pravatar.cc/80?u=james-o',
-      plan: 'Silver Plan',
-      quote:
-        "Started with the Silver plan 3 months ago. The platform is transparent, withdrawals are instant, and the support team responds within minutes. Highly recommended.",
-      earned: '$18,900',
-      rating: 5,
-    },
-  ];
+    quote: "I've been investing with Nexus Capital for 3 months and the consistency of daily payouts is unmatched. My Gold plan has returned over 170% of my initial investment.",
+    earned: 'PKR 35,000',
+    rating: 5,
+  },
+  {
+    name: 'Ayesha S.',
+    location: 'Lahore, PK',
+    avatar: 'https://i.pravatar.cc/80?u=ayesha-s',
+    plan: 'Diamond Plan',
+    quote: "Started with the Diamond plan and the platform is transparent, withdrawals process quickly, and the support team responds within minutes. Highly recommended.",
+    earned: 'PKR 70,000',
+    rating: 5,
+  },
+  {
+    name: 'Bilal O.',
+    location: 'Islamabad, PK',
+    avatar: 'https://i.pravatar.cc/80?u=bilal-o',
+    plan: 'Silver Plan',
+    quote: "Started with the Silver plan 2 months ago. Simple interface, daily profits credited automatically, and I've already referred 3 friends who love it too.",
+    earned: 'PKR 21,000',
+    rating: 5,
+  },
+];
 
   export const Testimonials = () => {
     return (

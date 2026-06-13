@@ -28,7 +28,7 @@ const investmentSchema = new mongoose.Schema(
     totalProfitEarned: { type: Number,  default: 0 },
     startDate:         { type: Date,    default: Date.now },
     endDate:           { type: Date,    required: true },
-    lastProfitDate:    { type: Date,    default: Date.now },
+    lastProfitDate:    { type: Date,    default: null },  // null = never processed; cron uses this
     status: {
       type: String,
       enum: ['pending', 'active', 'completed', 'cancelled'],

@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { User as UserIcon, Mail, Copy, LogOut, Shield, Award, Users, ChevronRight, Settings, X, Lock, Wallet, Briefcase, TrendingUp, ArrowUpRight, ArrowDownRight, Clock, Trash2, CheckCircle2, Share2, Activity, Info } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.tsx';
 import { motion, AnimatePresence } from 'motion/react';
+import { formatPKR } from '../utils/currency.ts';
 
 export const Profile = () => {
   const { user, logout, refreshUser } = useAuth();
@@ -115,7 +116,7 @@ export const Profile = () => {
             </div>
             <div>
               <p className="text-slate-500 text-[10px] font-medium uppercase tracking-wider mb-1">{item.label}</p>
-              <h3 className="text-lg font-bold text-white">${item.value?.toLocaleString(undefined, { minimumFractionDigits: 2 })}</h3>
+              <h3 className="text-lg font-bold text-white">{formatPKR(item.value || 0)}</h3>
             </div>
           </div>
         ))}
@@ -139,7 +140,7 @@ export const Profile = () => {
                 <div className="flex items-center gap-6">
                   <div>
                     <p className="text-[10px] text-slate-600 font-medium">Total Earned</p>
-                    <p className="text-lg font-bold text-nexus-magenta">${user?.wallet.referralEarnings.toFixed(2)}</p>
+                    <p className="text-lg font-bold text-nexus-magenta">{formatPKR(user?.wallet.referralEarnings || 0)}</p>
                   </div>
                   <div>
                     <p className="text-[10px] text-slate-600 font-medium">Referrals</p>
@@ -193,7 +194,7 @@ export const Profile = () => {
                     </div>
                   </div>
                   <p className={`text-sm font-bold ${tx.type === 'withdraw' ? 'text-nexus-magenta' : 'text-nexus-primary'}`}>
-                    {tx.type === 'withdraw' ? '-' : '+'}${tx.amount.toLocaleString()}
+                    {tx.type === 'withdraw' ? '-' : '+'}{formatPKR(tx.amount)}
                   </p>
                 </div>
               ))}

@@ -3,6 +3,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { User } from '../models/User.ts';
+import { Transaction } from '../models/Transaction.ts';
+import { Referral } from '../models/Referral.ts';
+import { getReferralReward } from '../models/ReferralSetting.ts';
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -35,6 +38,38 @@ export const register = async (req: Request, res: Response) => {
 
     await user.save();
 
+    // Handle referral reward if referred by someone
+    if (referredBy) {
+      const referrer = await User.findOne({ referralCode: referredBy });
+      if (referrer) {
+        // Referral reward — fetched from DB (admin-configurable), env var fallback
+        const referralReward = await getReferralReward();
+        referrer.wallet.totalBalance     += referralReward;
+        referrer.wallet.referralEarnings += referralReward;
+        referrer.referralCount           += 1;
+        await referrer.save();
+
+        // Record referral transaction for referrer
+        const referrerTx = new Transaction({
+          user: referrer._id,
+          type: 'referral',
+          amount: referralReward,
+          status: 'completed',
+          description: `Referral reward from ${user.name} (${user.email})`,
+        });
+        await referrerTx.save();
+
+        // Record in the Referral collection
+        const referralRecord = new Referral({
+          inviterId: referrer._id,
+          referredUserId: user._id,
+        });
+        await referralRecord.save();
+
+        console.log(`✅ Referral reward: PKR ${referralReward} awarded to ${referrer.email}`);
+      }
+    }
+
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, { expiresIn: '7d' });
 
     res.status(201).json({
@@ -46,6 +81,7 @@ export const register = async (req: Request, res: Response) => {
         referralCode: user.referralCode,
         wallet: user.wallet,
         isAdmin: user.isAdmin,
+        referralCount: user.referralCount,
       },
     });
   } catch (error: any) {
@@ -88,6 +124,7 @@ export const login = async (req: Request, res: Response) => {
         referralCode: user.referralCode,
         wallet: user.wallet,
         isAdmin: user.isAdmin,
+        referralCount: user.referralCount,
       },
     });
   } catch (error: any) {
@@ -139,7 +176,8 @@ export const updateProfile = async (req: any, res: Response) => {
         referralCode: user.referralCode,
         wallet: user.wallet,
         isAdmin: user.isAdmin,
-        investmentGoal: user.investmentGoal
+        investmentGoal: user.investmentGoal,
+        referralCount: user.referralCount,
       }
     });
   } catch (error) {
