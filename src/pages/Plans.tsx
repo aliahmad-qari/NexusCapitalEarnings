@@ -181,7 +181,6 @@ export const Plans = () => {
   const handleInitiate = (plan: any) => {
     setSelectedPlan(plan);
     setError('');
-    setSuccessMsg('');
     setIsModalOpen(true);
   };
 
