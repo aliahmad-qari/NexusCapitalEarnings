@@ -16,8 +16,13 @@ export const ReferralSetting =
   mongoose.model('ReferralSetting', referralSettingSchema);
 
 // Helper — always returns the current reward from DB (or env fallback)
+// Never throws — registration must succeed even if DB query fails.
 export async function getReferralReward(): Promise<number> {
-  const setting = await ReferralSetting.findOne().sort({ updatedAt: -1 });
-  if (setting) return setting.rewardAmount;
+  try {
+    const setting = await ReferralSetting.findOne().sort({ updatedAt: -1 });
+    if (setting && setting.rewardAmount > 0) return setting.rewardAmount;
+  } catch {
+    // DB error — fall through to env fallback
+  }
   return Number(process.env.REFERRAL_REWARD_PKR) || 85;
 }

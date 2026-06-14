@@ -234,14 +234,11 @@ export const getMyReferrals = async (req: any, res: Response) => {
     const actualTotalEarned = inviter?.wallet?.referralEarnings ?? 0;
 
     const list = records.map((r: any) => ({
-      _id:      r._id,
-      name:     r.referredUserId?.name  || 'Unknown',
-      email:    r.referredUserId?.email || '—',
-      joinedAt: r.createdAt,
-      // Individual reward = actualTotalEarned / count gives average per referral.
-      // Better: show current rewardAmount per row (what was credited may differ
-      // if admin changed the rate, but we use actual earnings for the total).
-      reward:   rewardAmount,
+      _id:          r._id,
+      name:         r.referredUserId?.name  || 'Unknown',
+      email:        r.referredUserId?.email || '—',
+      joinedAt:     r.createdAt,
+      reward:       r.rewardAmount ?? rewardAmount,  // use stored amount, fallback to current rate
     }));
 
     res.json({

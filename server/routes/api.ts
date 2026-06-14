@@ -105,6 +105,27 @@ router.put('/admin/referral-setting', auth, adminAuth, updateReferralSetting);
 router.get('/admin/plans/all', auth, adminAuth, getAllPlans);   // all plans incl. inactive
 router.get('/admin/stats', auth, adminAuth, getSystemStats);
 
+// Payment Settings — public read, admin write
+router.get('/settings/payment', async (_req, res) => {
+  try {
+    const { getPaymentSettings } = await import('../models/PaymentSetting.ts');
+    const settings = await getPaymentSettings();
+    res.json(settings);
+  } catch { res.status(500).json({ message: 'Error fetching payment settings' }); }
+});
+router.put('/admin/payment-settings', auth, adminAuth, async (req: any, res) => {
+  try {
+    const { PaymentSetting } = await import('../models/PaymentSetting.ts');
+    const { jazzcash, easypaisa } = req.body;
+    await PaymentSetting.findOneAndUpdate(
+      {},
+      { jazzcash, easypaisa, updatedBy: req.userId },
+      { upsert: true, new: true }
+    );
+    res.json({ message: 'Payment settings updated' });
+  } catch { res.status(500).json({ message: 'Error updating payment settings' }); }
+});
+
 // Manual ROI trigger — for testing without waiting 24h (admin only)
 router.post('/admin/trigger-roi', auth, adminAuth, async (_req, res) => {
   try {

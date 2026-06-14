@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Users, Copy, Share2, Award, TrendingUp, CheckCircle2, UserPlus, Gift, ExternalLink, Activity, RefreshCw, Loader } from 'lucide-react';
+import { Users, Copy, Share2, Award, TrendingUp, CheckCircle2, UserPlus, Gift, Activity, RefreshCw, Loader, MessageCircle, Facebook, Send, ExternalLink, Lock, Unlock } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useAuth } from '../hooks/useAuth.tsx';
 import { formatPKR } from '../utils/currency.ts';
@@ -141,8 +141,6 @@ export const Referrals = () => {
               {copiedLink ? <><CheckCircle2 size={14} /> Link Copied!</> : <><ExternalLink size={14} /> Copy & Share Referral Link</>}
             </button>
           </div>
-
-          {/* Referred Users Table */}
           <div className="nexus-card p-0 overflow-hidden border-white/5 shadow-xl">
             <div className="p-5 border-b border-white/5 flex justify-between items-center">
               <div className="flex items-center gap-3">

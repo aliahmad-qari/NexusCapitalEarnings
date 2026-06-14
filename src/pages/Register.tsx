@@ -1,17 +1,31 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, User as UserIcon, UserPlus, ChevronRight, Eye, EyeOff, Shield, AlertCircle, CheckCircle2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
+import { Mail, Lock, User as UserIcon, UserPlus, ChevronRight, Eye, EyeOff, Shield, AlertCircle, CheckCircle2, Gift } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.tsx';
 import { motion, AnimatePresence } from 'motion/react';
 
 export const Register = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '', referredBy: '' });
+  const [searchParams] = useSearchParams();
+  // Pre-fill referredBy from ?ref= query param — works with share links
+  const refFromUrl = searchParams.get('ref') || '';
+
+  const [formData, setFormData] = useState({
+    name: '', email: '', password: '', confirmPassword: '',
+    referredBy: refFromUrl,
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
+
+  // If the URL changes (e.g. user navigates to a new ref link), update the field
+  useEffect(() => {
+    if (refFromUrl) {
+      setFormData(prev => ({ ...prev, referredBy: refFromUrl }));
+    }
+  }, [refFromUrl]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -149,11 +163,35 @@ export const Register = () => {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">Referral Code <span className="normal-case text-slate-700">(optional)</span></label>
+              <label className="text-[10px] font-medium text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                Referral Code
+                <span className="normal-case text-slate-700">(optional)</span>
+                {refFromUrl && (
+                  <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-nexus-primary/10 border border-nexus-primary/20 text-nexus-primary text-[9px] font-bold">
+                    <Gift size={9} /> Applied
+                  </span>
+                )}
+              </label>
               <div className="relative group">
                 <UserPlus className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-700 group-focus-within:text-nexus-primary transition-colors" size={14} />
-                <input type="text" name="referredBy" value={formData.referredBy} onChange={handleChange} placeholder="Enter referral code if you have one" className="w-full bg-black/40 border border-white/5 rounded-xl py-3 pl-10 pr-4 outline-none focus:border-nexus-primary/30 transition-all text-xs text-white placeholder:text-slate-800" />
+                <input
+                  type="text"
+                  name="referredBy"
+                  value={formData.referredBy}
+                  onChange={handleChange}
+                  placeholder="Enter referral code if you have one"
+                  className={`w-full bg-black/40 border rounded-xl py-3 pl-10 pr-4 outline-none transition-all text-xs text-white placeholder:text-slate-800 ${
+                    formData.referredBy
+                      ? 'border-nexus-primary/40 bg-nexus-primary/5'
+                      : 'border-white/5 focus:border-nexus-primary/30'
+                  }`}
+                />
               </div>
+              {refFromUrl && (
+                <p className="text-[10px] text-nexus-primary px-1">
+                  ✓ Referral code <strong>{refFromUrl}</strong> applied from your invite link.
+                </p>
+              )}
             </div>
 
             <div className="px-1">

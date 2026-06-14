@@ -40,33 +40,39 @@ export const register = async (req: Request, res: Response) => {
 
     // Handle referral reward if referred by someone
     if (referredBy) {
-      const referrer = await User.findOne({ referralCode: referredBy });
-      if (referrer) {
-        // Referral reward — fetched from DB (admin-configurable), env var fallback
-        const referralReward = await getReferralReward();
-        referrer.wallet.totalBalance     += referralReward;
-        referrer.wallet.referralEarnings += referralReward;
-        referrer.referralCount           += 1;
-        await referrer.save();
-
-        // Record referral transaction for referrer
-        const referrerTx = new Transaction({
-          user: referrer._id,
-          type: 'referral',
-          amount: referralReward,
-          status: 'completed',
-          description: `Referral reward from ${user.name} (${user.email})`,
+      try {
+        // Case-insensitive search — codes are stored uppercase but users may type lowercase
+        const referrer = await User.findOne({
+          referralCode: { $regex: new RegExp(`^${referredBy.trim()}$`, 'i') },
         });
-        await referrerTx.save();
+        if (referrer) {
+          const referralReward = await getReferralReward();
+          referrer.wallet.totalBalance     += referralReward;
+          referrer.wallet.referralEarnings += referralReward;
+          referrer.referralCount           += 1;
+          await referrer.save();
 
-        // Record in the Referral collection
-        const referralRecord = new Referral({
-          inviterId: referrer._id,
-          referredUserId: user._id,
-        });
-        await referralRecord.save();
+          await new Transaction({
+            user:        referrer._id,
+            type:        'referral',
+            amount:      referralReward,
+            status:      'completed',
+            description: `Referral reward from ${user.name} (${user.email})`,
+          }).save();
 
-        console.log(`✅ Referral reward: PKR ${referralReward} awarded to ${referrer.email}`);
+          await new Referral({
+            inviterId:      referrer._id,
+            referredUserId: user._id,
+            rewardAmount:   referralReward,   // record what was paid at this moment
+          }).save();
+
+          console.log(`✅ Referral reward: PKR ${referralReward} → ${referrer.email} (referred by code: ${referredBy})`);
+        } else {
+          console.log(`⚠️ Referral code not found: "${referredBy}" — new user registered without referral`);
+        }
+      } catch (refErr) {
+        // Never block registration due to referral processing errors
+        console.error('Referral processing error (non-fatal):', refErr);
       }
     }
 
