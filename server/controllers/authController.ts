@@ -38,41 +38,70 @@ export const register = async (req: Request, res: Response) => {
 
     await user.save();
 
-    // Handle referral reward if referred by someone
+    // ── Referral reward ──────────────────────────────────────────────────────
     if (referredBy) {
       try {
-        // Case-insensitive search — codes are stored uppercase but users may type lowercase
+        // Case-insensitive match — codes stored uppercase, user may type lowercase
         const referrer = await User.findOne({
           referralCode: { $regex: new RegExp(`^${referredBy.trim()}$`, 'i') },
         });
-        if (referrer) {
-          const referralReward = await getReferralReward();
-          referrer.wallet.totalBalance     += referralReward;
-          referrer.wallet.referralEarnings += referralReward;
-          referrer.referralCount           += 1;
-          await referrer.save();
 
-          await new Transaction({
-            user:        referrer._id,
-            type:        'referral',
-            amount:      referralReward,
-            status:      'completed',
-            description: `Referral reward from ${user.name} (${user.email})`,
-          }).save();
-
-          await new Referral({
+        if (!referrer) {
+          console.log(`⚠️  Referral code not found: "${referredBy}" — registered without referral`);
+        } else if (referrer._id.toString() === user._id.toString()) {
+          console.log(`⚠️  Self-referral blocked: ${user.email}`);
+        } else {
+          // Duplicate protection — only reward once per (inviter, referred) pair
+          const alreadyRewarded = await Referral.findOne({
             inviterId:      referrer._id,
             referredUserId: user._id,
-            rewardAmount:   referralReward,   // record what was paid at this moment
-          }).save();
+          });
 
-          console.log(`✅ Referral reward: PKR ${referralReward} → ${referrer.email} (referred by code: ${referredBy})`);
-        } else {
-          console.log(`⚠️ Referral code not found: "${referredBy}" — new user registered without referral`);
+          if (alreadyRewarded) {
+            console.log(`⚠️  Duplicate referral blocked: ${referrer.email} ← ${user.email}`);
+          } else {
+            const referralReward = await getReferralReward();
+
+            // ── Use atomic $inc to avoid race conditions and schema validation issues ──
+            const updated = await User.findByIdAndUpdate(
+              referrer._id,
+              {
+                $inc: {
+                  referralCount:              1,
+                  'wallet.totalBalance':      referralReward,
+                  'wallet.referralEarnings':  referralReward,
+                },
+              },
+              { new: true }
+            );
+
+            if (!updated) throw new Error(`Referrer update failed for ${referrer._id}`);
+
+            // Record transaction
+            await new Transaction({
+              user:        referrer._id,
+              type:        'referral',
+              amount:      referralReward,
+              status:      'completed',
+              description: `Referral reward from ${user.name} (${user.email})`,
+            }).save();
+
+            // Record the referral relationship
+            await new Referral({
+              inviterId:      referrer._id,
+              referredUserId: user._id,
+              rewardAmount:   referralReward,
+            }).save();
+
+            console.log(
+              `✅ Referral reward credited: PKR ${referralReward} → ${referrer.email}` +
+              ` | count now ${updated.referralCount} | referred by: ${user.email}`
+            );
+          }
         }
-      } catch (refErr) {
-        // Never block registration due to referral processing errors
-        console.error('Referral processing error (non-fatal):', refErr);
+      } catch (refErr: any) {
+        // Log the actual error — never block registration, but always surface the cause
+        console.error('❌ Referral processing error (non-fatal):', refErr?.message || refErr);
       }
     }
 
