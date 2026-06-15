@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menu, X, Globe } from 'lucide-react';
+import { DownloadAppButton } from '../DownloadAppButton.tsx';
 
 const navLinks = [
   { label: 'Solutions', href: '#solutions' },
@@ -62,6 +63,7 @@ export const Navbar = () => {
 
         {/* Desktop CTA */}
         <div className="hidden md:flex items-center gap-3">
+          <DownloadAppButton variant="ghost" />
           <button
             onClick={() => navigate('/login')}
             className="text-slate-400 hover:text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-white/5 transition-all"
@@ -104,6 +106,7 @@ export const Navbar = () => {
             <span>EN</span>
           </div>
           <div className="flex flex-col gap-2 pt-4 border-t border-white/8 mt-3">
+            <DownloadAppButton variant="compact" className="w-full" onNavigate={() => setIsOpen(false)} />
             <button
               onClick={() => { navigate('/login'); setIsOpen(false); }}
               className="text-slate-400 hover:text-white text-sm font-semibold px-4 py-3 rounded-xl hover:bg-white/5 transition-all text-left"

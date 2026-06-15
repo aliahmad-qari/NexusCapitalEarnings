@@ -16,6 +16,7 @@ import { Support } from './pages/Support.tsx';
 import { ComingSoon } from './pages/ComingSoon.tsx';
 import { Login } from './pages/Login.tsx';
 import { Register } from './pages/Register.tsx';
+import { DownloadApp } from './pages/DownloadApp.tsx';
 import { AuthProvider, useAuth } from './hooks/useAuth.tsx';
 
 import { AdminDashboard } from './pages/Admin/Dashboard.tsx';
@@ -53,6 +54,9 @@ export default function App() {
           {/* Auth Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+
+          {/* Android APK download — public */}
+          <Route path="/download-app" element={<DownloadApp />} />
           
           {/* Dashboard Routes - Protected */}
           <Route path="/dashboard" element={<Layout />}>

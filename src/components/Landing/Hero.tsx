@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, ShieldCheck, Zap, Headphones, Users } from 'lucide-react';
+import { DownloadAppButton } from '../DownloadAppButton.tsx';
 
 const trustBadges = [
   { icon: ShieldCheck, label: 'Bank Grade Security' },
@@ -54,6 +55,7 @@ export const Hero = () => {
             >
               Explore Plans
             </button>
+            <DownloadAppButton variant="primary" label="Install Nexus Capital APK" />
           </div>
 
           {/* Trust Badges */}

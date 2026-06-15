@@ -117,7 +117,12 @@ async function startServer() {
       if (/^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(origin)) return callback(null, true);
 
       // Allow local network IPs during development
-      if (/^http:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+)(:\d+)?$/.test(origin)) {
+      if (/^https?:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+)(:\d+)?$/.test(origin)) {
+        return callback(null, true);
+      }
+
+      // Allow Capacitor Android WebView origins
+      if (origin === 'capacitor://localhost' || origin === 'https://localhost') {
         return callback(null, true);
       }
 

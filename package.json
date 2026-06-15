@@ -6,13 +6,24 @@
   "scripts": {
     "dev": "tsx --env-file=.env server.ts",
     "build": "vite build",
+    "build:pwa": "vite build",
     "start": "tsx server.ts",
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit && eslint .",
-    "prod": "npm run build && npm start"
+    "prod": "npm run build && npm start",
+    "cap:init": "npx cap init \"Nexus Capital\" com.nexuscapital.app --web-dir=dist",
+    "cap:add:android": "npx cap add android",
+    "cap:sync": "npm run build && npx cap sync android",
+    "cap:open": "npx cap open android",
+    "cap:run": "npx cap run android",
+    "apk:debug": "npm run build && npx cap sync android && cd android && ./gradlew assembleDebug",
+    "apk:release": "npm run build && npx cap sync android && cd android && ./gradlew assembleRelease"
   },
   "dependencies": {
+    "@capacitor/android": "^8.4.0",
+    "@capacitor/cli": "^8.4.0",
+    "@capacitor/core": "^8.4.0",
     "@google/genai": "^1.29.0",
     "@tailwindcss/vite": "^4.1.14",
     "@vitejs/plugin-react": "^5.0.4",
@@ -34,7 +45,9 @@
     "tailwind-merge": "^3.5.0",
     "ts-node": "^10.9.2",
     "vite": "^6.2.0",
-    "winston": "^3.19.0"
+    "vite-plugin-pwa": "^1.3.0",
+    "winston": "^3.19.0",
+    "workbox-window": "^7.4.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
