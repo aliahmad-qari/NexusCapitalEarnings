@@ -10,6 +10,8 @@ services:
         value: production
       - key: PORT
         value: 3000
+      - key: VITE_API_URL
+        value: https://nexuscapitalearnings.onrender.com
       - key: FRONTEND_URL
         value: https://nexus-capital-earnings.vercel.app
       - key: ADDITIONAL_ORIGINS

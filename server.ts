@@ -1,6 +1,7 @@
 import express from 'express';
 import { createServer as createViteServer } from 'vite';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
@@ -161,10 +162,33 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(process.cwd(), 'dist');
+    // Resolve from the file's own location, not cwd, so the path is correct
+    // regardless of where the process was launched from.
+    const distPath = path.join(__dirname, 'dist');
+    const indexHtml = path.join(distPath, 'index.html');
+
+    // Fail loudly at boot if the build output is missing. Without this the SPA
+    // catch-all below would happily serve index.html (text/html) in place of
+    // the JS/CSS bundles, producing 500s and MIME-type mismatch errors that are
+    // very hard to diagnose. Better to crash with a clear message.
+    if (!fs.existsSync(indexHtml)) {
+      logger.error(`Build output missing: ${indexHtml} not found.`);
+      logger.error('Run "npm run build" before starting in production (VITE_API_URL must be set).');
+      process.exit(1);
+    }
+
     app.use(express.static(distPath));
-    app.get('*', (req, res) => {
-      res.sendFile(path.join(distPath, 'index.html'));
+
+    // SPA fallback — only for client-side routes. Anything that looks like a
+    // static asset (has a file extension) or an unmatched API path must NOT be
+    // rewritten to index.html, otherwise a missing asset is masked as HTML.
+    app.get('*', (req, res, next) => {
+      if (req.path.startsWith('/api') || path.extname(req.path)) {
+        return res.status(404).send('Not found');
+      }
+      res.sendFile(indexHtml, (err) => {
+        if (err) next(err);
+      });
     });
   }
 
