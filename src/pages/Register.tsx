@@ -19,7 +19,15 @@ export const Register = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
+
+  // Auto-redirect guard: already-authenticated users skip the signup form and
+  // go straight to the dashboard (admins to the admin panel).
+  useEffect(() => {
+    if (user) {
+      navigate(user.isAdmin === true ? '/dashboard/admin' : '/dashboard', { replace: true });
+    }
+  }, [user, navigate]);
 
   // If the URL changes (e.g. user navigates to a new ref link), update the field
   useEffect(() => {

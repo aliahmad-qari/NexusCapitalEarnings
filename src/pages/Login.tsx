@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, ChevronRight, Eye, EyeOff, Shield, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.tsx';
@@ -12,7 +12,15 @@ export const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
+
+  // Auto-redirect guard: if a session already exists (user hydrated from
+  // localStorage), skip the login form and go straight to the dashboard.
+  useEffect(() => {
+    if (user) {
+      navigate(user.isAdmin === true ? '/dashboard/admin' : '/dashboard', { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
