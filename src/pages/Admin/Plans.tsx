@@ -2,6 +2,7 @@
 import { Plus, Trash2, Zap, X, Edit2, Gift, Save } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { formatPKR } from '../../utils/currency.ts';
+import { API_BASE } from '../../utils/api.ts';
 
 export const AdminPlans = () => {
   const [plans, setPlans] = useState([]);

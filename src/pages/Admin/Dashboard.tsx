@@ -2,6 +2,7 @@
 import { Users, Activity, TrendingUp, ShieldCheck, Briefcase, Clock, Award, Users2, BarChart2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { formatPKR } from '../../utils/currency.ts';
+import { API_BASE } from '../../utils/api.ts';
 
 export const AdminDashboard = () => {
   const [stats, setStats] = useState({ totalUsers: 0, activeInvestments: 0, totalInvestedAmount: 0, totalDeposits: 0, totalWithdrawals: 0, revenue: 0, activePlans: 0, pendingTransactions: 0, approvedTransactions: 0 });

@@ -3,6 +3,7 @@ import { Users, Copy, Share2, Award, TrendingUp, CheckCircle2, UserPlus, Gift, A
 import { motion } from 'motion/react';
 import { useAuth } from '../hooks/useAuth.tsx';
 import { formatPKR } from '../utils/currency.ts';
+import { API_BASE } from '../utils/api.ts';
 
 export const Referrals = () => {
   const { user } = useAuth();

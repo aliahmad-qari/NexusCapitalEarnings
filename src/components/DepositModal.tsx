@@ -5,6 +5,7 @@ import {
   ShieldCheck, Clock, ChevronRight, Info
 } from 'lucide-react';
 import { formatPKR } from '../utils/currency';
+import { API_BASE } from '../utils/api.ts';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 export interface DepositFormData {

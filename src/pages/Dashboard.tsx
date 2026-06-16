@@ -10,6 +10,7 @@ import { useAuth } from '../hooks/useAuth.tsx';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { formatPKR, formatPKRDecimal } from '../utils/currency.ts';
+import { API_BASE } from '../utils/api.ts';
 
 export const Dashboard = () => {
   const { user, refreshUser } = useAuth();

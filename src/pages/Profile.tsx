@@ -4,6 +4,7 @@ import { User as UserIcon, Mail, Copy, LogOut, Shield, Award, Users, ChevronRigh
 import { useAuth } from '../hooks/useAuth.tsx';
 import { motion, AnimatePresence } from 'motion/react';
 import { formatPKR } from '../utils/currency.ts';
+import { API_BASE } from '../utils/api.ts';
 
 export const Profile = () => {
   const { user, logout, refreshUser } = useAuth();

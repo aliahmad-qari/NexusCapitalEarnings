@@ -1,4 +1,5 @@
 ﻿import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { API_BASE } from '../utils/api.ts';
 
 interface User {
   id: string;

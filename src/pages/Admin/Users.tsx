@@ -2,6 +2,7 @@
 import { Users, Search, Shield, ShieldOff, Trash2, X, Filter, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { formatPKR } from '../../utils/currency.ts';
+import { API_BASE } from '../../utils/api.ts';
 
 export const UserManagement = () => {
   const [users, setUsers] = useState<any[]>([]);

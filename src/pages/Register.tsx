@@ -3,6 +3,7 @@ import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { Mail, Lock, User as UserIcon, UserPlus, ChevronRight, Eye, EyeOff, Shield, AlertCircle, CheckCircle2, Gift } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.tsx';
 import { motion, AnimatePresence } from 'motion/react';
+import { API_BASE } from '../utils/api.ts';
 
 export const Register = () => {
   const [searchParams] = useSearchParams();

@@ -2,6 +2,7 @@
 import { CheckCircle2, XCircle, Clock, Search, ArrowDownRight, ArrowUpRight, RefreshCw, AlertCircle, X, Image, ExternalLink } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { formatPKR } from '../../utils/currency.ts';
+import { API_BASE } from '../../utils/api.ts';
 
 export const TransactionApprovals = () => {
   const [transactions, setTransactions] = useState([]);

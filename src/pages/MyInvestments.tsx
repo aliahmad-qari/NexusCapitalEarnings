@@ -7,6 +7,7 @@ import {
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { formatPKR } from '../utils/currency.ts';
+import { API_BASE } from '../utils/api.ts';
 
 // ── Live countdown to next payout ────────────────────────────────────────────
 function useCountdown(target: Date | null) {

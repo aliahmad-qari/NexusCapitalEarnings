@@ -8,6 +8,7 @@ import { useAuth } from '../hooks/useAuth.tsx';
 import { motion, AnimatePresence } from 'motion/react';
 import { formatPKR } from '../utils/currency.ts';
 import { DepositModal, DepositFormData } from '../components/DepositModal.tsx';
+import { API_BASE } from '../utils/api.ts';
 
 // ── Earnings Preview Popup ────────────────────────────────────────────────────
 interface EarningsPopupProps {

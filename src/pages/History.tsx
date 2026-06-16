@@ -2,6 +2,7 @@
 import { History as HistoryIcon, Filter, Search, ArrowUpRight, ArrowDownRight, Activity, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { formatPKR } from '../utils/currency.ts';
+import { API_BASE } from '../utils/api.ts';
 
 export const History = () => {
   const [history, setHistory] = useState([]);

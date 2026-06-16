@@ -1,5 +1,6 @@
 ﻿import { useEffect, useState } from 'react';
 import { Shield, Clock, Search, User as UserIcon, RefreshCw } from 'lucide-react';
+import { API_BASE } from '../../utils/api.ts';
 
 export const AdminLogs = () => {
   const [logs, setLogs] = useState([]);
