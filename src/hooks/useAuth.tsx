@@ -31,8 +31,26 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  // Hydrate the session SYNCHRONOUSLY from localStorage on first render. As long
+  // as a token + cached user exist, the user is authenticated immediately — there
+  // is no async gap during which ProtectedRoute could bounce them to login. This
+  // is what makes the session survive a refresh / app reopen.
+  const [user, setUser] = useState<User | null>(() => {
+    try {
+      const token = localStorage.getItem('token');
+      const cached = localStorage.getItem('user');
+      return token && cached ? (JSON.parse(cached) as User) : null;
+    } catch {
+      return null;
+    }
+  });
+  // Only show the blocking loader when we have a token but no cached user to show
+  // yet (rare). With a cached user, render instantly and revalidate in background.
+  const [loading, setLoading] = useState<boolean>(() => {
+    const token = localStorage.getItem('token');
+    const cached = localStorage.getItem('user');
+    return !!token && !cached;
+  });
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -40,9 +58,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
       return;
     }
-    // Always fetch fresh data from the server on startup.
-    // This ensures DB-level changes (e.g. isAdmin, isBlocked) are picked up
-    // immediately without requiring a logout/login cycle.
+    // Revalidate against the server in the background to pick up DB-level changes
+    // (isAdmin, isBlocked, balances). This NEVER clears an already-hydrated session
+    // except on a definitive 401/403 (token truly invalid/expired). Transient
+    // failures — Render free-tier cold starts (502/503), 500s, offline — keep the
+    // cached session intact so the user is not logged out by a temporary blip.
     const init = async () => {
       try {
         const apiBase = API_BASE;
@@ -63,15 +83,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           };
           setUser(userData);
           localStorage.setItem('user', JSON.stringify(userData));
-        } else {
-          // Token invalid or expired — clear stale session
+        } else if (res.status === 401 || res.status === 403) {
+          // Token genuinely rejected — clear the stale session.
           localStorage.removeItem('token');
           localStorage.removeItem('user');
+          setUser(null);
         }
+        // Any other status (500/502/503/etc.) → keep the cached session as-is.
       } catch {
-        // Network error — fall back to cached user so the app still works offline
-        const savedUser = localStorage.getItem('user');
-        if (savedUser) setUser(JSON.parse(savedUser));
+        // Network error / cold start → keep the cached session; do not log out.
       } finally {
         setLoading(false);
       }

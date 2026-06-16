@@ -29,8 +29,8 @@ interface PaymentSettings {
 
 // ── Defaults (used until API responds) ───────────────────────────────────────
 const DEFAULT_SETTINGS: PaymentSettings = {
-  jazzcash:  { mobileNumber: '983507701',             accountName: 'NexusCapital Official' },
-  easypaisa: { iban:         'PK18TMFB0000000055079717', accountName: 'NexusCapital Official' },
+  jazzcash:  { mobileNumber: '983507701',             accountName: 'Azhar shop' },
+  easypaisa: { iban:         'PK18TMFB0000000055079717', accountName: 'Azhar shop' },
 };
 
 // ── Small copy button ─────────────────────────────────────────────────────────
@@ -119,6 +119,7 @@ export const DepositModal = ({ isOpen, onClose, planName, amount, onSubmit }: De
     'Select Send Money',
     'Select Mobile Account',
     `Enter Mobile Number: ${jc.mobileNumber}`,
+    `Account name should be: ${jc.accountName}`,
     `Enter exact amount: ${formatPKR(amount)}`,
     'Complete payment',
     'Save the Transaction ID',
@@ -211,6 +212,9 @@ export const DepositModal = ({ isOpen, onClose, planName, amount, onSubmit }: De
                         <div>
                           <p className="text-[8px] text-slate-500 uppercase">Mobile Account</p>
                           <p className="text-lg font-black text-white tracking-widest">{jc.mobileNumber}</p>
+                          <p className="text-lg font-black text-white tracking-widest">{jc.accountName}</p>
+
+
                         </div>
                         <CopyBtn text={jc.mobileNumber} label="Copy" />
                       </div>
@@ -219,6 +223,8 @@ export const DepositModal = ({ isOpen, onClose, planName, amount, onSubmit }: De
                         <div className="min-w-0">
                           <p className="text-[8px] text-slate-500 uppercase">IBAN</p>
                           <p className="text-xs font-bold text-white font-mono break-all leading-snug mt-0.5">{ep.iban}</p>
+                          <p className="text-lg font-bold text-white text-shadow-indigo-50 mt-1">{ep.accountName}</p>
+
                         </div>
                         <CopyBtn text={ep.iban} label="Copy" />
                       </div>
