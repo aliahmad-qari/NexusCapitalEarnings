@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { Mail, Lock, User as UserIcon, UserPlus, ChevronRight, Eye, EyeOff, Shield, AlertCircle, CheckCircle2, Gift } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.tsx';
@@ -34,7 +34,7 @@ export const Register = () => {
     setLoading(true);
     setError('');
     try {
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const res = await fetch(`${apiBase}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

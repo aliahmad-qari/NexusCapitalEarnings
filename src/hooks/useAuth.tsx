@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+﻿import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface User {
   id: string;
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // immediately without requiring a logout/login cycle.
     const init = async () => {
       try {
-        const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+        const apiBase = API_BASE;
         const res = await fetch(`${apiBase}/api/auth/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -96,7 +96,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const token = localStorage.getItem('token');
     if (!token) return;
     try {
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const res = await fetch(`${apiBase}/api/auth/profile`, {
         headers: { Authorization: `Bearer ${token}` },
       });

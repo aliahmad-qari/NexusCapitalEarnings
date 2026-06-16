@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import {
   TrendingUp, Calendar, Clock, Activity, PieChart, Zap,
   AlertCircle, RefreshCw, CheckCircle2, ArrowRight, Target,
@@ -58,7 +58,7 @@ export const MyInvestments = () => {
     setLoading(true);
     try {
       const token   = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const res     = await fetch(`${apiBase}/api/investment/my`, {
         headers: { Authorization: `Bearer ${token}` },
       });

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { Users, Search, Shield, ShieldOff, Trash2, X, Filter, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { formatPKR } from '../../utils/currency.ts';
@@ -16,7 +16,7 @@ export const UserManagement = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const res = await fetch(`${apiBase}/api/admin/users`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
       if (Array.isArray(data)) setUsers(data);
@@ -26,7 +26,7 @@ export const UserManagement = () => {
   const updateStatus = async (userId: string, status: string) => {
     try {
       const token = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const res = await fetch(`${apiBase}/api/admin/user-status`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -40,7 +40,7 @@ export const UserManagement = () => {
     if (!window.confirm('Delete this user permanently?')) return;
     try {
       const token = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const res = await fetch(`${apiBase}/api/admin/user/${userId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
       if (res.ok) { fetchUsers(); setSelectedUser(null); }
     } catch (err) { console.error(err); }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { User as UserIcon, Mail, Copy, LogOut, Shield, Award, Users, ChevronRight, Settings, X, Lock, Wallet, Briefcase, TrendingUp, ArrowUpRight, ArrowDownRight, Clock, Trash2, CheckCircle2, Activity, Info } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.tsx';
@@ -19,7 +19,7 @@ export const Profile = () => {
   const fetchHistory = async () => {
     try {
       const token = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const res = await fetch(`${apiBase}/api/wallet/history`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
       if (Array.isArray(data)) setRecentTransactions(data.slice(0, 5));
@@ -35,7 +35,7 @@ export const Profile = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const res = await fetch(`${apiBase}/api/auth/profile`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },

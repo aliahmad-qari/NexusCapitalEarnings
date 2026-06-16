@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { Plus, Trash2, Zap, X, Edit2, Gift, Save } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { formatPKR } from '../../utils/currency.ts';
@@ -21,7 +21,7 @@ export const AdminPlans = () => {
   const fetchReferralSetting = async () => {
     try {
       const token = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const res = await fetch(`${apiBase}/api/admin/referral-setting`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
       if (data.rewardAmount) { setReferralReward(data.rewardAmount); setReferralInput(String(data.rewardAmount)); }
@@ -35,7 +35,7 @@ export const AdminPlans = () => {
     setReferralMsg('');
     try {
       const token = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const res = await fetch(`${apiBase}/api/admin/referral-setting`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -52,7 +52,7 @@ export const AdminPlans = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       // Use admin endpoint — returns ALL plans including inactive
       const res = await fetch(`${apiBase}/api/admin/plans/all`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -77,7 +77,7 @@ export const AdminPlans = () => {
   const toggleActive = async (plan: any) => {
     try {
       const token = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       await fetch(`${apiBase}/api/admin/plan/${plan._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -91,7 +91,7 @@ export const AdminPlans = () => {
     if (!window.confirm('Delete this plan?')) return;
     try {
       const token = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       await fetch(`${apiBase}/api/admin/plan/${planId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
       fetchPlans();
     } catch (err) { console.error(err); }
@@ -101,7 +101,7 @@ export const AdminPlans = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const url = editingPlan ? `${apiBase}/api/admin/plan/${editingPlan._id}` : `${apiBase}/api/admin/create-plan`;
       const res = await fetch(url, {
         method: editingPlan ? 'PUT' : 'POST',

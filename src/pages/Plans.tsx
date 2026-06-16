@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { 
   TrendingUp, ShieldCheck, Zap, Award,
   Info, BarChart2, Flame, RefreshCw, AlertTriangle,
@@ -154,7 +154,7 @@ export const Plans = () => {
     setLoading(true);
     setError('');
     try {
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const res = await fetch(`${apiBase}/api/investment/plans`);
       if (!res.ok) throw new Error(`Server returned ${res.status}`);
       const data = await res.json();
@@ -189,7 +189,7 @@ export const Plans = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
 
       // Single request: plan selection + payment proof in one shot.
       // Creates exactly one Deposit + one Investment + one Transaction on the backend.

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   X, Copy, CheckCircle2, AlertCircle, Upload, Loader,
@@ -68,7 +68,7 @@ export const DepositModal = ({ isOpen, onClose, planName, amount, onSubmit }: De
   // Fetch payment settings from DB on open
   useEffect(() => {
     if (!isOpen) return;
-    const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    const apiBase = API_BASE;
     fetch(`${apiBase}/api/settings/payment`)
       .then(r => r.ok ? r.json() : null)
       .then(d => d && setSettings(d))

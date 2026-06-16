@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { History as HistoryIcon, Filter, Search, ArrowUpRight, ArrowDownRight, Activity, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { formatPKR } from '../utils/currency.ts';
@@ -19,7 +19,7 @@ export const History = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const res = await fetch(`${apiBase}/api/wallet/history`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
       if (Array.isArray(data)) setHistory(data);

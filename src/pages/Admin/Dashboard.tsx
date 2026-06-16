@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { Users, Activity, TrendingUp, ShieldCheck, Briefcase, Clock, Award, Users2, BarChart2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { formatPKR } from '../../utils/currency.ts';
@@ -14,7 +14,7 @@ export const AdminDashboard = () => {
   const fetchStats = async () => {
     try {
       const token = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const res = await fetch(`${apiBase}/api/admin/stats`, { headers: { Authorization: `Bearer ${token}` } });
       setStats(await res.json());
     } catch (err) { console.error(err); } finally { setLoading(false); }
@@ -23,7 +23,7 @@ export const AdminDashboard = () => {
   const fetchLogs = async () => {
     try {
       const token = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const res = await fetch(`${apiBase}/api/admin/logs`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
       if (Array.isArray(data)) setRecentLogs(data.slice(0, 5));
@@ -33,7 +33,7 @@ export const AdminDashboard = () => {
   const fetchReferralStats = async () => {
     try {
       const token = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const res = await fetch(`${apiBase}/api/admin/referral-stats`, { headers: { Authorization: `Bearer ${token}` } });
       setRefStats(await res.json());
     } catch (err) { console.error(err); }

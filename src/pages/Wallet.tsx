@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Download, Upload, Wallet as WalletIcon, ChevronRight, Activity, Award, ArrowUpRight, ArrowDownRight, History as HistoryIcon, Clock, CheckCircle2, AlertCircle, Lock, X, Shield, Cpu } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.tsx';
@@ -29,7 +29,7 @@ export const Wallet = () => {
   const fetchHistory = async () => {
     try {
       const token = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const res = await fetch(`${apiBase}/api/wallet/history`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
       if (Array.isArray(data)) setHistory(data);
@@ -53,7 +53,7 @@ export const Wallet = () => {
     setAlert({ type: 'pending', message: 'Processing your request...' });
     try {
       const token = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const res = await fetch(`${apiBase}/api/wallet/withdraw`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { Users, Copy, Share2, Award, TrendingUp, CheckCircle2, UserPlus, Gift, Activity, RefreshCw, Loader, MessageCircle, Facebook, Send, ExternalLink, Lock, Unlock } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useAuth } from '../hooks/useAuth.tsx';
@@ -19,7 +19,7 @@ export const Referrals = () => {
     setLoading(true);
     try {
       const token   = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const res = await fetch(`${apiBase}/api/investment/my-referrals`, {
         headers: { Authorization: `Bearer ${token}` },
       });

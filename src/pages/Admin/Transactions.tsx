@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { CheckCircle2, XCircle, Clock, Search, ArrowDownRight, ArrowUpRight, RefreshCw, AlertCircle, X, Image, ExternalLink } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { formatPKR } from '../../utils/currency.ts';
@@ -18,7 +18,7 @@ export const TransactionApprovals = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const res = await fetch(`${apiBase}/api/admin/transactions`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
       if (Array.isArray(data)) setTransactions(data);
@@ -29,7 +29,7 @@ export const TransactionApprovals = () => {
     if (!window.confirm(`${status === 'approved' ? 'Approve' : 'Reject'} this transaction?`)) return;
     try {
       const token = localStorage.getItem('token');
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBase = API_BASE;
       const res = await fetch(`${apiBase}/api/admin/approve-transaction`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -52,7 +52,7 @@ export const TransactionApprovals = () => {
 
   const screenshotUrl = (tx: any) => {
     if (!tx.depositId?.screenshotUrl) return null;
-    const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    const apiBase = API_BASE;
     const raw = tx.depositId.screenshotUrl as string;
     // If already a full URL, use as-is
     if (raw.startsWith('http')) return raw;
