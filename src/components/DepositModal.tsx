@@ -29,8 +29,8 @@ interface PaymentSettings {
 
 // ── Defaults (used until API responds) ───────────────────────────────────────
 const DEFAULT_SETTINGS: PaymentSettings = {
-  jazzcash:  { mobileNumber: '983507701',             accountName: 'Azhar shop' },
-  easypaisa: { iban:         'PK18TMFB0000000055079717', accountName: 'Azhar shop' },
+  jazzcash:  { mobileNumber: '983507701',             accountName: 'Naveed shop' },
+  easypaisa: { iban:         'PK18TMFB0000000055079717', accountName: 'Naveed shop' },
 };
 
 // ── Small copy button ─────────────────────────────────────────────────────────
