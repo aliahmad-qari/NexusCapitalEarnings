@@ -94,55 +94,77 @@ async function startServer() {
     logger.error('MongoDB connection error:', err);
   });
 
-  // CORS Configuration - MUST be first middleware
-  // Uses a function so we can match dynamic Vercel preview URLs (*.vercel.app)
-  // alongside the hardcoded production origins.
-  const allowedOrigins = new Set([
+  // ── CORS Configuration ────────────────────────────────────────────
+  //
+  // Allowed origins are built from three sources (all merged into one Set):
+  //   1. Hardcoded dev origins (localhost variants)
+  //   2. CORS_ALLOWED_ORIGINS env var — comma-separated list for production
+  //      e.g. "https://nexuscapitalbusiness.com,https://www.nexuscapitalbusiness.com"
+  //   3. Legacy FRONTEND_URL / ADDITIONAL_ORIGINS env vars (backwards compat)
+  //
+  // On Render, set ONE env var:
+  //   Key:   CORS_ALLOWED_ORIGINS
+  //   Value: https://nexuscapitalbusiness.com,https://www.nexuscapitalbusiness.com
+  // ─────────────────────────────────────────────────────────────────
+
+  const parseOriginList = (raw: string | undefined): string[] =>
+    (raw || '').split(',').map(s => s.trim()).filter(Boolean);
+
+  const allowedOrigins = new Set<string>([
+    // ── Dev ───────────────────────────────────────────────────────
     'http://localhost:5173',
     'http://localhost:3000',
     'http://127.0.0.1:5173',
+    'http://127.0.0.1:3000',
+    // ── Production — both www and non-www ─────────────────────────
+    'https://nexuscapitalbusiness.com',
+    'https://www.nexuscapitalbusiness.com',
+    // ── Previous Vercel deployments (keep for backwards compat) ───
     'https://nexus-capital-earnings.vercel.app',
     'https://roiwealth.vercel.app',
-    'https://www.nexuscapitalbusiness.com',
+    // ── From environment variables (runtime-configurable) ─────────
+    ...parseOriginList(process.env.CORS_ALLOWED_ORIGINS),
+    ...parseOriginList(process.env.ADDITIONAL_ORIGINS),
     ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
-    ...(process.env.ADDITIONAL_ORIGINS
-      ? process.env.ADDITIONAL_ORIGINS.split(',').map(s => s.trim()).filter(Boolean)
-      : []),
   ]);
+
+  logger.info(`🌐 CORS allowed origins: ${[...allowedOrigins].join(', ')}`);
 
   const corsOptions: cors.CorsOptions = {
     origin: (origin, callback) => {
-      // Allow requests with no origin (curl, mobile apps, server-to-server)
+      // ── No origin: server-to-server, curl, mobile native apps ───
       if (!origin) return callback(null, true);
 
-      // Exact match against allowlist
+      // ── Exact match against allowlist ────────────────────────────
       if (allowedOrigins.has(origin)) return callback(null, true);
 
-      // Allow ANY Vercel preview / deployment URL (*.vercel.app)
+      // ── Vercel preview deployments (*.vercel.app) ────────────────
       if (/^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(origin)) return callback(null, true);
 
-      // Allow local network IPs during development
+      // ── Local network / dev IPs ──────────────────────────────────
       if (/^https?:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+)(:\d+)?$/.test(origin)) {
         return callback(null, true);
       }
 
-      // Allow Capacitor Android WebView origins
+      // ── Capacitor Android/iOS WebView ────────────────────────────
       if (origin === 'capacitor://localhost' || origin === 'https://localhost') {
         return callback(null, true);
       }
 
+      logger.warn(`🚫 CORS blocked: ${origin}`);
       callback(new Error(`CORS blocked: ${origin}`));
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-    optionsSuccessStatus: 200,
+    exposedHeaders: ['Content-Range', 'X-Content-Range'],
+    optionsSuccessStatus: 204, // Some legacy browsers choke on 200 for OPTIONS
   };
 
-  // Apply CORS to all routes
+  // Apply CORS globally — must be before all other middleware
   app.use(cors(corsOptions));
 
-  // Explicit preflight handler — must be before any route handlers
+  // Explicit OPTIONS preflight handler — catches ALL routes before any auth middleware
   app.options('*', cors(corsOptions));
 
   app.use(express.json());
