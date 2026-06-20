@@ -72,10 +72,10 @@ export const MyInvestments = () => {
     }
   };
 
-  // Aggregate portfolio stats
-  const active    = investments.filter(i => i.status === 'active');
-  const totalInvested  = investments.reduce((s, i) => s + i.principalAmount, 0);
-  const totalEarned    = investments.reduce((s, i) => s + (i.totalProfitEarned || 0), 0);
+  // Aggregate portfolio stats — exclude cancelled investments (from rejected deposits)
+  const active         = investments.filter(i => i.status === 'active');
+  const totalInvested  = investments.filter(i => i.status !== 'cancelled').reduce((s, i) => s + i.principalAmount, 0);
+  const totalEarned    = investments.filter(i => i.status !== 'cancelled').reduce((s, i) => s + (i.totalProfitEarned || 0), 0);
   const dailyTotal     = active.reduce((s, i) => s + (i.dailyProfit || 0), 0);
 
   return (

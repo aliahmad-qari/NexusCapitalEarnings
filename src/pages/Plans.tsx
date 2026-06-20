@@ -250,7 +250,7 @@ export const Plans = () => {
             <h2 className="text-2xl md:text-3xl font-black text-white">
               Choose Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-nexus-primary to-cyan-400">Investment</span>
             </h2>
-            <p className="text-slate-500 text-xs max-w-xl">Fixed 10% daily ROI for 7 days. 100% principal + 70% total profit returned automatically.</p>
+            <p className="text-slate-500 text-xs max-w-xl">Fixed 3% daily ROI for 10 days. 100% principal + 30% total profit returned automatically.</p>
           </div>
           <div className="flex flex-wrap gap-3">
             <div className="flex items-center gap-2 px-4 py-2.5 glass rounded-xl border border-white/8">
@@ -356,7 +356,7 @@ export const Plans = () => {
                     </motion.div>
                     <div>
                       <h3 className="text-base md:text-lg font-bold text-white">{plan.name}</h3>
-                      <p className={`text-[11px] font-semibold mt-1 ${meta.color}`}>10% Daily ROI</p>
+                      <p className={`text-[11px] font-semibold mt-1 ${meta.color}`}>3% Daily ROI</p>
                     </div>
                   </motion.div>
 
@@ -392,9 +392,9 @@ export const Plans = () => {
                     whileHover={{ scale: 1.03 }}
                     className={`rounded-xl p-4 border bg-gradient-to-r ${meta.gradient}/20 ${meta.borderColor} text-center shadow-lg`}
                   >
-                    <p className="text-[9px] text-slate-400 font-semibold mb-2">Total Return (7 Days)</p>
+                    <p className="text-[9px] text-slate-400 font-semibold mb-2">Total Return (10 Days)</p>
                     <p className={`text-2xl font-black ${meta.color}`}>{formatPKR(Math.round(totalReturn))}</p>
-                    <p className="text-[9px] text-slate-500 mt-2 font-medium">↑ 170% total gain</p>
+                    <p className="text-[9px] text-slate-500 mt-2 font-medium">↑ 130% total gain</p>
                   </motion.div>
 
                   {/* Duration */}
@@ -429,7 +429,7 @@ export const Plans = () => {
           <div className="space-y-2 flex-1">
             <h3 className="text-sm font-bold text-white">How It Works</h3>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Each plan activation requires a fresh external deposit. Submit a deposit request — once the admin approves your payment, your plan activates and starts earning 10% daily ROI. After 7 days, your full principal + all profits are credited to your wallet automatically.
+              Each plan activation requires a fresh external deposit. Submit a deposit request — once the admin approves your payment, your plan activates and starts earning 3% daily ROI. After 10 days, your full principal + all profits are credited to your wallet automatically.
             </p>
           </div>
         </div>

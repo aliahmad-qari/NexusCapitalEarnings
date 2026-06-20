@@ -25,8 +25,8 @@ const investmentPlanSchema = new mongoose.Schema(
   {
     name:             { type: String,  required: true },
     investmentAmount: { type: Number,  required: true },
-    dailyROI:         { type: Number,  required: true, default: 10 },
-    durationDays:     { type: Number,  required: true, default: 7  },
+    dailyROI:         { type: Number,  required: true, default: 3  },
+    durationDays:     { type: Number,  required: true, default: 10 },
     isActive:         { type: Boolean, default: true },
   },
   { timestamps: true }
@@ -38,11 +38,11 @@ const InvestmentPlan =
 
 // ── The canonical plans ────────────────────────────────────────────────────────
 const CANONICAL_PLANS = [
-  { name: 'Starter Plan',  investmentAmount: 300,   dailyROI: 10, durationDays: 7  },
-  { name: 'Bronze Plan',   investmentAmount: 1000,  dailyROI: 10, durationDays: 7  },
-  { name: 'Silver Plan',   investmentAmount: 3000,  dailyROI: 10, durationDays: 7  },
-  { name: 'Gold Plan',     investmentAmount: 5000,  dailyROI: 10, durationDays: 7  },
-  { name: 'Diamond Plan',  investmentAmount: 10000, dailyROI: 10, durationDays: 7  },
+  { name: 'Starter Plan',  investmentAmount: 300,   dailyROI: 3, durationDays: 10 },
+  { name: 'Bronze Plan',   investmentAmount: 1000,  dailyROI: 3, durationDays: 10 },
+  { name: 'Silver Plan',   investmentAmount: 3000,  dailyROI: 3, durationDays: 10 },
+  { name: 'Gold Plan',     investmentAmount: 5000,  dailyROI: 3, durationDays: 10 },
+  { name: 'Diamond Plan',  investmentAmount: 10000, dailyROI: 3, durationDays: 10 },
 ];
 
 async function run() {

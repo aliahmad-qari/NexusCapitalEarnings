@@ -4,11 +4,11 @@ import { Calculator, TrendingUp, ChevronRight, Zap, Target, Award, Sparkles } fr
 import { formatPKR } from '../../utils/currency.ts';
 
 const calcPlans = [
-  { name: 'Starter', amount: 300, dailyROI: 10, duration: 7, icon: Zap },
-  { name: 'Bronze', amount: 1000, dailyROI: 10, duration: 7, icon: Target },
-  { name: 'Silver', amount: 3000, dailyROI: 10, duration: 7, icon: Award },
-  { name: 'Gold', amount: 5000, dailyROI: 10, duration: 7, icon: Sparkles },
-  { name: 'Diamond', amount: 10000, dailyROI: 10, duration: 7, icon: TrendingUp },
+  { name: 'Starter', amount: 300, dailyROI: 3, duration: 10, icon: Zap },
+  { name: 'Bronze', amount: 1000, dailyROI: 3, duration: 10, icon: Target },
+  { name: 'Silver', amount: 3000, dailyROI: 3, duration: 10, icon: Award },
+  { name: 'Gold', amount: 5000, dailyROI: 3, duration: 10, icon: Sparkles },
+  { name: 'Diamond', amount: 10000, dailyROI: 3, duration: 10, icon: TrendingUp },
 ];
 
 export const ROICalculator = () => {
@@ -36,7 +36,7 @@ export const ROICalculator = () => {
             Calculate Your Returns
           </h2>
           <p className="text-slate-400 text-xs sm:text-sm md:text-base max-w-2xl mx-auto">
-            Estimate your earnings based on 10% daily ROI for 7 days
+            Estimate your earnings based on 3% daily ROI for 10 days
           </p>
         </div>
 
@@ -76,7 +76,7 @@ export const ROICalculator = () => {
                               {p.name} Plan
                             </p>
                             <p className={`text-[9px] md:text-xs ${planIdx === i && !customAmount ? 'text-nexus-primary' : 'text-slate-500'}`}>
-                              {formatPKR(p.amount)} • +{formatPKR(Math.round(totalProfit7Days))} in 7 days
+                              {formatPKR(p.amount)} • +{formatPKR(Math.round(totalProfit7Days))} in 10 days
                             </p>
                           </div>
                         </div>
@@ -123,8 +123,8 @@ export const ROICalculator = () => {
               <div className="space-y-2.5 md:space-y-3">
                 {[
                   { label: 'Investment', value: formatPKR(investmentAmount), color: 'text-slate-300', icon: Zap },
-                  { label: 'Daily ROI (10%)', value: formatPKR(Math.round(daily)), color: 'text-cyan-400', icon: Target },
-                  { label: `Total Profit (7 days)`, value: formatPKR(Math.round(totalProfit)), color: 'text-nexus-primary', icon: Award },
+                  { label: 'Daily ROI (3%)', value: formatPKR(Math.round(daily)), color: 'text-cyan-400', icon: Target },
+                  { label: `Total Profit (10 days)`, value: formatPKR(Math.round(totalProfit)), color: 'text-nexus-primary', icon: Award },
                 ].map(({ label, value, color, icon: Icon }) => (
                   <div key={label} className="bg-white/4 rounded-lg md:rounded-xl p-2.5 md:p-3 border border-white/6 flex items-start gap-2 md:gap-3">
                     <div className="p-1 md:p-1.5 bg-white/8 rounded-md md:rounded-lg shrink-0">
@@ -169,7 +169,7 @@ export const ROICalculator = () => {
         </div>
 
         <p className="text-center text-slate-600 text-[10px] md:text-xs mt-4 md:mt-6 px-2">
-          All amounts in PKR. Fixed 10% daily ROI for 7-day investment period. Principal returned after completion.
+          All amounts in PKR. Fixed 3% daily ROI for 10-day investment period. Principal returned after completion.
         </p>
       </div>
     </section>

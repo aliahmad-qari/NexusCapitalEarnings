@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { Plus, Trash2, Zap, X, Edit2, Gift, Save } from 'lucide-react';
+import { Plus, Trash2, Zap, X, Edit2, Gift, Save, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { formatPKR } from '../../utils/currency.ts';
 import { API_BASE } from '../../utils/api.ts';
@@ -9,7 +9,12 @@ export const AdminPlans = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingPlan, setEditingPlan] = useState<any>(null);
-  const [form, setForm] = useState({ name: '', investmentAmount: 1000, dailyROI: 10, durationDays: 7, isActive: true });
+  const [form, setForm] = useState({ name: '', investmentAmount: 1000, dailyROI: 3, durationDays: 10, isActive: true });
+
+  // Delete confirmation state
+  const [deletingPlan, setDeletingPlan] = useState<any>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
 
   // Referral setting state
   const [referralReward, setReferralReward] = useState<number>(85);
@@ -65,7 +70,7 @@ export const AdminPlans = () => {
 
   const openCreate = () => {
     setEditingPlan(null);
-    setForm({ name: '', investmentAmount: 1000, dailyROI: 10, durationDays: 7, isActive: true });
+    setForm({ name: '', investmentAmount: 1000, dailyROI: 3, durationDays: 10, isActive: true });
     setIsModalOpen(true);
   };
 
@@ -88,14 +93,34 @@ export const AdminPlans = () => {
     } catch (err) { console.error(err); }
   };
 
-  const deletePlan = async (planId: string) => {
-    if (!window.confirm('Delete this plan?')) return;
+  const confirmDelete = (plan: any) => {
+    setDeletingPlan(plan);
+    setDeleteError('');
+  };
+
+  const executePlanDelete = async () => {
+    if (!deletingPlan) return;
+    setDeleteLoading(true);
+    setDeleteError('');
     try {
       const token = localStorage.getItem('token');
       const apiBase = API_BASE;
-      await fetch(`${apiBase}/api/admin/plan/${planId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
-      fetchPlans();
-    } catch (err) { console.error(err); }
+      const res = await fetch(`${apiBase}/api/admin/plan/${deletingPlan._id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setDeletingPlan(null);
+        fetchPlans();
+      } else {
+        setDeleteError(data.message || 'Failed to delete plan');
+      }
+    } catch {
+      setDeleteError('Network error. Please try again.');
+    } finally {
+      setDeleteLoading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -203,7 +228,7 @@ export const AdminPlans = () => {
                 <button onClick={() => openEdit(plan)} className="px-3 py-2 rounded-lg border border-white/10 text-slate-400 hover:text-white hover:border-white/20 transition-all">
                   <Edit2 size={12} />
                 </button>
-                <button onClick={() => deletePlan(plan._id)} className="px-3 py-2 rounded-lg border border-rose-500/20 bg-rose-500/5 text-rose-400 hover:bg-rose-500 hover:text-white transition-all">
+                <button onClick={() => confirmDelete(plan)} className="px-3 py-2 rounded-lg border border-rose-500/20 bg-rose-500/5 text-rose-400 hover:bg-rose-500 hover:text-white transition-all">
                   <Trash2 size={12} />
                 </button>
               </div>
@@ -270,6 +295,84 @@ export const AdminPlans = () => {
                   </button>
                 </div>
               </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Delete Confirmation Modal */}
+      <AnimatePresence>
+        {deletingPlan && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => !deleteLoading && setDeletingPlan(null)}
+              className="absolute inset-0 bg-black/75 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ scale: 0.93, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.93, opacity: 0 }}
+              className="relative nexus-card w-full max-w-sm p-6 border-rose-500/20"
+            >
+              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-rose-500/50 to-transparent rounded-t-xl" />
+              <div className="flex items-start gap-4 mb-5">
+                <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 shrink-0">
+                  <AlertTriangle size={20} className="text-rose-400" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white">Delete Plan</h3>
+                  <p className="text-[10px] text-slate-500 mt-0.5">This action cannot be undone.</p>
+                </div>
+                <button onClick={() => !deleteLoading && setDeletingPlan(null)} className="ml-auto p-1.5 hover:bg-white/10 rounded-lg text-slate-500 transition-all">
+                  <X size={14} />
+                </button>
+              </div>
+              <div className="p-4 rounded-xl bg-white/[0.03] border border-white/8 space-y-2 mb-5">
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] text-slate-500 uppercase tracking-wider">Plan</span>
+                  <span className="text-xs font-bold text-white">{deletingPlan.name}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] text-slate-500 uppercase tracking-wider">Amount</span>
+                  <span className="text-xs font-semibold text-slate-200">{formatPKR(deletingPlan.investmentAmount)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] text-slate-500 uppercase tracking-wider">ROI</span>
+                  <span className="text-xs font-semibold text-nexus-primary">+{deletingPlan.dailyROI}% / day</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] text-slate-500 uppercase tracking-wider">Duration</span>
+                  <span className="text-xs font-semibold text-slate-200">{deletingPlan.durationDays} days</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] text-slate-500 uppercase tracking-wider">Status</span>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${deletingPlan.isActive ? 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/20' : 'text-slate-500 bg-white/5 border border-white/10'}`}>
+                    {deletingPlan.isActive ? 'Active' : 'Inactive'}
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-start gap-2 p-3 rounded-xl bg-amber-500/5 border border-amber-500/20 mb-5">
+                <AlertTriangle size={12} className="text-amber-400 shrink-0 mt-0.5" />
+                <p className="text-[10px] text-amber-300 leading-relaxed">
+                  Existing investments linked to this plan will not be affected — they continue earning ROI until completion. Only new deposits for this plan will stop.
+                </p>
+              </div>
+              {deleteError && (
+                <div className="p-3 rounded-xl bg-rose-500/8 border border-rose-500/20 text-rose-300 text-[11px] mb-4">
+                  {deleteError}
+                </div>
+              )}
+              <div className="flex gap-3">
+                <button onClick={executePlanDelete} disabled={deleteLoading}
+                  className="flex-1 py-2.5 bg-rose-500 hover:bg-rose-600 disabled:opacity-50 text-white rounded-xl font-semibold text-xs transition-all flex items-center justify-center gap-2">
+                  {deleteLoading
+                    ? <><div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Deleting…</>
+                    : <><Trash2 size={13} /> Delete Plan</>}
+                </button>
+                <button onClick={() => setDeletingPlan(null)} disabled={deleteLoading}
+                  className="px-5 py-2.5 glass rounded-xl border border-white/8 text-xs text-slate-400 hover:text-white disabled:opacity-50 transition-all">
+                  Cancel
+                </button>
+              </div>
             </motion.div>
           </div>
         )}

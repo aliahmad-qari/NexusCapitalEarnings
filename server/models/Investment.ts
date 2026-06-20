@@ -4,8 +4,8 @@ const investmentPlanSchema = new mongoose.Schema(
   {
     name:             { type: String, required: true },
     investmentAmount: { type: Number, required: true },
-    dailyROI:         { type: Number, required: true, default: 10 },
-    durationDays:     { type: Number, required: true, default: 7 },
+    dailyROI:         { type: Number, required: true, default: 3 },
+    durationDays:     { type: Number, required: true, default: 10 },
     isActive:         { type: Boolean, default: true },
   },
   { timestamps: true }
@@ -23,8 +23,8 @@ const investmentSchema = new mongoose.Schema(
     planName:          { type: String,  required: true },
     principalAmount:   { type: Number,  required: true },
     dailyROI:          { type: Number,  required: true },
-    totalDays:         { type: Number,  required: true, default: 7 },
-    remainingDays:     { type: Number,  required: true, default: 7 },
+    totalDays:         { type: Number,  required: true, default: 10 },
+    remainingDays:     { type: Number,  required: true, default: 10 },
     totalProfitEarned: { type: Number,  default: 0 },
     startDate:         { type: Date,    default: Date.now },
     endDate:           { type: Date,    required: true },

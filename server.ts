@@ -50,11 +50,11 @@ async function seedPlans() {
 
   // ── Ensure the canonical 5 plans exist ───────────────────────────
   const canonical = [
-    { name: 'Starter Plan',  investmentAmount: 300,   dailyROI: 10, durationDays: 7 },
-    { name: 'Bronze Plan',   investmentAmount: 1000,  dailyROI: 10, durationDays: 7 },
-    { name: 'Silver Plan',   investmentAmount: 3000,  dailyROI: 10, durationDays: 7 },
-    { name: 'Gold Plan',     investmentAmount: 5000,  dailyROI: 10, durationDays: 7 },
-    { name: 'Diamond Plan',  investmentAmount: 10000, dailyROI: 10, durationDays: 7 },
+    { name: 'Starter Plan',  investmentAmount: 300,   dailyROI: 3, durationDays: 10 },
+    { name: 'Bronze Plan',   investmentAmount: 1000,  dailyROI: 3, durationDays: 10 },
+    { name: 'Silver Plan',   investmentAmount: 3000,  dailyROI: 3, durationDays: 10 },
+    { name: 'Gold Plan',     investmentAmount: 5000,  dailyROI: 3, durationDays: 10 },
+    { name: 'Diamond Plan',  investmentAmount: 10000, dailyROI: 3, durationDays: 10 },
   ];
 
   for (const p of canonical) {
@@ -62,11 +62,14 @@ async function seedPlans() {
     if (!exists) {
       await InvestmentPlan.create({ ...p, isActive: true });
       logger.info(`✅ Added missing plan: ${p.name} (PKR ${p.investmentAmount})`);
-    } else if (!exists.isActive) {
-      // Re-activate if it was accidentally deactivated
-      exists.isActive = true;
+    } else {
+      // Always sync canonical values (ROI, duration, amount) and ensure active
+      exists.investmentAmount = p.investmentAmount;
+      exists.dailyROI         = p.dailyROI;
+      exists.durationDays     = p.durationDays;
+      if (!exists.isActive) exists.isActive = true;
       await exists.save();
-      logger.info(`✅ Re-activated plan: ${p.name}`);
+      logger.info(`✅ Synced plan: ${p.name} → ${p.dailyROI}%/day, ${p.durationDays} days`);
     }
   }
 

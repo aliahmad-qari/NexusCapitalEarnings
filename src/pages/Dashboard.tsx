@@ -68,7 +68,7 @@ export const Dashboard = () => {
       const data = await res.json();
       if (!Array.isArray(data)) return;
       setInvestments(data);
-      const total = data.reduce((acc: number, inv: any) => acc + inv.principalAmount, 0);
+      const total = data.filter((inv: any) => inv.status !== 'cancelled').reduce((acc: number, inv: any) => acc + inv.principalAmount, 0);
       const active = data.filter((inv: any) => inv.status === 'active').length;
       const daily = data.filter((inv: any) => inv.status === 'active').reduce((acc: number, inv: any) => acc + inv.dailyProfit, 0);
       setStats({ totalInvested: total, dailyProfit: daily, activeInvestments: active });

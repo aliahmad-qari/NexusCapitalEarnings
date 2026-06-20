@@ -58,8 +58,8 @@ export const WelcomeModal = () => {
           </p>
           <div className="grid grid-cols-3 gap-2 mt-3">
             {[
-              { label: 'Daily ROI',    value: '10%',  icon: TrendingUp, color: 'text-nexus-primary' },
-              { label: 'Duration',     value: '7 Days', icon: Clock,      color: 'text-cyan-400'    },
+              { label: 'Daily ROI',    value: '3%',     icon: TrendingUp, color: 'text-nexus-primary' },
+              { label: 'Duration',     value: '10 Days', icon: Clock,      color: 'text-cyan-400'    },
               { label: 'Principal',    value: 'Returned', icon: DollarSign, color: 'text-emerald-400' },
             ].map(s => (
               <div key={s.label} className="glass p-2.5 rounded-xl border border-white/8 text-center">
@@ -82,11 +82,11 @@ export const WelcomeModal = () => {
       content: (
         <div className="space-y-2">
           {[
-            { name: 'Starter',  amount: 'PKR 300',    daily: 'PKR 30',     total: 'PKR 510' },
-            { name: 'Bronze',   amount: 'PKR 1,000',  daily: 'PKR 100',    total: 'PKR 1,700' },
-            { name: 'Silver',   amount: 'PKR 3,000',  daily: 'PKR 300',    total: 'PKR 5,100' },
-            { name: 'Gold',     amount: 'PKR 5,000',  daily: 'PKR 500',    total: 'PKR 8,500' },
-            { name: 'Diamond',  amount: 'PKR 10,000', daily: 'PKR 1,000',  total: 'PKR 17,000' },
+            { name: 'Starter',  amount: 'PKR 300',    daily: 'PKR 9',     total: 'PKR 390' },
+            { name: 'Bronze',   amount: 'PKR 1,000',  daily: 'PKR 30',    total: 'PKR 1,300' },
+            { name: 'Silver',   amount: 'PKR 3,000',  daily: 'PKR 90',    total: 'PKR 3,900' },
+            { name: 'Gold',     amount: 'PKR 5,000',  daily: 'PKR 150',   total: 'PKR 6,500' },
+            { name: 'Diamond',  amount: 'PKR 10,000', daily: 'PKR 300',   total: 'PKR 13,000' },
           ].map((p, i) => (
             <div key={p.name}
               className="flex items-center justify-between px-3 py-2 rounded-xl border border-white/6 bg-white/[0.025] hover:border-nexus-primary/25 transition-all">
@@ -130,8 +130,8 @@ export const WelcomeModal = () => {
             {[
               { step: '1', text: 'Submit deposit with payment proof (JazzCash / Easypaisa)', icon: DollarSign, color: 'text-cyan-400 bg-cyan-400/10 border-cyan-400/20' },
               { step: '2', text: 'Admin verifies & activates your plan within 24 hours',      icon: CheckCircle2, color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20' },
-              { step: '3', text: '10% daily ROI credited to your wallet every 24h for 7 days', icon: TrendingUp,  color: 'text-nexus-primary bg-nexus-primary/10 border-nexus-primary/20' },
-              { step: '4', text: 'After 7 days: full principal + all profits returned',         icon: Star,        color: 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20' },
+              { step: '3', text: '3% daily ROI credited to your wallet every 24h for 10 days', icon: TrendingUp,  color: 'text-nexus-primary bg-nexus-primary/10 border-nexus-primary/20' },
+              { step: '4', text: 'After 10 days: full principal + all profits returned',         icon: Star,        color: 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20' },
             ].map(s => (
               <div key={s.step} className="flex items-start gap-3 p-2.5 rounded-xl bg-white/[0.02] border border-white/6">
                 <div className={`p-1.5 rounded-lg border shrink-0 ${s.color}`}>
