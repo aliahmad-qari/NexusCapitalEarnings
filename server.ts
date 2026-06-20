@@ -103,6 +103,7 @@ async function startServer() {
     'http://127.0.0.1:5173',
     'https://nexus-capital-earnings.vercel.app',
     'https://roiwealth.vercel.app',
+    'https://www.nexuscapitalbusiness.com',
     ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
     ...(process.env.ADDITIONAL_ORIGINS
       ? process.env.ADDITIONAL_ORIGINS.split(',').map(s => s.trim()).filter(Boolean)
