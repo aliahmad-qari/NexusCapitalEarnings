@@ -72,10 +72,12 @@ export const MyInvestments = () => {
     }
   };
 
-  // Aggregate portfolio stats — exclude cancelled investments (from rejected deposits)
+  // Aggregate portfolio stats — only count admin-approved investments (active or completed)
+  // pending = deposit submitted, not yet approved → must NOT count in totals
+  // cancelled = deposit rejected → must NOT count in totals
   const active         = investments.filter(i => i.status === 'active');
-  const totalInvested  = investments.filter(i => i.status !== 'cancelled').reduce((s, i) => s + i.principalAmount, 0);
-  const totalEarned    = investments.filter(i => i.status !== 'cancelled').reduce((s, i) => s + (i.totalProfitEarned || 0), 0);
+  const totalInvested  = investments.filter(i => i.status === 'active' || i.status === 'completed').reduce((s, i) => s + i.principalAmount, 0);
+  const totalEarned    = investments.filter(i => i.status === 'active' || i.status === 'completed').reduce((s, i) => s + (i.totalProfitEarned || 0), 0);
   const dailyTotal     = active.reduce((s, i) => s + (i.dailyProfit || 0), 0);
 
   return (
